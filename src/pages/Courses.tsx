@@ -4,6 +4,7 @@ import { Search, Filter } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CourseCard from '@/components/CourseCard';
+import SEOHead from '@/components/SEOHead';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -110,6 +111,13 @@ const Courses = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEOHead
+        title="All Courses - Learn Web Development, Data Science, Design & More"
+        description="Browse our complete catalog of expert-led online courses. Master web development, data science, UI/UX design, digital marketing, cloud computing and more. 50,000+ students learning."
+        url="/courses"
+        type="website"
+        tags={['online courses', 'web development', 'data science', 'ui ux design', 'digital marketing', 'cloud computing', 'professional training']}
+      />
       <Navbar />
       
       <main className="flex-1 pt-24 pb-16">
