@@ -9,6 +9,7 @@ interface SEOProps {
   siteName?: string;
   author?: string;
   publishedTime?: string;
+  modifiedTime?: string;
   tags?: string[];
   course?: {
     id: string;
@@ -18,7 +19,23 @@ interface SEOProps {
     level?: string;
     price?: number;
     currency?: string;
+    rating?: number;
+    reviewCount?: number;
+    instructor?: string;
   };
+  article?: {
+    title: string;
+    description: string;
+    author: string;
+    publishedTime: string;
+    modifiedTime?: string;
+    section?: string;
+    tags?: string[];
+  };
+  faq?: Array<{
+    question: string;
+    answer: string;
+  }>;
 }
 
 const SEOHead = ({
@@ -30,8 +47,11 @@ const SEOHead = ({
   siteName = 'LearnCraft',
   author,
   publishedTime,
+  modifiedTime,
   tags = [],
   course,
+  article,
+  faq,
 }: SEOProps) => {
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://learncraft.lovable.app';
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
@@ -52,11 +72,24 @@ const SEOHead = ({
       "name": siteName,
       "sameAs": siteUrl
     },
+    ...(course.instructor && {
+      "instructor": {
+        "@type": "Person",
+        "name": course.instructor
+      }
+    }),
     ...(course.duration && {
       "timeRequired": course.duration
     }),
     ...(course.level && {
       "educationalLevel": course.level
+    }),
+    ...(course.rating && course.reviewCount && {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": course.rating,
+        "reviewCount": course.reviewCount
+      }
     }),
     ...(course.price !== undefined && {
       "offers": {
@@ -67,6 +100,55 @@ const SEOHead = ({
         "url": `${siteUrl}/courses/${course.id}`
       }
     })
+  } : null;
+
+  // Generate Article structured data
+  const articleStructuredData = article ? {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": article.title,
+    "description": article.description,
+    "image": fullImageUrl,
+    "author": {
+      "@type": "Person",
+      "name": article.author
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": siteName,
+      "logo": {
+        "@type": "ImageObject",
+        "url": `${siteUrl}/placeholder.svg`
+      }
+    },
+    "datePublished": article.publishedTime,
+    ...(article.modifiedTime && {
+      "dateModified": article.modifiedTime
+    }),
+    ...(article.section && {
+      "articleSection": article.section
+    }),
+    ...(article.tags && article.tags.length > 0 && {
+      "keywords": article.tags.join(', ')
+    }),
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": fullUrl
+    }
+  } : null;
+
+  // Generate FAQ structured data
+  const faqStructuredData = faq && faq.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faq.map(item => ({
+      "@type": "Question",
+      "name": item.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.answer
+      }
+    }))
   } : null;
 
   // Generate Organization structured data
@@ -135,8 +217,13 @@ const SEOHead = ({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={fullImageUrl} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={title} />
       <meta property="og:site_name" content={siteName} />
       {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+      {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+      {author && <meta property="article:author" content={author} />}
       {tags.length > 0 && tags.map(tag => (
         <meta key={tag} property="article:tag" content={tag} />
       ))}
@@ -167,6 +254,16 @@ const SEOHead = ({
       {courseStructuredData && (
         <script type="application/ld+json">
           {JSON.stringify(courseStructuredData)}
+        </script>
+      )}
+      {articleStructuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(articleStructuredData)}
+        </script>
+      )}
+      {faqStructuredData && (
+        <script type="application/ld+json">
+          {JSON.stringify(faqStructuredData)}
         </script>
       )}
     </Helmet>
