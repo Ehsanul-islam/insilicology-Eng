@@ -3,6 +3,7 @@ import { Clock, Users, Star, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import ImageSkeleton from './ImageSkeleton';
 
 interface CourseCardProps {
   id: string;
@@ -41,15 +42,18 @@ const CourseCard = ({
     <Card className="card-hover overflow-hidden group">
       <CardHeader className="p-0">
         <div className="relative overflow-hidden aspect-video">
-          <img
+          <ImageSkeleton
             src={thumbnail}
-            alt={title}
+            alt={`${title} - ${category} course thumbnail`}
             className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+            width={800}
+            height={450}
+            loading="lazy"
           />
-          <div className="absolute top-4 right-4">
+          <div className="absolute top-4 right-4 z-10">
             <Badge className={levelColors[level]}>{level}</Badge>
           </div>
-          <div className="absolute top-4 left-4">
+          <div className="absolute top-4 left-4 z-10">
             <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm">
               {category}
             </Badge>

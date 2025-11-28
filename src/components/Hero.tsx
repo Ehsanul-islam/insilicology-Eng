@@ -99,9 +99,12 @@ const Hero = () => {
             <div className="relative rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src={heroImage}
-                alt="Professional learning environment"
+                alt="Professional learning environment showcasing modern e-learning platform"
                 className="w-full h-auto object-cover"
+                width={1200}
+                height={800}
                 loading="eager"
+                fetchPriority="high"
               />
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent"></div>
             </div>
