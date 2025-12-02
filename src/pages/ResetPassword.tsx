@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ArrowLeft, Mail, CheckCircle2 } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Mail, CheckCircle2, Lock, Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -17,33 +17,81 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import SEOHead from '@/components/SEOHead';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { PasswordStrengthIndicator } from '@/components/PasswordStrengthIndicator';
 
 const resetPasswordSchema = z.object({
   email: z.string().email('Invalid email address'),
 });
 
+const updatePasswordSchema = z.object({
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/\d/, 'Password must contain at least one number')
+    .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, 'Password must contain at least one special character'),
+  confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
 type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
+type UpdatePasswordFormData = z.infer<typeof updatePasswordSchema>;
 
 const ResetPassword = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [isPasswordUpdate, setIsPasswordUpdate] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { resetPassword, updatePassword } = useAuth();
+  const navigate = useNavigate();
 
-  const form = useForm<ResetPasswordFormData>({
+  const resetForm = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
       email: '',
     },
   });
 
-  const onSubmit = async (data: ResetPasswordFormData) => {
+  const updateForm = useForm<UpdatePasswordFormData>({
+    resolver: zodResolver(updatePasswordSchema),
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  // Check if user is coming from email link to update password
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (data.session && window.location.hash.includes('type=recovery')) {
+        setIsPasswordUpdate(true);
+      }
+    };
+    checkSession();
+  }, []);
+
+  const onSubmitReset = async (data: ResetPasswordFormData) => {
     setIsSubmitting(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Password reset requested for:', data.email);
-    setEmailSent(true);
+    const { error } = await resetPassword(data.email);
     setIsSubmitting(false);
+    
+    if (!error) {
+      setEmailSent(true);
+    }
+  };
+
+  const onSubmitUpdate = async (data: UpdatePasswordFormData) => {
+    setIsSubmitting(true);
+    const { error } = await updatePassword(data.password);
+    setIsSubmitting(false);
+    
+    if (!error) {
+      navigate('/auth');
+    }
   };
 
   return (
@@ -117,16 +165,20 @@ const ResetPassword = () => {
               >
                 {emailSent ? (
                   <CheckCircle2 className="w-8 h-8 text-white" />
+                ) : isPasswordUpdate ? (
+                  <Lock className="w-8 h-8 text-white" />
                 ) : (
                   <Mail className="w-8 h-8 text-white" />
                 )}
               </motion.div>
               <CardTitle className="text-2xl">
-                {emailSent ? 'Check Your Email' : 'Reset Password'}
+                {emailSent ? 'Check Your Email' : isPasswordUpdate ? 'Update Password' : 'Reset Password'}
               </CardTitle>
               <CardDescription>
                 {emailSent
                   ? "We've sent you instructions to reset your password. Please check your inbox."
+                  : isPasswordUpdate
+                  ? 'Enter your new password below.'
                   : 'Enter your email address and we\'ll send you instructions to reset your password.'}
               </CardDescription>
             </CardHeader>
@@ -154,11 +206,92 @@ const ResetPassword = () => {
                     <Link to="/auth">Back to Sign In</Link>
                   </Button>
                 </motion.div>
-              ) : (
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              ) : isPasswordUpdate ? (
+                <Form {...updateForm}>
+                  <form onSubmit={updateForm.handleSubmit(onSubmitUpdate)} className="space-y-6">
                     <FormField
-                      control={form.control}
+                      control={updateForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>New Password</FormLabel>
+                          <FormControl>
+                            <div className="space-y-2">
+                              <div className="relative">
+                                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                <Input
+                                  type={showPassword ? 'text' : 'password'}
+                                  placeholder="••••••••"
+                                  className="pl-10 pr-10"
+                                  {...field}
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => setShowPassword(!showPassword)}
+                                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                  {showPassword ? (
+                                    <EyeOff className="h-4 w-4" />
+                                  ) : (
+                                    <Eye className="h-4 w-4" />
+                                  )}
+                                </button>
+                              </div>
+                              <PasswordStrengthIndicator password={field.value} />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={updateForm.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Confirm New Password</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                              <Input
+                                type={showConfirmPassword ? 'text' : 'password'}
+                                placeholder="••••••••"
+                                className="pl-10 pr-10"
+                                {...field}
+                              />
+                              <button
+                                type="button"
+                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                {showConfirmPassword ? (
+                                  <EyeOff className="h-4 w-4" />
+                                ) : (
+                                  <Eye className="h-4 w-4" />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button
+                      type="submit"
+                      className="w-full btn-primary"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Updating...' : 'Update Password'}
+                    </Button>
+                  </form>
+                </Form>
+              ) : (
+                <Form {...resetForm}>
+                  <form onSubmit={resetForm.handleSubmit(onSubmitReset)} className="space-y-6">
+                    <FormField
+                      control={resetForm.control}
                       name="email"
                       render={({ field }) => (
                         <FormItem>
