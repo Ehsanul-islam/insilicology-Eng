@@ -2,7 +2,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Link } from 'react-router-dom';
 import {
   BookOpen,
@@ -15,79 +14,50 @@ import {
   LogOut,
   User,
   BarChart3,
+  Loader2,
+  ExternalLink,
 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
+  const { loading, stats, enrolledCourses, certificates, recentActivity } = useDashboardData();
 
-  const stats = [
+  const statsCards = [
     {
       title: 'Courses Enrolled',
-      value: '3',
+      value: stats.enrolledCourses.toString(),
       icon: BookOpen,
-      change: '+2 this month',
+      change: stats.enrolledCourses > 0 ? 'Active learning' : 'Start learning today',
       color: 'text-blue-500',
       bgColor: 'bg-blue-500/10',
     },
     {
-      title: 'Certificates Earned',
-      value: '1',
-      icon: Award,
-      change: '+1 this month',
-      color: 'text-accent',
-      bgColor: 'bg-accent/10',
-    },
-    {
-      title: 'Learning Hours',
-      value: '24.5',
-      icon: Clock,
-      change: '+8.2 this week',
+      title: 'Completed Courses',
+      value: stats.completedCourses.toString(),
+      icon: Trophy,
+      change: stats.completedCourses > 0 ? 'Great progress!' : 'Complete your first course',
       color: 'text-green-500',
       bgColor: 'bg-green-500/10',
     },
     {
-      title: 'Current Streak',
-      value: '7 days',
-      icon: TrendingUp,
-      change: 'Keep it up!',
+      title: 'Certificates Earned',
+      value: stats.certificates.toString(),
+      icon: Award,
+      change: stats.certificates > 0 ? 'Keep achieving!' : 'Earn your first certificate',
+      color: 'text-accent',
+      bgColor: 'bg-accent/10',
+    },
+    {
+      title: 'Hours Watched',
+      value: stats.totalHours.toString(),
+      icon: Clock,
+      change: stats.totalHours > 0 ? 'Time well spent' : 'Start watching',
       color: 'text-purple-500',
       bgColor: 'bg-purple-500/10',
     },
-  ];
-
-  const enrolledCourses = [
-    {
-      id: 1,
-      title: 'Advanced React Development',
-      progress: 65,
-      thumbnail: '/placeholder.svg',
-      nextLesson: 'State Management Patterns',
-      instructor: 'Sarah Johnson',
-    },
-    {
-      id: 2,
-      title: 'UI/UX Design Fundamentals',
-      progress: 30,
-      thumbnail: '/placeholder.svg',
-      nextLesson: 'Color Theory Basics',
-      instructor: 'Michael Chen',
-    },
-    {
-      id: 3,
-      title: 'Python for Data Science',
-      progress: 90,
-      thumbnail: '/placeholder.svg',
-      nextLesson: 'Final Project Review',
-      instructor: 'Dr. Emily Roberts',
-    },
-  ];
-
-  const recentActivity = [
-    { action: 'Completed lesson', course: 'Advanced React', time: '2 hours ago' },
-    { action: 'Earned certificate', course: 'JavaScript Basics', time: '1 day ago' },
-    { action: 'Started course', course: 'Python for Data Science', time: '3 days ago' },
-    { action: 'Completed quiz', course: 'UI/UX Design', time: '1 week ago' },
   ];
 
   return (
@@ -139,25 +109,35 @@ const Dashboard = () => {
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 animate-slide-up">
-          {stats.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <Card key={stat.title} className="card-hover">
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <Card key={i}>
                 <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3 rounded-lg ${stat.bgColor}`}>
-                      <Icon className={`w-5 h-5 ${stat.color}`} />
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">{stat.title}</p>
-                    <h3 className="text-2xl font-bold">{stat.value}</h3>
-                    <p className="text-xs text-muted-foreground">{stat.change}</p>
-                  </div>
+                  <Skeleton className="h-32" />
                 </CardContent>
               </Card>
-            );
-          })}
+            ))
+          ) : (
+            statsCards.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <Card key={stat.title} className="card-hover">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`p-3 rounded-lg ${stat.bgColor}`}>
+                        <Icon className={`w-5 h-5 ${stat.color}`} />
+                      </div>
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">{stat.title}</p>
+                      <h3 className="text-2xl font-bold">{stat.value}</h3>
+                      <p className="text-xs text-muted-foreground">{stat.change}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })
+          )}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -173,73 +153,106 @@ const Dashboard = () => {
                 <CardDescription>Pick up where you left off</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {enrolledCourses.map((course) => (
-                  <div
-                    key={course.id}
-                    className="flex gap-4 p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
-                  >
-                    <img
-                      src={course.thumbnail}
-                      alt={course.title}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h4 className="font-semibold">{course.title}</h4>
-                          <p className="text-sm text-muted-foreground">
-                            by {course.instructor}
-                          </p>
+                {loading ? (
+                  Array.from({ length: 2 }).map((_, i) => (
+                    <Skeleton key={i} className="h-32" />
+                  ))
+                ) : enrolledCourses.length === 0 ? (
+                  <div className="text-center py-8">
+                    <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground mb-4">
+                      You haven't enrolled in any courses yet
+                    </p>
+                    <Button asChild>
+                      <Link to="/courses">Browse Courses</Link>
+                    </Button>
+                  </div>
+                ) : (
+                  enrolledCourses.map((course) => (
+                    <div
+                      key={course.id}
+                      className="flex gap-4 p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
+                    >
+                      <img
+                        src={course.thumbnail || '/placeholder.svg'}
+                        alt={course.title}
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <h4 className="font-semibold">{course.title}</h4>
+                          </div>
+                          <span className="text-sm font-medium text-primary">
+                            {course.progress}%
+                          </span>
                         </div>
-                        <span className="text-sm font-medium text-primary">
-                          {course.progress}%
-                        </span>
-                      </div>
-                      <Progress value={course.progress} className="h-2" />
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-muted-foreground">
-                          Next: {course.nextLesson}
-                        </p>
-                        <Button size="sm" asChild>
-                          <Link to={`/courses/${course.id}`}>Continue</Link>
-                        </Button>
+                        <Progress value={course.progress} className="h-2" />
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm text-muted-foreground">
+                            {course.progress === 100 ? 'Completed!' : 'In Progress'}
+                          </p>
+                          <Button size="sm" asChild>
+                            <Link to={`/courses/${course.slug}`}>
+                              {course.progress === 100 ? 'Review' : 'Continue'}
+                            </Link>
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </CardContent>
             </Card>
 
-            {/* Achievements */}
+            {/* Certificates Showcase */}
             <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Trophy className="w-5 h-5 text-accent" />
-                  Achievements
+                  <Award className="w-5 h-5 text-accent" />
+                  My Certificates
                 </CardTitle>
-                <CardDescription>Your learning milestones</CardDescription>
+                <CardDescription>Your earned credentials</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { icon: '🎯', title: 'First Course', unlocked: true },
-                    { icon: '🔥', title: '7 Day Streak', unlocked: true },
-                    { icon: '📚', title: '5 Courses', unlocked: false },
-                    { icon: '🏆', title: 'Top Student', unlocked: false },
-                  ].map((achievement, i) => (
-                    <div
-                      key={i}
-                      className={`p-4 rounded-lg text-center ${
-                        achievement.unlocked
-                          ? 'bg-accent/10 border-2 border-accent'
-                          : 'bg-secondary/50 opacity-50'
-                      }`}
-                    >
-                      <div className="text-3xl mb-2">{achievement.icon}</div>
-                      <p className="text-xs font-medium">{achievement.title}</p>
-                    </div>
-                  ))}
-                </div>
+                {loading ? (
+                  <Skeleton className="h-32" />
+                ) : certificates.length === 0 ? (
+                  <div className="text-center py-8">
+                    <Award className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground mb-2">No certificates yet</p>
+                    <p className="text-sm text-muted-foreground">
+                      Complete a course to earn your first certificate
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {certificates.slice(0, 4).map((cert) => (
+                      <Link
+                        key={cert.id}
+                        to={`/verify-certificate?hash=${cert.verificationHash}`}
+                        className="group p-4 rounded-lg border-2 border-border hover:border-accent transition-colors bg-gradient-to-br from-accent/5 to-primary/5"
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <Award className="w-8 h-8 text-accent" />
+                          <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
+                        </div>
+                        <h4 className="font-semibold mb-1 line-clamp-1">{cert.courseName}</h4>
+                        <p className="text-xs text-muted-foreground">
+                          Completed: {new Date(cert.completionDate).toLocaleDateString()}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          #{cert.certificateNumber}
+                        </p>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+                {certificates.length > 4 && (
+                  <Button variant="outline" className="w-full mt-4" asChild>
+                    <Link to="/my-certificates">View All Certificates</Link>
+                  </Button>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -273,20 +286,29 @@ const Dashboard = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {recentActivity.map((activity, i) => (
-                    <div key={i} className="flex gap-3">
-                      <div className="w-2 h-2 bg-primary rounded-full mt-2" />
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">{activity.action}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {activity.course}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                {loading ? (
+                  <Skeleton className="h-48" />
+                ) : recentActivity.length === 0 ? (
+                  <div className="text-center py-8">
+                    <BarChart3 className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">No recent activity</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {recentActivity.map((activity, i) => (
+                      <div key={i} className="flex gap-3">
+                        <div className="w-2 h-2 bg-primary rounded-full mt-2 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium">{activity.action}</p>
+                          <p className="text-xs text-muted-foreground truncate">
+                            {activity.course}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{activity.time}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                )}
               </CardContent>
             </Card>
 
