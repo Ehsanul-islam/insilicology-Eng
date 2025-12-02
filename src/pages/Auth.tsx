@@ -3,25 +3,30 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { GraduationCap, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { GraduationCap, Mail, Lock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { PasswordStrengthIndicator } from '@/components/PasswordStrengthIndicator';
 
 const signUpSchema = z.object({
-  fullName: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  fullName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
+  email: z.string().email('Invalid email address').max(255, 'Email is too long'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/\d/, 'Password must contain at least one number')
+    .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, 'Password must contain at least one special character'),
 });
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
+  rememberMe: z.boolean().default(false),
 });
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
@@ -30,6 +35,8 @@ type SignInFormData = z.infer<typeof signInSchema>;
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const { signUp, signIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -47,6 +54,7 @@ const Auth = () => {
     defaultValues: {
       email: '',
       password: '',
+      rememberMe: false,
     },
   });
 
@@ -69,7 +77,7 @@ const Auth = () => {
 
   const handleSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
-    const { error } = await signIn(data.email, data.password);
+    const { error } = await signIn(data.email, data.password, data.rememberMe);
     setIsLoading(false);
     
     if (!error) {
@@ -159,14 +167,43 @@ const Auth = () => {
                               <div className="relative">
                                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                                 <Input
-                                  type="password"
+                                  type={showPassword ? 'text' : 'password'}
                                   placeholder="••••••••"
-                                  className="pl-10"
+                                  className="pl-10 pr-10"
                                   {...field}
                                 />
+                                <button
+                                  type="button"
+                                  onClick={() => setShowPassword(!showPassword)}
+                                  className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                                >
+                                  {showPassword ? (
+                                    <EyeOff className="h-4 w-4" />
+                                  ) : (
+                                    <Eye className="h-4 w-4" />
+                                  )}
+                                </button>
                               </div>
                             </FormControl>
                             <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={signInForm.control}
+                        name="rememberMe"
+                        render={({ field }) => (
+                          <FormItem className="flex flex-row items-center space-x-2 space-y-0">
+                            <FormControl>
+                              <Checkbox
+                                checked={field.value}
+                                onCheckedChange={field.onChange}
+                              />
+                            </FormControl>
+                            <FormLabel className="text-sm font-normal cursor-pointer">
+                              Remember me for 30 days
+                            </FormLabel>
                           </FormItem>
                         )}
                       />
@@ -244,14 +281,28 @@ const Auth = () => {
                           <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                              <div className="relative">
-                                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                                <Input
-                                  type="password"
-                                  placeholder="••••••••"
-                                  className="pl-10"
-                                  {...field}
-                                />
+                              <div className="space-y-2">
+                                <div className="relative">
+                                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                                  <Input
+                                    type={showSignUpPassword ? 'text' : 'password'}
+                                    placeholder="••••••••"
+                                    className="pl-10 pr-10"
+                                    {...field}
+                                  />
+                                  <button
+                                    type="button"
+                                    onClick={() => setShowSignUpPassword(!showSignUpPassword)}
+                                    className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                                  >
+                                    {showSignUpPassword ? (
+                                      <EyeOff className="h-4 w-4" />
+                                    ) : (
+                                      <Eye className="h-4 w-4" />
+                                    )}
+                                  </button>
+                                </div>
+                                <PasswordStrengthIndicator password={field.value} />
                               </div>
                             </FormControl>
                             <FormMessage />
