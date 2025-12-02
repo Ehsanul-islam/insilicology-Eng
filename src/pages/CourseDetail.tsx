@@ -110,6 +110,7 @@ const CourseDetail = () => {
         type="article"
         image={course.thumbnail}
         course={{
+          id: course.id,
           title: course.title,
           description: course.description,
           instructor: course.instructor.name,
