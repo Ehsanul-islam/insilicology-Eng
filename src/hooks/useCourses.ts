@@ -1,0 +1,238 @@
+import { useState, useEffect, useMemo } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { Tables } from '@/integrations/supabase/types';
+
+export type Course = Tables<'courses'>;
+
+export type CourseFilters = {
+  search: string;
+  type: string;
+  difficulty: string;
+  priceRange: string;
+  sortBy: string;
+};
+
+export type PaginationState = {
+  page: number;
+  pageSize: number;
+  total: number;
+};
+
+export const useCourses = (filters: CourseFilters, pagination: PaginationState) => {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        let query = supabase
+          .from('courses')
+          .select('*', { count: 'exact' })
+          .eq('status', 'published');
+
+        // Search filter
+        if (filters.search) {
+          query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+        }
+
+        // Type filter
+        if (filters.type && filters.type !== 'all') {
+          query = query.eq('course_type', filters.type as 'recorded' | 'live' | 'hybrid');
+        }
+
+        // Difficulty filter
+        if (filters.difficulty && filters.difficulty !== 'all') {
+          query = query.eq('difficulty', filters.difficulty as 'beginner' | 'intermediate' | 'advanced');
+        }
+
+        // Price range filter
+        if (filters.priceRange && filters.priceRange !== 'all') {
+          switch (filters.priceRange) {
+            case 'free':
+              query = query.or('price_offer.is.null,price_offer.eq.0');
+              break;
+            case 'under50':
+              query = query.lt('price_offer', 50);
+              break;
+            case '50to100':
+              query = query.gte('price_offer', 50).lt('price_offer', 100);
+              break;
+            case 'over100':
+              query = query.gte('price_offer', 100);
+              break;
+          }
+        }
+
+        // Sorting
+        switch (filters.sortBy) {
+          case 'newest':
+            query = query.order('created_at', { ascending: false });
+            break;
+          case 'price-low':
+            query = query.order('price_offer', { ascending: true, nullsFirst: true });
+            break;
+          case 'price-high':
+            query = query.order('price_offer', { ascending: false, nullsFirst: false });
+            break;
+          case 'featured':
+            query = query.order('featured', { ascending: false }).order('created_at', { ascending: false });
+            break;
+          default:
+            query = query.order('created_at', { ascending: false });
+        }
+
+        // Pagination
+        const from = (pagination.page - 1) * pagination.pageSize;
+        const to = from + pagination.pageSize - 1;
+        query = query.range(from, to);
+
+        const { data, error: fetchError, count } = await query;
+
+        if (fetchError) throw fetchError;
+
+        setCourses(data || []);
+        setTotalCount(count || 0);
+      } catch (err) {
+        console.error('Error fetching courses:', err);
+        setError('Failed to load courses');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+  }, [filters, pagination.page, pagination.pageSize]);
+
+  const totalPages = useMemo(() => 
+    Math.ceil(totalCount / pagination.pageSize), 
+    [totalCount, pagination.pageSize]
+  );
+
+  return { courses, loading, error, totalCount, totalPages };
+};
+
+export const useCourseDetail = (slug: string | undefined) => {
+  const [course, setCourse] = useState<Course | null>(null);
+  const [lessons, setLessons] = useState<Tables<'lessons'>[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [resources, setResources] = useState<Tables<'course_resources'>[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isEnrolled, setIsEnrolled] = useState(false);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchCourseDetail = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // Fetch course
+        const { data: courseData, error: courseError } = await supabase
+          .from('courses')
+          .select('*')
+          .eq('slug', slug)
+          .single();
+
+        if (courseError) throw courseError;
+        setCourse(courseData);
+
+        // Fetch lessons
+        const { data: lessonsData } = await supabase
+          .from('lessons')
+          .select('*')
+          .eq('course_id', courseData.id)
+          .eq('is_active', true)
+          .order('lesson_order', { ascending: true });
+
+        setLessons(lessonsData || []);
+
+        // Fetch approved reviews with profile info
+        const { data: reviewsData } = await supabase
+          .from('course_reviews')
+          .select(`
+            *,
+            profiles:user_id (full_name, avatar_url)
+          `)
+          .eq('course_id', courseData.id)
+          .eq('is_approved', true)
+          .order('created_at', { ascending: false });
+
+        setReviews(reviewsData || []);
+
+        // Check enrollment status
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: enrollment } = await supabase
+            .from('enrollments')
+            .select('*')
+            .eq('course_id', courseData.id)
+            .eq('user_id', user.id)
+            .eq('status', 'active')
+            .maybeSingle();
+
+          setIsEnrolled(!!enrollment);
+
+          // Fetch resources if enrolled
+          if (enrollment) {
+            const { data: resourcesData } = await supabase
+              .from('course_resources')
+              .select('*')
+              .eq('course_id', courseData.id)
+              .eq('is_active', true);
+
+            setResources(resourcesData || []);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching course:', err);
+        setError('Failed to load course details');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourseDetail();
+  }, [slug]);
+
+  return { course, lessons, reviews, resources, loading, error, isEnrolled };
+};
+
+export const useUniqueFilters = () => {
+  const [types, setTypes] = useState<string[]>([]);
+  const [difficulties, setDifficulties] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchFilters = async () => {
+      // Get unique course types
+      const { data: typeData } = await supabase
+        .from('courses')
+        .select('course_type')
+        .eq('status', 'published')
+        .not('course_type', 'is', null);
+
+      const uniqueTypes = [...new Set(typeData?.map(c => c.course_type).filter(Boolean))] as string[];
+      setTypes(uniqueTypes);
+
+      // Get unique difficulties
+      const { data: diffData } = await supabase
+        .from('courses')
+        .select('difficulty')
+        .eq('status', 'published')
+        .not('difficulty', 'is', null);
+
+      const uniqueDiffs = [...new Set(diffData?.map(c => c.difficulty).filter(Boolean))] as string[];
+      setDifficulties(uniqueDiffs);
+    };
+
+    fetchFilters();
+  }, []);
+
+  return { types, difficulties };
+};
