@@ -342,10 +342,13 @@ export type Database = {
           description: string | null
           difficulty: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text: string | null
+          enrollment_form_fields: Json | null
           featured: boolean | null
           id: string
           learning_outcomes: Json | null
           module_count: number | null
+          payment_instructions: string | null
+          payment_methods: Json | null
           poster_url: string | null
           price_offer: number | null
           price_regular: number | null
@@ -368,10 +371,13 @@ export type Database = {
           description?: string | null
           difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text?: string | null
+          enrollment_form_fields?: Json | null
           featured?: boolean | null
           id?: string
           learning_outcomes?: Json | null
           module_count?: number | null
+          payment_instructions?: string | null
+          payment_methods?: Json | null
           poster_url?: string | null
           price_offer?: number | null
           price_regular?: number | null
@@ -394,10 +400,13 @@ export type Database = {
           description?: string | null
           difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text?: string | null
+          enrollment_form_fields?: Json | null
           featured?: boolean | null
           id?: string
           learning_outcomes?: Json | null
           module_count?: number | null
+          payment_instructions?: string | null
+          payment_methods?: Json | null
           poster_url?: string | null
           price_offer?: number | null
           price_regular?: number | null
@@ -420,10 +429,16 @@ export type Database = {
           completion_date: string | null
           course_id: string | null
           created_at: string | null
+          custom_form_data: Json | null
           enrollment_date: string | null
           id: string
+          payment_method: string | null
+          payment_proof_url: string | null
           payment_status: Database["public"]["Enums"]["payment_status"] | null
           progress_percentage: number | null
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
           status: Database["public"]["Enums"]["enrollment_status"] | null
           updated_at: string | null
           user_id: string | null
@@ -432,10 +447,16 @@ export type Database = {
           completion_date?: string | null
           course_id?: string | null
           created_at?: string | null
+          custom_form_data?: Json | null
           enrollment_date?: string | null
           id?: string
+          payment_method?: string | null
+          payment_proof_url?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"] | null
           progress_percentage?: number | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: Database["public"]["Enums"]["enrollment_status"] | null
           updated_at?: string | null
           user_id?: string | null
@@ -444,10 +465,16 @@ export type Database = {
           completion_date?: string | null
           course_id?: string | null
           created_at?: string | null
+          custom_form_data?: Json | null
           enrollment_date?: string | null
           id?: string
+          payment_method?: string | null
+          payment_proof_url?: string | null
           payment_status?: Database["public"]["Enums"]["payment_status"] | null
           progress_percentage?: number | null
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
           status?: Database["public"]["Enums"]["enrollment_status"] | null
           updated_at?: string | null
           user_id?: string | null
@@ -458,6 +485,13 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {

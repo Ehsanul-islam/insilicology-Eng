@@ -125,83 +125,87 @@ export const useCourseDetail = (slug: string | undefined) => {
   const [error, setError] = useState<string | null>(null);
   const [isEnrolled, setIsEnrolled] = useState(false);
 
-  useEffect(() => {
+  const fetchCourseDetail = async () => {
     if (!slug) return;
+    
+    setLoading(true);
+    setError(null);
 
-    const fetchCourseDetail = async () => {
-      setLoading(true);
-      setError(null);
+    try {
+      // Fetch course
+      const { data: courseData, error: courseError } = await supabase
+        .from('courses')
+        .select('*')
+        .eq('slug', slug)
+        .single();
 
-      try {
-        // Fetch course
-        const { data: courseData, error: courseError } = await supabase
-          .from('courses')
-          .select('*')
-          .eq('slug', slug)
-          .single();
+      if (courseError) throw courseError;
+      setCourse(courseData);
 
-        if (courseError) throw courseError;
-        setCourse(courseData);
+      // Fetch lessons
+      const { data: lessonsData } = await supabase
+        .from('lessons')
+        .select('*')
+        .eq('course_id', courseData.id)
+        .eq('is_active', true)
+        .order('lesson_order', { ascending: true });
 
-        // Fetch lessons
-        const { data: lessonsData } = await supabase
-          .from('lessons')
+      setLessons(lessonsData || []);
+
+      // Fetch approved reviews with profile info
+      const { data: reviewsData } = await supabase
+        .from('course_reviews')
+        .select(`
+          *,
+          profiles:user_id (full_name, avatar_url)
+        `)
+        .eq('course_id', courseData.id)
+        .eq('is_approved', true)
+        .order('created_at', { ascending: false });
+
+      setReviews(reviewsData || []);
+
+      // Check enrollment status
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: enrollment } = await supabase
+          .from('enrollments')
           .select('*')
           .eq('course_id', courseData.id)
-          .eq('is_active', true)
-          .order('lesson_order', { ascending: true });
+          .eq('user_id', user.id)
+          .eq('status', 'active')
+          .maybeSingle();
 
-        setLessons(lessonsData || []);
+        setIsEnrolled(!!enrollment);
 
-        // Fetch approved reviews with profile info
-        const { data: reviewsData } = await supabase
-          .from('course_reviews')
-          .select(`
-            *,
-            profiles:user_id (full_name, avatar_url)
-          `)
-          .eq('course_id', courseData.id)
-          .eq('is_approved', true)
-          .order('created_at', { ascending: false });
-
-        setReviews(reviewsData || []);
-
-        // Check enrollment status
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          const { data: enrollment } = await supabase
-            .from('enrollments')
+        // Fetch resources if enrolled
+        if (enrollment) {
+          const { data: resourcesData } = await supabase
+            .from('course_resources')
             .select('*')
             .eq('course_id', courseData.id)
-            .eq('user_id', user.id)
-            .eq('status', 'active')
-            .maybeSingle();
+            .eq('is_active', true);
 
-          setIsEnrolled(!!enrollment);
-
-          // Fetch resources if enrolled
-          if (enrollment) {
-            const { data: resourcesData } = await supabase
-              .from('course_resources')
-              .select('*')
-              .eq('course_id', courseData.id)
-              .eq('is_active', true);
-
-            setResources(resourcesData || []);
-          }
+          setResources(resourcesData || []);
         }
-      } catch (err) {
-        console.error('Error fetching course:', err);
-        setError('Failed to load course details');
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (err) {
+      console.error('Error fetching course:', err);
+      setError('Failed to load course details');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCourseDetail();
   }, [slug]);
 
-  return { course, lessons, reviews, resources, loading, error, isEnrolled };
+  const refetch = () => {
+    fetchCourseDetail();
+  };
+
+  return { course, lessons, reviews, resources, loading, error, isEnrolled, refetch };
 };
 
 export const useUniqueFilters = () => {
