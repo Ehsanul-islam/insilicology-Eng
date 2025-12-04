@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -17,19 +18,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCourseDetail } from '@/hooks/useCourses';
 import ImageSkeleton from '@/components/ImageSkeleton';
+import { EnrollmentDialog } from '@/components/EnrollmentDialog';
 
 const CourseDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { course, lessons, reviews, resources, loading, error, isEnrolled } = useCourseDetail(slug);
+  const { course, lessons, reviews, resources, loading, error, isEnrolled, refetch } = useCourseDetail(slug);
+  const [enrollmentOpen, setEnrollmentOpen] = useState(false);
 
   const handleEnroll = () => {
     if (!user) {
       navigate('/auth', { state: { returnTo: `/courses/${slug}` } });
     } else {
-      // TODO: Handle enrollment/payment flow
-      console.log('Enrolling user in course:', slug);
+      setEnrollmentOpen(true);
     }
   };
 
@@ -609,6 +611,24 @@ const CourseDetail = () => {
       </main>
 
       <Footer />
+
+      {/* Enrollment Dialog */}
+      {course && (
+        <EnrollmentDialog
+          course={{
+            id: course.id,
+            title: course.title,
+            price_offer: course.price_offer,
+            price_regular: course.price_regular,
+            payment_methods: course.payment_methods as string[] | null,
+            payment_instructions: course.payment_instructions,
+            enrollment_form_fields: course.enrollment_form_fields as any,
+          }}
+          open={enrollmentOpen}
+          onOpenChange={setEnrollmentOpen}
+          onSuccess={refetch}
+        />
+      )}
     </div>
   );
 };
