@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Shield, CheckCircle2, XCircle, Award, Calendar, User } from 'lucide-react';
+import { Search, Shield, CheckCircle2, XCircle, Award, Calendar, User, QrCode } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SEOHead from '@/components/SEOHead';
@@ -8,43 +10,41 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useVerifyCertificate } from '@/hooks/useCertificates';
 
 const CertificateVerify = () => {
+  const [searchParams] = useSearchParams();
   const [certificateNumber, setCertificateNumber] = useState('');
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [verificationResult, setVerificationResult] = useState<'valid' | 'invalid' | null>(null);
+  const { loading: isVerifying, result, verifyCertificate, reset } = useVerifyCertificate();
 
-  // Mock certificate data
-  const mockCertificate = {
-    number: 'LC-2024-WD-12345',
-    recipientName: 'John Doe',
-    courseName: 'Complete Web Development Bootcamp',
-    issueDate: '2024-03-15',
-    completionDate: '2024-03-10',
-    status: 'Active',
-  };
+  // Auto-verify if code is in URL (from QR code scan)
+  useEffect(() => {
+    const code = searchParams.get('code');
+    if (code && !result) {
+      setCertificateNumber(code);
+      verifyCertificate(code);
+    }
+  }, [searchParams]);
 
   const handleVerify = async () => {
-    setIsVerifying(true);
-    setVerificationResult(null);
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Simple validation - in production, this would be an actual API call
-    if (certificateNumber.toUpperCase() === mockCertificate.number) {
-      setVerificationResult('valid');
-    } else {
-      setVerificationResult('invalid');
-    }
-
-    setIsVerifying(false);
+    if (!certificateNumber.trim()) return;
+    await verifyCertificate(certificateNumber.trim());
   };
 
   const handleReset = () => {
     setCertificateNumber('');
-    setVerificationResult(null);
+    reset();
   };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && certificateNumber.trim()) {
+      handleVerify();
+    }
+  };
+
+  const verificationUrl = result?.certificate
+    ? `${window.location.origin}/verify-certificate?code=${result.certificate.verificationHash}`
+    : '';
 
   return (
     <div className="min-h-screen">
@@ -94,9 +94,10 @@ const CertificateVerify = () => {
                       <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                       <Input
                         type="text"
-                        placeholder="e.g., LC-2024-WD-12345"
+                        placeholder="e.g., CERT-2024-ABC123 or verification code"
                         value={certificateNumber}
                         onChange={(e) => setCertificateNumber(e.target.value)}
+                        onKeyPress={handleKeyPress}
                         className="pl-10 h-12 text-lg"
                         disabled={isVerifying}
                       />
@@ -113,7 +114,7 @@ const CertificateVerify = () => {
                   <div className="mt-6 p-4 bg-muted rounded-lg">
                     <p className="text-sm text-muted-foreground">
                       <strong>Tip:</strong> The certificate number can be found at the top of the certificate document.
-                      It typically follows the format: LC-YYYY-XX-XXXXX
+                      It follows the format: CERT-YYYY-XXXXXX. You can also use the verification code.
                     </p>
                   </div>
                 </CardContent>
@@ -121,7 +122,7 @@ const CertificateVerify = () => {
             </motion.div>
 
             {/* Verification Result */}
-            {verificationResult && (
+            {result && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -129,18 +130,18 @@ const CertificateVerify = () => {
                 className="mt-8"
               >
                 <Card className={
-                  verificationResult === 'valid'
+                  result.valid
                     ? 'border-green-500 border-2'
                     : 'border-destructive border-2'
                 }>
                   <CardContent className="p-8">
                     <div className="flex items-start gap-4 mb-6">
                       <div className={
-                        verificationResult === 'valid'
+                        result.valid
                           ? 'w-12 h-12 rounded-full bg-green-100 flex items-center justify-center shrink-0'
                           : 'w-12 h-12 rounded-full bg-red-100 flex items-center justify-center shrink-0'
                       }>
-                        {verificationResult === 'valid' ? (
+                        {result.valid ? (
                           <CheckCircle2 className="w-6 h-6 text-green-600" />
                         ) : (
                           <XCircle className="w-6 h-6 text-red-600" />
@@ -148,35 +149,35 @@ const CertificateVerify = () => {
                       </div>
                       <div className="flex-1">
                         <h3 className={
-                          verificationResult === 'valid'
+                          result.valid
                             ? 'text-2xl font-bold text-green-600 mb-2'
                             : 'text-2xl font-bold text-destructive mb-2'
                         }>
-                          {verificationResult === 'valid' ? 'Certificate Valid' : 'Certificate Not Found'}
+                          {result.valid ? 'Certificate Valid' : 'Certificate Not Found'}
                         </h3>
                         <p className="text-muted-foreground">
-                          {verificationResult === 'valid'
+                          {result.valid
                             ? 'This certificate has been verified as authentic and was issued by LearnCraft.'
                             : 'No certificate found with this number. Please check the number and try again.'}
                         </p>
                       </div>
                     </div>
 
-                    {verificationResult === 'valid' && (
+                    {result.valid && result.certificate && (
                       <div className="space-y-4 pt-6 border-t border-border">
                         <div className="grid sm:grid-cols-2 gap-4">
                           <div className="flex items-start gap-3">
                             <User className="w-5 h-5 text-primary shrink-0 mt-1" />
                             <div>
                               <p className="text-sm text-muted-foreground">Recipient</p>
-                              <p className="font-semibold">{mockCertificate.recipientName}</p>
+                              <p className="font-semibold">{result.certificate.recipientName}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
                             <Award className="w-5 h-5 text-primary shrink-0 mt-1" />
                             <div>
                               <p className="text-sm text-muted-foreground">Course</p>
-                              <p className="font-semibold">{mockCertificate.courseName}</p>
+                              <p className="font-semibold">{result.certificate.courseName}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3">
@@ -184,7 +185,7 @@ const CertificateVerify = () => {
                             <div>
                               <p className="text-sm text-muted-foreground">Issue Date</p>
                               <p className="font-semibold">
-                                {new Date(mockCertificate.issueDate).toLocaleDateString()}
+                                {new Date(result.certificate.issueDate).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
@@ -193,19 +194,43 @@ const CertificateVerify = () => {
                             <div>
                               <p className="text-sm text-muted-foreground">Completion Date</p>
                               <p className="font-semibold">
-                                {new Date(mockCertificate.completionDate).toLocaleDateString()}
+                                {new Date(result.certificate.completionDate).toLocaleDateString()}
                               </p>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2 pt-4">
+                        <div className="flex flex-wrap items-center gap-2 pt-4">
                           <Badge className="bg-green-100 text-green-700">
-                            {mockCertificate.status}
+                            Active
                           </Badge>
                           <Badge variant="outline">
-                            Certificate #{mockCertificate.number}
+                            Certificate #{result.certificate.certificateNumber}
                           </Badge>
+                        </div>
+
+                        {/* QR Code Section */}
+                        <div className="mt-6 pt-6 border-t border-border">
+                          <div className="flex items-center gap-2 mb-4">
+                            <QrCode className="w-5 h-5 text-primary" />
+                            <h4 className="font-semibold">Verification QR Code</h4>
+                          </div>
+                          <div className="flex flex-col sm:flex-row items-center gap-4">
+                            <div className="p-4 bg-white rounded-lg shadow-sm">
+                              <QRCodeSVG
+                                value={verificationUrl}
+                                size={120}
+                                level="H"
+                                includeMargin
+                              />
+                            </div>
+                            <div className="text-sm text-muted-foreground text-center sm:text-left">
+                              <p>Scan this QR code to verify this certificate anytime.</p>
+                              <p className="mt-1 font-mono text-xs break-all">
+                                {result.certificate.verificationHash}
+                              </p>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     )}
@@ -236,7 +261,7 @@ const CertificateVerify = () => {
                   {
                     step: '1',
                     title: 'Enter Certificate Number',
-                    description: 'Input the unique certificate number found on the certificate document.',
+                    description: 'Input the unique certificate number or scan the QR code on the certificate.',
                   },
                   {
                     step: '2',

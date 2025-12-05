@@ -1,43 +1,97 @@
 import { Link } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GraduationCap, Award, Download, Share2, ExternalLink, ArrowLeft, Calendar } from 'lucide-react';
+import { GraduationCap, Award, Download, Share2, ExternalLink, ArrowLeft, Calendar, Loader2 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
+import { useCertificates } from '@/hooks/useCertificates';
+import { useDashboardData } from '@/hooks/useDashboardData';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { useState } from 'react';
 
 const MyCertificates = () => {
-  const certificates = [
-    {
-      id: 1,
-      courseName: 'JavaScript Fundamentals',
-      completionDate: 'March 15, 2024',
-      certificateNumber: 'CERT-2024-001234',
-      instructor: 'Sarah Johnson',
-      hours: 40,
-      thumbnail: '/placeholder.svg',
-    },
-  ];
+  const { certificates, loading: certsLoading } = useCertificates();
+  const { enrolledCourses, stats, loading: dashLoading } = useDashboardData();
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
-  const inProgressCourses = [
-    {
-      id: 1,
-      title: 'Advanced React Development',
-      progress: 65,
-      estimatedCompletion: '2 weeks',
-    },
-    {
-      id: 2,
-      title: 'UI/UX Design Fundamentals',
-      progress: 30,
-      estimatedCompletion: '1 month',
-    },
-    {
-      id: 3,
-      title: 'Python for Data Science',
-      progress: 90,
-      estimatedCompletion: '3 days',
-    },
-  ];
+  const loading = certsLoading || dashLoading;
+
+  // Get in-progress courses (not 100% complete)
+  const inProgressCourses = enrolledCourses.filter(c => c.progress < 100 && c.progress > 0);
+
+  const handleDownloadPDF = async (certificateId: string, certificateNumber: string) => {
+    setDownloadingId(certificateId);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-certificate-pdf', {
+        body: { certificateId },
+      });
+
+      if (error) throw error;
+
+      if (data?.pdfBase64) {
+        // Convert base64 to blob and download
+        const byteCharacters = atob(data.pdfBase64);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${certificateNumber}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        
+        toast.success('Certificate downloaded successfully!');
+      }
+    } catch (error) {
+      console.error('Error downloading certificate:', error);
+      toast.error('Failed to download certificate. Please try again.');
+    } finally {
+      setDownloadingId(null);
+    }
+  };
+
+  const handleShare = async (certificate: typeof certificates[0]) => {
+    const verificationUrl = `${window.location.origin}/verify-certificate?code=${certificate.verificationHash}`;
+    const shareText = `I earned a certificate for completing "${certificate.courseName}" at LearnCraft! Verify it here:`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `LearnCraft Certificate - ${certificate.courseName}`,
+          text: shareText,
+          url: verificationUrl,
+        });
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          copyToClipboard(verificationUrl);
+        }
+      }
+    } else {
+      copyToClipboard(verificationUrl);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Verification link copied to clipboard!');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-subtle flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
@@ -118,7 +172,7 @@ const MyCertificates = () => {
                     <Calendar className="w-6 h-6 text-purple-500" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold">40</p>
+                    <p className="text-2xl font-bold">{stats.totalHours}</p>
                     <p className="text-sm text-muted-foreground">Total Hours</p>
                   </div>
                 </div>
@@ -163,7 +217,7 @@ const MyCertificates = () => {
                                 {cert.courseName}
                               </h3>
                               <p className="text-sm text-muted-foreground">
-                                Instructor: {cert.instructor}
+                                Awarded to: {cert.recipientName}
                               </p>
                             </div>
                           </div>
@@ -171,11 +225,15 @@ const MyCertificates = () => {
                           <div className="grid grid-cols-2 gap-4 text-sm">
                             <div>
                               <p className="text-muted-foreground">Completion Date</p>
-                              <p className="font-medium">{cert.completionDate}</p>
+                              <p className="font-medium">
+                                {new Date(cert.completionDate).toLocaleDateString()}
+                              </p>
                             </div>
                             <div>
-                              <p className="text-muted-foreground">Course Hours</p>
-                              <p className="font-medium">{cert.hours} hours</p>
+                              <p className="text-muted-foreground">Issue Date</p>
+                              <p className="font-medium">
+                                {new Date(cert.issueDate).toLocaleDateString()}
+                              </p>
                             </div>
                             <div className="col-span-2">
                               <p className="text-muted-foreground">Certificate Number</p>
@@ -183,18 +241,45 @@ const MyCertificates = () => {
                             </div>
                           </div>
 
+                          {/* QR Code */}
+                          <div className="flex items-center gap-4 pt-2">
+                            <div className="p-2 bg-white rounded-lg shadow-sm">
+                              <QRCodeSVG
+                                value={`${window.location.origin}/verify-certificate?code=${cert.verificationHash}`}
+                                size={64}
+                                level="H"
+                              />
+                            </div>
+                            <p className="text-xs text-muted-foreground flex-1">
+                              Scan to verify this certificate
+                            </p>
+                          </div>
+
                           {/* Actions */}
                           <div className="flex flex-wrap gap-2 pt-2">
-                            <Button size="sm" variant="default">
-                              <Download className="w-4 h-4 mr-2" />
+                            <Button 
+                              size="sm" 
+                              variant="default"
+                              onClick={() => handleDownloadPDF(cert.id, cert.certificateNumber)}
+                              disabled={downloadingId === cert.id}
+                            >
+                              {downloadingId === cert.id ? (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              ) : (
+                                <Download className="w-4 h-4 mr-2" />
+                              )}
                               Download PDF
                             </Button>
-                            <Button size="sm" variant="outline">
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => handleShare(cert)}
+                            >
                               <Share2 className="w-4 h-4 mr-2" />
                               Share
                             </Button>
                             <Button size="sm" variant="ghost" asChild>
-                              <Link to="/verify-certificate">
+                              <Link to={`/verify-certificate?code=${cert.verificationHash}`}>
                                 <ExternalLink className="w-4 h-4 mr-2" />
                                 Verify
                               </Link>
@@ -232,30 +317,34 @@ const MyCertificates = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {inProgressCourses.map((course) => (
-                  <div
-                    key={course.id}
-                    className="p-4 rounded-lg bg-secondary/50 space-y-2"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <h4 className="font-medium text-sm leading-tight">
-                        {course.title}
-                      </h4>
-                      <Badge variant="outline" className="text-xs">
-                        {course.progress}%
-                      </Badge>
-                    </div>
-                    <div className="h-2 bg-muted rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary rounded-full transition-all"
-                        style={{ width: `${course.progress}%` }}
-                      />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Est. completion: {course.estimatedCompletion}
-                    </p>
-                  </div>
-                ))}
+                {inProgressCourses.length > 0 ? (
+                  inProgressCourses.map((course) => (
+                    <Link
+                      key={course.id}
+                      to={`/courses/${course.slug}`}
+                      className="block p-4 rounded-lg bg-secondary/50 space-y-2 hover:bg-secondary/70 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="font-medium text-sm leading-tight">
+                          {course.title}
+                        </h4>
+                        <Badge variant="outline" className="text-xs">
+                          {course.progress}%
+                        </Badge>
+                      </div>
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-primary rounded-full transition-all"
+                          style={{ width: `${course.progress}%` }}
+                        />
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground text-center py-4">
+                    No courses in progress
+                  </p>
+                )}
               </CardContent>
             </Card>
 
