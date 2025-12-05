@@ -1,1 +1,10 @@
 project_id = "vcifolmgcwgiaptnecdc"
+
+[functions.send-enrollment-notification]
+verify_jwt = true
+
+[functions.generate-certificate-pdf]
+verify_jwt = true
+
+[functions.issue-certificate]
+verify_jwt = true
