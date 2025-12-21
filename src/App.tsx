@@ -25,6 +25,14 @@ import ProfileSettings from "./pages/ProfileSettings";
 import MyCertificates from "./pages/MyCertificates";
 import NotFound from "./pages/NotFound";
 
+// Admin Pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminEnrollments from "./pages/admin/AdminEnrollments";
+import AdminCourses from "./pages/admin/AdminCourses";
+import AdminCertificates from "./pages/admin/AdminCertificates";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminContacts from "./pages/admin/AdminContacts";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -83,6 +91,56 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <MyCertificates />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Admin Routes */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/enrollments"
+                element={
+                  <ProtectedRoute>
+                    <AdminEnrollments />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/courses"
+                element={
+                  <ProtectedRoute>
+                    <AdminCourses />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/certificates"
+                element={
+                  <ProtectedRoute>
+                    <AdminCertificates />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/users"
+                element={
+                  <ProtectedRoute>
+                    <AdminUsers />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/contacts"
+                element={
+                  <ProtectedRoute>
+                    <AdminContacts />
                   </ProtectedRoute>
                 }
               />
