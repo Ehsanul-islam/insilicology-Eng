@@ -29,6 +29,7 @@ import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminEnrollments from "./pages/admin/AdminEnrollments";
 import AdminCourses from "./pages/admin/AdminCourses";
+import AdminCourseEditor from "./pages/admin/AdminCourseEditor";
 import AdminCertificates from "./pages/admin/AdminCertificates";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminContacts from "./pages/admin/AdminContacts";
@@ -117,6 +118,22 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminCourses />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/courses/new"
+                element={
+                  <ProtectedRoute>
+                    <AdminCourseEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/courses/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <AdminCourseEditor />
                   </ProtectedRoute>
                 }
               />
