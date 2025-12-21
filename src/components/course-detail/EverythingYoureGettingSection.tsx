@@ -69,7 +69,7 @@ const EverythingYoureGettingSection = ({
                   Priceless Value
                 </div>
                 <div className="text-sm text-white/90">
-                  The complete package priced at ৳{totalValue.toLocaleString()} is available for just ৳{finalPrice.toLocaleString()}
+                  The complete package priced at ${totalValue.toLocaleString()} is available for just ${finalPrice.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -114,7 +114,7 @@ const EverythingYoureGettingSection = ({
                 {/* Price */}
                 <div className="ml-4 shrink-0">
                   <div className="text-sm font-medium text-[#8b5cf6]">
-                    ৳{item.original_price.toLocaleString()}
+                    ${item.original_price.toLocaleString()}
                   </div>
                 </div>
               </motion.div>
@@ -135,11 +135,11 @@ const EverythingYoureGettingSection = ({
                   Total Value
                 </div>
                 <div className="text-3xl lg:text-4xl font-bold">
-                  ৳{totalValue.toLocaleString()}/-
+                  ${totalValue.toLocaleString()}/-
                 </div>
               </div>
               <div className="text-sm text-white/90 text-right max-w-xs">
-                You get a complete package worth ৳{totalValue.toLocaleString()}
+                You get a complete package worth ${totalValue.toLocaleString()}
               </div>
             </div>
           </motion.div>
@@ -155,11 +155,11 @@ const EverythingYoureGettingSection = ({
             {/* Pricing Text */}
             <div className="text-center space-y-2">
               <p className="text-2xl lg:text-3xl font-bold text-green-600 dark:text-green-500">
-                The program fee is only ৳{finalPrice.toLocaleString()}
+                The program fee is only ${finalPrice.toLocaleString()}
               </p>
               {hasDiscount && (
                 <p className="text-lg text-green-600 dark:text-green-500">
-                  The program fee is ৳{finalPrice.toLocaleString()}
+                  The program fee is ${finalPrice.toLocaleString()}
                 </p>
               )}
             </div>

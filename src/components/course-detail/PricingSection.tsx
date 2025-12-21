@@ -69,7 +69,7 @@ const PricingSection = ({
           className="bg-[#f5f7ff] rounded-2xl p-6 border-2 border-dashed border-pink-300/50 text-center"
         >
           <p className="text-[#ec4899] mb-4 text-base font-medium">
-            When the offer ends, the price will go up to ৳{Number(priceRegular).toLocaleString()}!
+            When the offer ends, the price will go up to ${Number(priceRegular).toLocaleString()}!
           </p>
           <CountdownTimer endDate={countdownEndDate} variant="hero" />
         </motion.div>
@@ -95,11 +95,11 @@ const PricingSection = ({
           {/* Price Display */}
           <div className="flex items-baseline gap-3 mb-2">
             <span className="text-4xl lg:text-5xl font-bold vibe-gradient-text">
-              ৳{priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}
+              ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}
             </span>
             {hasDiscount && (
               <span className="text-xl text-muted-foreground line-through">
-                ৳{Number(priceRegular).toLocaleString()}
+                ${Number(priceRegular).toLocaleString()}
               </span>
             )}
             {hasDiscount && (
@@ -153,7 +153,7 @@ const PricingSection = ({
                     <span className="text-foreground/80">{item.item}</span>
                   </div>
                   <span className="text-muted-foreground line-through text-sm">
-                    ৳{item.original_price.toLocaleString()}
+                    ${item.original_price.toLocaleString()}
                   </span>
                 </motion.div>
               ))}
@@ -164,7 +164,7 @@ const PricingSection = ({
               <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
                 <span className="font-semibold text-foreground">Total Value</span>
                 <span className="text-2xl font-bold vibe-gradient-text">
-                  ৳{totalValue.toLocaleString()}
+                  ${totalValue.toLocaleString()}
                 </span>
               </div>
             )}
@@ -189,7 +189,7 @@ const PricingSection = ({
                 'Pre-Register Now'
               ) : (
                 <>
-                  <span>Enroll Now ৳{priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}</span>
+                  <span>Enroll Now ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}</span>
                   <ArrowRight className="w-6 h-6 ml-2 transition-transform group-hover:translate-x-1" />
                 </>
               )}

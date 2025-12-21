@@ -164,9 +164,9 @@ const Courses = () => {
                 <SelectContent>
                   <SelectItem value="all">All Prices</SelectItem>
                   <SelectItem value="free">Free</SelectItem>
-                  <SelectItem value="under50">Under ৳5,000</SelectItem>
-                  <SelectItem value="50to100">৳5,000 - ৳10,000</SelectItem>
-                  <SelectItem value="over100">Over ৳10,000</SelectItem>
+                  <SelectItem value="under50">Under $50</SelectItem>
+                  <SelectItem value="50to100">$50 - $100</SelectItem>
+                  <SelectItem value="over100">Over $100</SelectItem>
                 </SelectContent>
               </Select>
 

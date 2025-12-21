@@ -69,7 +69,7 @@ const VibeHeroSection = ({
   isEnrolled,
   upcoming,
 }: VibeHeroSectionProps) => {
-  const scrambledTitle = useTextScramble(title, 2000);
+  const scrambledTitle = useTextScramble(title, 3000);
   
   // Extract YouTube video ID from URL
   const getYouTubeId = (url: string) => {

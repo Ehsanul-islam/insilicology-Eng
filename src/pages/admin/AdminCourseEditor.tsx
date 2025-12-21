@@ -685,7 +685,7 @@ const AdminCourseEditor = () => {
                   <CardContent className="space-y-4">
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
-                        <Label htmlFor="price_regular">Regular Price (৳)</Label>
+                        <Label htmlFor="price_regular">Regular Price ($)</Label>
                         <Input
                           id="price_regular"
                           type="number"
@@ -697,7 +697,7 @@ const AdminCourseEditor = () => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="price_offer">Offer Price (৳)</Label>
+                        <Label htmlFor="price_offer">Offer Price ($)</Label>
                         <Input
                           id="price_offer"
                           type="number"

@@ -217,14 +217,14 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">Course Price</span>
           <span className="text-2xl font-bold">
-            {course.price_offer ? `৳${Number(course.price_offer).toLocaleString()}` : 'Free'}
+            {course.price_offer ? `$${Number(course.price_offer).toLocaleString()}` : 'Free'}
           </span>
         </div>
         {course.price_regular && course.price_offer && course.price_offer < course.price_regular && (
           <div className="flex justify-between items-center mt-1">
             <span className="text-sm text-muted-foreground">Original Price</span>
             <span className="text-sm line-through text-muted-foreground">
-              ৳{Number(course.price_regular).toLocaleString()}
+              ${Number(course.price_regular).toLocaleString()}
             </span>
           </div>
         )}
@@ -361,7 +361,7 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
           <div className="flex justify-between">
             <span className="text-muted-foreground">Amount</span>
             <span className="font-medium">
-              {course.price_offer ? `৳${Number(course.price_offer).toLocaleString()}` : 'Free'}
+              {course.price_offer ? `$${Number(course.price_offer).toLocaleString()}` : 'Free'}
             </span>
           </div>
           <div className="flex justify-between">
