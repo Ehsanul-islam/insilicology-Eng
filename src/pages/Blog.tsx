@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Calendar, Clock, User, ArrowRight, Search } from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SEOHead from '@/components/SEOHead';
@@ -9,101 +9,51 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useBlog } from '@/hooks/useBlog';
 
 const Blog = () => {
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
+  const { fetchPublishedBlogPosts, fetchCategories, calculateReadTime } = useBlog();
+  
+  const [posts, setPosts] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = ['all', 'tutorials', 'industry news', 'career advice', 'technology'];
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const posts = [
-    {
-      id: '1',
-      slug: 'mastering-react-hooks-2024',
-      title: 'Mastering React Hooks in 2024: A Complete Guide',
-      excerpt: 'Deep dive into React Hooks with practical examples and best practices for building modern applications.',
-      author: 'Sarah Johnson',
-      authorAvatar: '👩‍💻',
-      publishedAt: '2024-03-15',
-      readTime: '8 min read',
-      category: 'tutorials',
-      featuredImage: '/placeholder.svg',
-      featured: true,
-    },
-    {
-      id: '2',
-      slug: 'ai-revolution-2024',
-      title: 'The AI Revolution: What Developers Need to Know',
-      excerpt: 'Exploring how artificial intelligence is transforming the software development landscape and what skills you need.',
-      author: 'Michael Chen',
-      authorAvatar: '👨‍💼',
-      publishedAt: '2024-03-12',
-      readTime: '6 min read',
-      category: 'industry news',
-      featuredImage: '/placeholder.svg',
-      featured: true,
-    },
-    {
-      id: '3',
-      slug: 'career-transition-tech',
-      title: 'Successfully Transitioning Your Career into Tech',
-      excerpt: 'A comprehensive guide for professionals looking to make the switch to a technology career.',
-      author: 'Emily Rodriguez',
-      authorAvatar: '👩‍🎓',
-      publishedAt: '2024-03-10',
-      readTime: '10 min read',
-      category: 'career advice',
-      featuredImage: '/placeholder.svg',
-      featured: false,
-    },
-    {
-      id: '4',
-      slug: 'typescript-best-practices',
-      title: 'TypeScript Best Practices for Large Applications',
-      excerpt: 'Learn how to leverage TypeScript effectively in enterprise-level applications with these proven patterns.',
-      author: 'David Kim',
-      authorAvatar: '👨‍💻',
-      publishedAt: '2024-03-08',
-      readTime: '7 min read',
-      category: 'tutorials',
-      featuredImage: '/placeholder.svg',
-      featured: false,
-    },
-    {
-      id: '5',
-      slug: 'web3-blockchain-basics',
-      title: 'Understanding Web3 and Blockchain for Developers',
-      excerpt: 'A beginner-friendly introduction to Web3 technologies and how to start building decentralized applications.',
-      author: 'Sarah Johnson',
-      authorAvatar: '👩‍💻',
-      publishedAt: '2024-03-05',
-      readTime: '9 min read',
-      category: 'technology',
-      featuredImage: '/placeholder.svg',
-      featured: false,
-    },
-    {
-      id: '6',
-      slug: 'remote-work-productivity',
-      title: '10 Tips for Staying Productive While Working Remotely',
-      excerpt: 'Proven strategies to maintain high productivity and work-life balance in a remote work environment.',
-      author: 'Michael Chen',
-      authorAvatar: '👨‍💼',
-      publishedAt: '2024-03-01',
-      readTime: '5 min read',
-      category: 'career advice',
-      featuredImage: '/placeholder.svg',
-      featured: false,
-    },
-  ];
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [postsData, categoriesData] = await Promise.all([
+        fetchPublishedBlogPosts(),
+        fetchCategories(),
+      ]);
+      setPosts(postsData);
+      setCategories(categoriesData);
+    } catch (error) {
+      console.error('Error loading blog data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredPosts = posts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
+    const matchesSearch = !searchQuery ||
+      post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const category = post.blog_categories as any;
+    const matchesCategory = selectedCategory === 'all' || 
+      (selectedCategory === 'featured' && post.featured) ||
+      category?.id === selectedCategory ||
+      category?.slug === selectedCategory;
+    
     return matchesSearch && matchesCategory;
   });
-
   const featuredPosts = posts.filter(p => p.featured);
 
   return (
@@ -158,14 +108,26 @@ const Blog = () => {
               transition={{ delay: 0.1 }}
               className="flex flex-wrap gap-3 justify-center"
             >
+              <Button
+                variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                onClick={() => setSelectedCategory('all')}
+              >
+                All
+              </Button>
+              <Button
+                variant={selectedCategory === 'featured' ? 'default' : 'outline'}
+                onClick={() => setSelectedCategory('featured')}
+              >
+                Featured
+              </Button>
               {categories.map((category) => (
                 <Button
-                  key={category}
-                  variant={selectedCategory === category ? 'default' : 'outline'}
-                  onClick={() => setSelectedCategory(category)}
+                  key={category.id}
+                  variant={selectedCategory === category.id || selectedCategory === category.slug ? 'default' : 'outline'}
+                  onClick={() => setSelectedCategory(category.id)}
                   className="capitalize"
                 >
-                  {category}
+                  {category.name}
                 </Button>
               ))}
             </motion.div>
@@ -186,14 +148,27 @@ const Blog = () => {
                   {featuredPosts.map((post, index) => (
                     <Link key={post.id} to={`/blog/${post.slug}`}>
                       <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                        <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-6xl opacity-50">📝</div>
+                        {post.featured_image ? (
+                          <div className="aspect-video relative overflow-hidden">
+                            <img 
+                              src={post.featured_image} 
+                              alt={post.title}
+                              className="w-full h-full object-cover"
+                            />
+                            <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground">
+                              Featured
+                            </Badge>
                           </div>
-                          <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground">
-                            Featured
-                          </Badge>
-                        </div>
+                        ) : (
+                          <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative">
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-6xl opacity-50">📝</div>
+                            </div>
+                            <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground">
+                              Featured
+                            </Badge>
+                          </div>
+                        )}
                         <CardContent className="p-6 space-y-4">
                           <Badge variant="secondary" className="capitalize">
                             {post.category}
@@ -204,18 +179,30 @@ const Blog = () => {
                           <p className="text-muted-foreground line-clamp-2">{post.excerpt}</p>
                           <div className="flex items-center justify-between pt-4 border-t border-border">
                             <div className="flex items-center gap-3">
-                              <div className="text-2xl">{post.authorAvatar}</div>
-                              <div className="text-sm">
-                                <p className="font-semibold">{post.author}</p>
-                                <div className="flex items-center gap-2 text-muted-foreground">
-                                  <Calendar className="w-3 h-3" />
-                                  <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                              {(post.profiles as any)?.avatar_url ? (
+                                <img 
+                                  src={(post.profiles as any).avatar_url} 
+                                  alt={(post.profiles as any).full_name || 'Author'} 
+                                  className="w-8 h-8 rounded-full"
+                                />
+                              ) : (
+                                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm">
+                                  {((post.profiles as any)?.full_name || 'A')[0].toUpperCase()}
                                 </div>
+                              )}
+                              <div className="text-sm">
+                                <p className="font-semibold">{(post.profiles as any)?.full_name || 'Unknown Author'}</p>
+                                {post.published_at && (
+                                  <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Calendar className="w-3 h-3" />
+                                    <span>{new Date(post.published_at).toLocaleDateString()}</span>
+                                  </div>
+                                )}
                               </div>
                             </div>
                             <div className="flex items-center gap-1 text-muted-foreground">
                               <Clock className="w-4 h-4" />
-                              <span className="text-sm">{post.readTime}</span>
+                              <span className="text-sm">{calculateReadTime(post.content)}</span>
                             </div>
                           </div>
                         </CardContent>
@@ -240,7 +227,11 @@ const Blog = () => {
                 {searchQuery ? `Search Results for "${searchQuery}"` : 'Latest Articles'}
               </h2>
               
-              {filteredPosts.length > 0 ? (
+              {loading ? (
+                <div className="text-center py-12">
+                  <div className="text-muted-foreground">Loading posts...</div>
+                </div>
+              ) : filteredPosts.length > 0 ? (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredPosts.map((post, index) => (
                     <motion.div
@@ -251,15 +242,27 @@ const Blog = () => {
                     >
                       <Link to={`/blog/${post.slug}`}>
                         <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                          <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 relative">
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="text-5xl opacity-50">📝</div>
+                          {post.featured_image ? (
+                            <div className="aspect-video relative overflow-hidden">
+                              <img 
+                                src={post.featured_image} 
+                                alt={post.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              />
                             </div>
-                          </div>
+                          ) : (
+                            <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 relative">
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="text-5xl opacity-50">📝</div>
+                              </div>
+                            </div>
+                          )}
                           <CardContent className="p-6 space-y-3">
-                            <Badge variant="secondary" className="capitalize text-xs">
-                              {post.category}
-                            </Badge>
+                            {(post.blog_categories as any) && (
+                              <Badge variant="secondary" className="capitalize text-xs">
+                                {(post.blog_categories as any).name}
+                              </Badge>
+                            )}
                             <h3 className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-2">
                               {post.title}
                             </h3>
@@ -268,12 +271,24 @@ const Blog = () => {
                             </p>
                             <div className="flex items-center justify-between pt-3 border-t border-border">
                               <div className="flex items-center gap-2">
-                                <div className="text-xl">{post.authorAvatar}</div>
-                                <span className="text-sm font-medium">{post.author}</span>
+                                {(post.profiles as any)?.avatar_url ? (
+                                  <img 
+                                    src={(post.profiles as any).avatar_url} 
+                                    alt={(post.profiles as any).full_name || 'Author'} 
+                                    className="w-6 h-6 rounded-full"
+                                  />
+                                ) : (
+                                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs">
+                                    {((post.profiles as any)?.full_name || 'A')[0].toUpperCase()}
+                                  </div>
+                                )}
+                                <span className="text-sm font-medium">
+                                  {(post.profiles as any)?.full_name || 'Unknown Author'}
+                                </span>
                               </div>
                               <div className="flex items-center gap-1 text-muted-foreground text-sm">
                                 <Clock className="w-3 h-3" />
-                                <span>{post.readTime}</span>
+                                <span>{calculateReadTime(post.content)}</span>
                               </div>
                             </div>
                           </CardContent>
