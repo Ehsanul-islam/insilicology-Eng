@@ -57,3 +57,4 @@ COMMENT ON COLUMN public.courses.stats IS 'Object {students: number, community: 
 
 
 
+
