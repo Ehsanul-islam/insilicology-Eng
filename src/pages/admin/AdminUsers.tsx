@@ -281,7 +281,7 @@ const AdminUsers = () => {
                       {role}
                       {role !== 'student' && (
                         <button
-                          onClick={() => handleRemoveRole(selectedUser.id, role)}
+                          onClick={() => handleRemoveRole(selectedUser.id, role as 'admin' | 'instructor' | 'student')}
                           className="ml-1 text-destructive hover:text-destructive/80"
                         >
                           ×
@@ -326,7 +326,7 @@ const AdminUsers = () => {
                       <button
                         onClick={() => {
                           if (selectedUser) {
-                            handleRemoveRole(selectedUser.id, role);
+                            handleRemoveRole(selectedUser.id, role as 'admin' | 'instructor' | 'student');
                           }
                         }}
                         className="ml-1 text-destructive hover:text-destructive/80"
