@@ -337,14 +337,21 @@ export type Database = {
       courses: {
         Row: {
           certificate: boolean | null
+          comparison_features: Json | null
+          countdown_end_date: string | null
           course_type: Database["public"]["Enums"]["course_type"] | null
           created_at: string | null
           description: string | null
           difficulty: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text: string | null
           enrollment_form_fields: Json | null
+          faq: Json | null
           featured: boolean | null
           id: string
+          instructor_bio: string | null
+          instructor_name: string | null
+          instructor_photo: string | null
+          instructor_title: string | null
           learning_outcomes: Json | null
           module_count: number | null
           payment_instructions: string | null
@@ -352,28 +359,40 @@ export type Database = {
           poster_url: string | null
           price_offer: number | null
           price_regular: number | null
+          promo_video_url: string | null
           requirements: Json | null
           roadmap: Json | null
           slug: string
           start_date: string | null
+          stats: Json | null
           status: Database["public"]["Enums"]["course_status"] | null
+          target_audience: Json | null
+          testimonials: Json | null
           title: string
           topics: Json | null
           upcoming: boolean | null
           updated_at: string | null
+          value_breakdown: Json | null
           whats_included: Json | null
           why_join: Json | null
         }
         Insert: {
           certificate?: boolean | null
+          comparison_features?: Json | null
+          countdown_end_date?: string | null
           course_type?: Database["public"]["Enums"]["course_type"] | null
           created_at?: string | null
           description?: string | null
           difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text?: string | null
           enrollment_form_fields?: Json | null
+          faq?: Json | null
           featured?: boolean | null
           id?: string
+          instructor_bio?: string | null
+          instructor_name?: string | null
+          instructor_photo?: string | null
+          instructor_title?: string | null
           learning_outcomes?: Json | null
           module_count?: number | null
           payment_instructions?: string | null
@@ -381,28 +400,40 @@ export type Database = {
           poster_url?: string | null
           price_offer?: number | null
           price_regular?: number | null
+          promo_video_url?: string | null
           requirements?: Json | null
           roadmap?: Json | null
           slug: string
           start_date?: string | null
+          stats?: Json | null
           status?: Database["public"]["Enums"]["course_status"] | null
+          target_audience?: Json | null
+          testimonials?: Json | null
           title: string
           topics?: Json | null
           upcoming?: boolean | null
           updated_at?: string | null
+          value_breakdown?: Json | null
           whats_included?: Json | null
           why_join?: Json | null
         }
         Update: {
           certificate?: boolean | null
+          comparison_features?: Json | null
+          countdown_end_date?: string | null
           course_type?: Database["public"]["Enums"]["course_type"] | null
           created_at?: string | null
           description?: string | null
           difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text?: string | null
           enrollment_form_fields?: Json | null
+          faq?: Json | null
           featured?: boolean | null
           id?: string
+          instructor_bio?: string | null
+          instructor_name?: string | null
+          instructor_photo?: string | null
+          instructor_title?: string | null
           learning_outcomes?: Json | null
           module_count?: number | null
           payment_instructions?: string | null
@@ -410,15 +441,20 @@ export type Database = {
           poster_url?: string | null
           price_offer?: number | null
           price_regular?: number | null
+          promo_video_url?: string | null
           requirements?: Json | null
           roadmap?: Json | null
           slug?: string
           start_date?: string | null
+          stats?: Json | null
           status?: Database["public"]["Enums"]["course_status"] | null
+          target_audience?: Json | null
+          testimonials?: Json | null
           title?: string
           topics?: Json | null
           upcoming?: boolean | null
           updated_at?: string | null
+          value_breakdown?: Json | null
           whats_included?: Json | null
           why_join?: Json | null
         }
