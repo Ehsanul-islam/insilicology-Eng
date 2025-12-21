@@ -6,7 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
-import { GraduationCap, Mail, Lock, User, ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { GraduationCap, Mail, Lock, User, ArrowLeft, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -37,7 +38,9 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
-  const { signUp, signIn, user } = useAuth();
+  const [emailConfirmationError, setEmailConfirmationError] = useState<string | null>(null);
+  const [resendingEmail, setResendingEmail] = useState(false);
+  const { signUp, signIn, user, resendConfirmationEmail } = useAuth();
   const navigate = useNavigate();
 
   const signUpForm = useForm<SignUpFormData>({
@@ -77,11 +80,30 @@ const Auth = () => {
 
   const handleSignIn = async (data: SignInFormData) => {
     setIsLoading(true);
+    setEmailConfirmationError(null);
     const { error } = await signIn(data.email, data.password, data.rememberMe);
     setIsLoading(false);
     
-    if (!error) {
+    if (error) {
+      // Check if error is related to email confirmation
+      const errorMessage = error.message.toLowerCase();
+      if (errorMessage.includes('email') && (errorMessage.includes('confirm') || errorMessage.includes('verified') || errorMessage.includes('not confirmed'))) {
+        setEmailConfirmationError(data.email);
+      }
+    } else {
       navigate('/dashboard');
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    if (!emailConfirmationError) return;
+    
+    setResendingEmail(true);
+    const { error } = await resendConfirmationEmail(emailConfirmationError);
+    setResendingEmail(false);
+    
+    if (!error) {
+      setEmailConfirmationError(null);
     }
   };
 
@@ -123,7 +145,10 @@ const Auth = () => {
 
           {/* Auth Card */}
           <Card className="shadow-xl animate-scale-in border-border/50 backdrop-blur-sm bg-card/95">
-            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'signin' | 'signup')}>
+            <Tabs value={activeTab} onValueChange={(v) => {
+              setActiveTab(v as 'signin' | 'signup');
+              setEmailConfirmationError(null);
+            }}>
               <CardHeader className="space-y-4">
                 <TabsList className="grid w-full grid-cols-2">
                   <TabsTrigger value="signin">Sign In</TabsTrigger>
@@ -149,6 +174,12 @@ const Auth = () => {
                                   placeholder="your@email.com"
                                   className="pl-10"
                                   {...field}
+                                  onChange={(e) => {
+                                    field.onChange(e);
+                                    if (emailConfirmationError) {
+                                      setEmailConfirmationError(null);
+                                    }
+                                  }}
                                 />
                               </div>
                             </FormControl>
@@ -207,6 +238,27 @@ const Auth = () => {
                           </FormItem>
                         )}
                       />
+
+                      {emailConfirmationError && (
+                        <Alert className="border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-950">
+                          <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                          <AlertDescription className="flex flex-col gap-2">
+                            <span className="text-sm text-orange-800 dark:text-orange-200">
+                              Your email address hasn't been confirmed yet. Please check your inbox for the confirmation link.
+                            </span>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              onClick={handleResendConfirmation}
+                              disabled={resendingEmail}
+                              className="w-full border-orange-300 text-orange-700 hover:bg-orange-100 dark:border-orange-700 dark:text-orange-300 dark:hover:bg-orange-900"
+                            >
+                              {resendingEmail ? 'Sending...' : 'Resend Confirmation Email'}
+                            </Button>
+                          </AlertDescription>
+                        </Alert>
+                      )}
 
                       <Button
                         type="submit"

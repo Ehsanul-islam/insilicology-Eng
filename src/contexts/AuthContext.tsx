@@ -13,6 +13,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   updatePassword: (newPassword: string) => Promise<{ error: Error | null }>;
+  resendConfirmationEmail: (email: string) => Promise<{ error: Error | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -80,12 +81,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         password,
       });
 
-      if (error) throw error;
+      if (error) {
+        // Check if error is related to email confirmation
+        const errorMessage = error.message.toLowerCase();
+        if (errorMessage.includes('email') && (errorMessage.includes('confirm') || errorMessage.includes('verified') || errorMessage.includes('not confirmed'))) {
+          toast.error('Please confirm your email before signing in. Check your inbox for the confirmation link.', {
+            duration: 5000,
+          });
+        } else {
+          toast.error(error.message);
+        }
+        throw error;
+      }
       
       return { error: null };
     } catch (error) {
       const err = error as Error;
-      toast.error(err.message);
       return { error: err };
     }
   };
@@ -139,8 +150,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const resendConfirmationEmail = async (email: string) => {
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+        options: {
+          emailRedirectTo: redirectUrl,
+        },
+      });
+
+      if (error) throw error;
+      
+      toast.success('Confirmation email sent! Please check your inbox.');
+      return { error: null };
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message || 'Failed to send confirmation email');
+      return { error: err };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, resetPassword, updatePassword }}>
+    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, resetPassword, updatePassword, resendConfirmationEmail }}>
       {children}
     </AuthContext.Provider>
   );
