@@ -139,7 +139,7 @@ export const useAdminData = () => {
       .order('created_at', { ascending: false });
 
     if (filters?.status && filters.status !== 'all') {
-      query = query.eq('status', filters.status);
+      query = query.eq('status', filters.status as 'active' | 'cancelled' | 'pending' | 'completed');
     }
 
     const { data, error } = await query;

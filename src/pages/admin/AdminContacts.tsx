@@ -72,7 +72,7 @@ const AdminContacts = () => {
     if (action === 'view') {
       setViewDialog(true);
     } else if (action === 'resolve' || action === 'archive') {
-      updateStatus(contact.id, action === 'resolve' ? 'resolved' : 'archived');
+      updateStatus(contact.id, action === 'resolve' ? 'resolved' : 'closed');
     }
   };
 
@@ -101,13 +101,13 @@ const AdminContacts = () => {
       new: 'secondary',
       in_progress: 'default',
       resolved: 'outline',
-      archived: 'outline',
+      closed: 'outline',
     };
     const icons: Record<string, React.ReactNode> = {
       new: <Clock className="w-3 h-3 mr-1" />,
       in_progress: <MessageSquare className="w-3 h-3 mr-1" />,
       resolved: <CheckCircle className="w-3 h-3 mr-1" />,
-      archived: <Archive className="w-3 h-3 mr-1" />,
+      closed: <Archive className="w-3 h-3 mr-1" />,
     };
     return (
       <Badge variant={variants[status] || 'outline'} className="flex items-center w-fit">
@@ -199,17 +199,17 @@ const AdminContacts = () => {
             { label: 'New', value: 'new' },
             { label: 'In Progress', value: 'in_progress' },
             { label: 'Resolved', value: 'resolved' },
-            { label: 'Archived', value: 'archived' },
+            { label: 'Closed', value: 'closed' },
           ]}
           onRowAction={handleAction}
           rowActions={[
             { label: 'View Message', value: 'view', icon: <Eye className="w-4 h-4" /> },
             { label: 'Mark Resolved', value: 'resolve', icon: <CheckCircle className="w-4 h-4" /> },
-            { label: 'Archive', value: 'archive', icon: <Archive className="w-4 h-4" /> },
+            { label: 'Close', value: 'archive', icon: <Archive className="w-4 h-4" /> },
           ]}
           bulkActions={[
             { label: 'Mark Resolved', value: 'resolve', icon: <CheckCircle className="w-4 h-4 mr-2" /> },
-            { label: 'Archive', value: 'archive', icon: <Archive className="w-4 h-4 mr-2" /> },
+            { label: 'Close', value: 'archive', icon: <Archive className="w-4 h-4 mr-2" /> },
           ]}
           emptyMessage="No contact messages found"
         />
@@ -269,7 +269,7 @@ const AdminContacts = () => {
                 <Select
                   value={selectedContact.status}
                   onValueChange={(value) => {
-                    updateStatus(selectedContact.id, value);
+                    updateStatus(selectedContact.id, value as 'new' | 'in_progress' | 'resolved' | 'closed');
                     setSelectedContact({ ...selectedContact, status: value });
                   }}
                   disabled={processing}
@@ -281,7 +281,7 @@ const AdminContacts = () => {
                     <SelectItem value="new">New</SelectItem>
                     <SelectItem value="in_progress">In Progress</SelectItem>
                     <SelectItem value="resolved">Resolved</SelectItem>
-                    <SelectItem value="archived">Archived</SelectItem>
+                    <SelectItem value="closed">Closed</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
