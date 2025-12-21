@@ -1,8 +1,7 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
+import { ChevronDown, ArrowRight, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 
 interface CourseDescriptionProps {
   description: string;
@@ -50,11 +49,42 @@ const CourseDescription = ({
     const paragraphs = text.split(/\n\n+/);
 
     return paragraphs.map((paragraph, pIndex) => {
+      // Check if it's a heading (starts with #)
+      if (paragraph.startsWith('## ')) {
+        return (
+          <h3 key={pIndex} className="text-lg font-bold text-foreground mt-5 mb-2.5 first:mt-0">
+            {paragraph.replace('## ', '')}
+          </h3>
+        );
+      }
+      if (paragraph.startsWith('### ')) {
+        return (
+          <h4 key={pIndex} className="text-base font-semibold text-foreground mt-3 mb-2">
+            {paragraph.replace('### ', '')}
+          </h4>
+        );
+      }
+
+      // Check if it's a list
+      if (paragraph.includes('\n- ') || paragraph.startsWith('- ')) {
+        const items = paragraph.split('\n').filter(item => item.startsWith('- '));
+        return (
+          <ul key={pIndex} className="my-4 space-y-2">
+            {items.map((item, idx) => (
+              <li key={idx} className="flex items-start gap-3 text-foreground/80 text-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 mt-2 shrink-0" />
+                <span className="leading-relaxed">{renderInlineFormatting(item.replace('- ', ''))}</span>
+              </li>
+            ))}
+          </ul>
+        );
+      }
+
       // Handle single newlines as line breaks
       const lines = paragraph.split('\n');
       
       return (
-        <p key={pIndex} className="text-foreground/80 leading-relaxed mb-4 last:mb-0">
+        <p key={pIndex} className="text-foreground/80 leading-relaxed mb-3 last:mb-0 text-[15px]">
           {lines.map((line, lIndex) => (
             <span key={lIndex}>
               {lIndex > 0 && <br />}
@@ -94,71 +124,97 @@ const CourseDescription = ({
   };
 
   return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-8">
-        <motion.h2 
-          className="text-2xl font-bold mb-6 flex items-center gap-2"
+    <div className="relative">
+      {/* Decorative Gradient Line */}
+      <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-pink-500 via-purple-500 to-indigo-500 rounded-full" />
+      
+      <div className="ml-6 lg:ml-8">
+        {/* Section Header */}
+        <motion.div
           initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mb-6"
         >
-          📚 About This Course
-        </motion.h2>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 flex items-center justify-center">
+              <Lightbulb className="w-5 h-5 text-pink-500" />
+            </div>
+            <h2 className="text-2xl font-bold text-foreground">
+              Course Details
+            </h2>
+          </div>
+          <p className="text-muted-foreground">
+            Everything you need to know about this program
+          </p>
+        </motion.div>
 
-        <div className="prose prose-slate dark:prose-invert max-w-none">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={isExpanded ? 'expanded' : 'collapsed'}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {renderFormattedText(displayText)}
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        {/* Expandable Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
+        >
+          {/* Content */}
+          <div className="p-6 lg:p-8">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={isExpanded ? 'expanded' : 'collapsed'}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="prose prose-slate dark:prose-invert max-w-none"
+              >
+                {renderFormattedText(displayText)}
+              </motion.div>
+            </AnimatePresence>
 
-        {needsTruncation && (
-          <motion.button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-2 mt-4 text-primary font-medium hover:text-primary/80 transition-colors group"
-            whileHover={{ x: 5 }}
-          >
-            {isExpanded ? (
-              <>
-                <span>Read Less</span>
-                <ChevronUp className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
-              </>
-            ) : (
-              <>
-                <span>Read More</span>
-                <ChevronDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
-              </>
+            {/* Fade Overlay when collapsed */}
+            {needsTruncation && !isExpanded && (
+              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-slate-900 to-transparent pointer-events-none" />
             )}
-          </motion.button>
-        )}
+          </div>
 
+          {/* Expand/Collapse Button */}
+          {needsTruncation && (
+            <motion.button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 text-foreground font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
+              whileTap={{ scale: 0.99 }}
+            >
+              <span>{isExpanded ? 'Show Less' : 'Read Full Description'}</span>
+              <motion.div
+                animate={{ rotate: isExpanded ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown className="w-5 h-5" />
+              </motion.div>
+            </motion.button>
+          )}
+        </motion.div>
+
+        {/* CTA Button */}
         {showCta && onEnrollClick && (
           <motion.div
-            className="mt-8 pt-6 border-t border-border"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-6 flex justify-center lg:justify-start"
           >
             <Button
               onClick={onEnrollClick}
-              variant="outline"
-              className="group border-purple-200 dark:border-purple-800 hover:bg-purple-50 dark:hover:bg-purple-950"
+              className="vibe-cta-gradient text-white px-8 py-6 text-base font-semibold rounded-xl shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all duration-300 group"
             >
-              <span>Start Learning Today</span>
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              <span>Enroll Now</span>
+              <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
             </Button>
           </motion.div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
 export default CourseDescription;
-

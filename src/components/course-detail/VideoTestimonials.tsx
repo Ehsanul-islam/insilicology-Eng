@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Play, ChevronLeft, ChevronRight, Star, Quote, X } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Play, ChevronLeft, ChevronRight, Star, X, ZoomIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 
@@ -10,6 +9,7 @@ interface Testimonial {
   role?: string;
   video_url?: string;
   thumbnail?: string;
+  image_url?: string;
   text?: string;
   rating?: number;
 }
@@ -20,7 +20,7 @@ interface VideoTestimonialsProps {
 
 const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [activeVideo, setActiveVideo] = useState<{ url: string; name: string } | null>(null);
+  const [activeMedia, setActiveMedia] = useState<{ type: 'video' | 'image'; url: string; name: string } | null>(null);
 
   if (!testimonials || testimonials.length === 0) return null;
 
@@ -49,185 +49,193 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
 
   return (
     <>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <h2 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
-              ⭐ What Our Students Say
-            </h2>
-            <p className="text-muted-foreground mt-1">
-              Hear from our successful students
-            </p>
-          </motion.div>
+      <div className="space-y-8">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center"
+        >
+          <h2 className="text-2xl lg:text-[30px] font-bold mb-3 text-foreground">
+            Student Reviews
+          </h2>
+          <p className="text-muted-foreground text-base max-w-2xl mx-auto">
+            These reviews are directly from our Facebook page. See what real students have said—no edits. You can visit our page to verify for yourself.
+          </p>
+        </motion.div>
 
-          {/* Navigation Buttons */}
-          {testimonials.length > 3 && (
-            <div className="hidden md:flex gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => scroll('left')}
-                className="rounded-full"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => scroll('right')}
-                className="rounded-full"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </Button>
-            </div>
-          )}
-        </div>
+        {/* Navigation Header */}
+        {testimonials.length > 3 && (
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => scroll('left')}
+              className="rounded-full w-10 h-10 border-slate-200 dark:border-slate-700 hover:bg-pink-50 dark:hover:bg-pink-950/30 hover:border-pink-300 dark:hover:border-pink-800"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => scroll('right')}
+              className="rounded-full w-10 h-10 border-slate-200 dark:border-slate-700 hover:bg-pink-50 dark:hover:bg-pink-950/30 hover:border-pink-300 dark:hover:border-pink-800"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </Button>
+          </div>
+        )}
 
         {/* Testimonials Carousel */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+          className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {testimonials.map((testimonial, index) => {
             const hasVideo = !!testimonial.video_url;
+            const hasImage = !!testimonial.image_url || !!testimonial.thumbnail;
             const thumbnail = testimonial.thumbnail || 
+              testimonial.image_url ||
               (testimonial.video_url ? getYouTubeThumbnail(testimonial.video_url) : null);
 
             return (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="flex-shrink-0 w-[320px] snap-center"
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08 }}
+                className="flex-shrink-0 w-[300px] snap-center"
               >
-                <Card className="h-full overflow-hidden group hover:shadow-xl transition-all duration-300 border-2 hover:border-purple-200 dark:hover:border-purple-800">
-                  {/* Video Thumbnail / Play Button */}
-                  {hasVideo && (
+                <div className="h-full bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden group hover:shadow-xl hover:border-pink-200 dark:hover:border-pink-800 transition-all duration-300">
+                  {/* Image/Video Thumbnail */}
+                  {thumbnail && (
                     <div
-                      className="relative aspect-video cursor-pointer overflow-hidden bg-slate-900"
+                      className="relative aspect-[4/5] cursor-pointer overflow-hidden bg-slate-100 dark:bg-slate-800"
                       onClick={() => {
-                        if (testimonial.video_url) {
-                          setActiveVideo({ url: testimonial.video_url, name: testimonial.name });
+                        if (hasVideo && testimonial.video_url) {
+                          setActiveMedia({ type: 'video', url: testimonial.video_url, name: testimonial.name });
+                        } else if (thumbnail) {
+                          setActiveMedia({ type: 'image', url: thumbnail, name: testimonial.name });
                         }
                       }}
                     >
-                      {thumbnail && (
-                        <img
-                          src={thumbnail}
-                          alt={`${testimonial.name}'s testimonial`}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        />
-                      )}
+                      <img
+                        src={thumbnail}
+                        alt={`${testimonial.name}'s review`}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
                       
                       {/* Overlay */}
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-colors" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       
-                      {/* Play Button */}
-                      <motion.div
-                        className="absolute inset-0 flex items-center justify-center"
-                        whileHover={{ scale: 1.1 }}
-                      >
-                        <div className="w-16 h-16 rounded-full bg-white/90 shadow-xl flex items-center justify-center group-hover:bg-white transition-colors">
-                          <Play className="w-7 h-7 text-purple-600 ml-1" fill="currentColor" />
+                      {/* Play Button for Videos */}
+                      {hasVideo && (
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center"
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          whileHover={{ scale: 1, opacity: 1 }}
+                        >
+                          <div className="w-14 h-14 rounded-full bg-white/90 shadow-xl flex items-center justify-center group-hover:bg-white transition-colors">
+                            <Play className="w-6 h-6 text-pink-600 ml-0.5" fill="currentColor" />
+                          </div>
+                        </motion.div>
+                      )}
+
+                      {/* Zoom Icon for Images */}
+                      {!hasVideo && (
+                        <div className="absolute bottom-3 right-3 w-10 h-10 rounded-full bg-white/90 shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ZoomIn className="w-5 h-5 text-slate-600" />
                         </div>
-                      </motion.div>
+                      )}
                     </div>
                   )}
 
-                  <CardContent className="p-5">
-                    {/* Rating */}
-                    {testimonial.rating && (
-                      <div className="flex gap-1 mb-3">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-4 h-4 ${
-                              i < testimonial.rating!
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-muted-foreground/30'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    )}
+                  {/* Text Content */}
+                  {(testimonial.text || testimonial.name) && (
+                    <div className="p-4">
+                      {/* Rating */}
+                      {testimonial.rating && (
+                        <div className="flex gap-0.5 mb-2">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < testimonial.rating!
+                                  ? 'fill-amber-400 text-amber-400'
+                                  : 'text-slate-200 dark:text-slate-700'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      )}
 
-                    {/* Text Testimonial */}
-                    {testimonial.text && (
-                      <div className="relative mb-4">
-                        <Quote className="absolute -top-1 -left-1 w-6 h-6 text-purple-200 dark:text-purple-800 rotate-180" />
-                        <p className="text-sm text-foreground/80 leading-relaxed pl-5 line-clamp-4">
-                          {testimonial.text}
+                      {/* Text */}
+                      {testimonial.text && (
+                        <p className="text-sm text-foreground/80 leading-relaxed mb-3 line-clamp-3">
+                          "{testimonial.text}"
                         </p>
-                      </div>
-                    )}
+                      )}
 
-                    {/* Author Info */}
-                    <div className="flex items-center gap-3">
-                      {/* Avatar Placeholder */}
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-indigo-500 flex items-center justify-center text-white font-bold text-sm">
-                        {testimonial.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-foreground">{testimonial.name}</p>
-                        {testimonial.role && (
-                          <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                        )}
+                      {/* Author */}
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center text-white font-bold text-xs">
+                          {testimonial.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground text-sm">{testimonial.name}</p>
+                          {testimonial.role && (
+                            <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  )}
+                </div>
               </motion.div>
             );
           })}
         </div>
-
-        {/* Mobile Navigation Dots */}
-        <div className="flex justify-center gap-2 md:hidden">
-          {testimonials.slice(0, 5).map((_, index) => (
-            <button
-              key={index}
-              className="w-2 h-2 rounded-full bg-muted-foreground/30 hover:bg-purple-500 transition-colors"
-              onClick={() => {
-                if (scrollContainerRef.current) {
-                  const cardWidth = 320 + 24; // card width + gap
-                  scrollContainerRef.current.scrollTo({
-                    left: index * cardWidth,
-                    behavior: 'smooth',
-                  });
-                }
-              }}
-            />
-          ))}
-        </div>
       </div>
 
-      {/* Video Modal */}
-      <Dialog open={!!activeVideo} onOpenChange={() => setActiveVideo(null)}>
-        <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-black">
-          {activeVideo && (
+      {/* Media Modal */}
+      <Dialog open={!!activeMedia} onOpenChange={() => setActiveMedia(null)}>
+        <DialogContent className="sm:max-w-4xl p-0 overflow-hidden bg-black border-0">
+          {activeMedia && activeMedia.type === 'video' && (
             <div className="aspect-video">
-              {getYouTubeId(activeVideo.url) ? (
+              {getYouTubeId(activeMedia.url) ? (
                 <iframe
-                  src={`https://www.youtube.com/embed/${getYouTubeId(activeVideo.url)}?autoplay=1&rel=0`}
-                  title={`${activeVideo.name}'s testimonial`}
+                  src={`https://www.youtube.com/embed/${getYouTubeId(activeMedia.url)}?autoplay=1&rel=0`}
+                  title={`${activeMedia.name}'s testimonial`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                   className="w-full h-full"
                 />
               ) : (
                 <video
-                  src={activeVideo.url}
+                  src={activeMedia.url}
                   controls
                   autoPlay
                   className="w-full h-full"
                 />
               )}
+            </div>
+          )}
+          {activeMedia && activeMedia.type === 'image' && (
+            <div className="relative max-h-[90vh] overflow-auto">
+              <img
+                src={activeMedia.url}
+                alt={`${activeMedia.name}'s review`}
+                className="w-full h-auto"
+              />
+              <button
+                onClick={() => setActiveMedia(null)}
+                className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 flex items-center justify-center text-white transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
           )}
         </DialogContent>
@@ -237,4 +245,3 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
 };
 
 export default VideoTestimonials;
-

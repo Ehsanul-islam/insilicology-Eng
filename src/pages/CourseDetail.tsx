@@ -22,6 +22,7 @@ import {
   PricingSection,
   FAQSection,
   StickyFooterCTA,
+  EverythingYoureGettingSection,
 } from '@/components/course-detail';
 
 // Type definitions for JSON fields
@@ -46,6 +47,8 @@ interface TargetAudienceItem {
 interface ValueBreakdownItem {
   item: string;
   original_price: number;
+  is_premium?: boolean;
+  sub_text?: string;
 }
 
 interface Testimonial {
@@ -60,6 +63,13 @@ interface Testimonial {
 interface FAQItem {
   question: string;
   answer: string;
+}
+
+interface ModuleItem {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  icon?: string;
 }
 
 const CourseDetail = () => {
@@ -156,6 +166,7 @@ const CourseDetail = () => {
   const topics = Array.isArray(course.topics) 
     ? (course.topics as string[]) 
     : [];
+  const modules = (course.modules as ModuleItem[] | null) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -263,7 +274,9 @@ const CourseDetail = () => {
               >
                 <CurriculumAccordion
                   lessons={lessons}
+                  modules={modules}
                   isEnrolled={isEnrolled}
+                  courseTitle={course.title}
                 />
               </motion.div>
             </section>
@@ -299,6 +312,21 @@ const CourseDetail = () => {
             <section className="container-custom">
               <VideoTestimonials testimonials={testimonials} />
             </section>
+          )}
+
+          {/* ═══════════════════════════════════════════════════════════════════
+              SECTION 7.5: EVERYTHING YOU'RE GETTING
+              - Value breakdown with purple banners and itemized list
+          ═══════════════════════════════════════════════════════════════════ */}
+          {valueBreakdown.length > 0 && (
+            <EverythingYoureGettingSection
+              valueBreakdown={valueBreakdown}
+              totalValue={valueBreakdown.reduce((sum, item) => sum + (item.original_price || 0), 0)}
+              priceOffer={course.price_offer}
+              priceRegular={course.price_regular}
+              onEnrollClick={handleEnroll}
+              isEnrolled={isEnrolled}
+            />
           )}
 
           {/* ═══════════════════════════════════════════════════════════════════

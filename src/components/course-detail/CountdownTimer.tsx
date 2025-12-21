@@ -84,20 +84,20 @@ const CountdownTimer = ({ endDate, onExpire, variant = 'default' }: CountdownTim
     );
   }
 
-  // Hero variant with larger display
+  // Hero variant with larger display - Vibe Academy minimalistic style
   if (variant === 'hero') {
     return (
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 text-sm text-yellow-300">
+      <div className="space-y-4">
+        <div className="flex items-center justify-center gap-2 text-sm text-[#ec4899] font-medium">
           <Clock className="w-4 h-4" />
           <span>Limited Time Offer Ends In</span>
         </div>
-        <div className="flex gap-3">
+        <div className="flex gap-3 justify-center">
           {[
             { value: timeLeft.days, label: 'Days' },
             { value: timeLeft.hours, label: 'Hours' },
-            { value: timeLeft.minutes, label: 'Mins' },
-            { value: timeLeft.seconds, label: 'Secs' },
+            { value: timeLeft.minutes, label: 'Minutes' },
+            { value: timeLeft.seconds, label: 'Seconds' },
           ].map((item, index) => (
             <motion.div
               key={item.label}
@@ -106,20 +106,20 @@ const CountdownTimer = ({ endDate, onExpire, variant = 'default' }: CountdownTim
               transition={{ delay: index * 0.1 }}
               className="flex flex-col items-center"
             >
-              <div className="w-16 h-16 rounded-xl bg-black/30 backdrop-blur-sm flex items-center justify-center border border-white/20">
+              <div className="w-20 h-20 rounded-xl bg-white flex items-center justify-center shadow-sm border border-slate-100">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={item.value}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="text-2xl font-bold font-mono text-white"
+                    className="text-3xl font-bold font-mono text-[#ec4899]"
                   >
                     {String(item.value).padStart(2, '0')}
                   </motion.span>
                 </AnimatePresence>
               </div>
-              <span className="text-xs text-white/70 mt-1">{item.label}</span>
+              <span className="text-sm text-muted-foreground mt-2 font-normal">{item.label}</span>
             </motion.div>
           ))}
         </div>

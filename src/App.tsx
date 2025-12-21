@@ -33,6 +33,7 @@ import AdminCourseEditor from "./pages/admin/AdminCourseEditor";
 import AdminCertificates from "./pages/admin/AdminCertificates";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminContacts from "./pages/admin/AdminContacts";
+import AdminLessonEditor from "./pages/admin/AdminLessonEditor";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -134,6 +135,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminCourseEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/courses/:id/lessons"
+                element={
+                  <ProtectedRoute>
+                    <AdminLessonEditor />
                   </ProtectedRoute>
                 }
               />

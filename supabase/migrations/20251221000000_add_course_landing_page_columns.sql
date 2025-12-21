@@ -54,3 +54,6 @@ COMMENT ON COLUMN public.courses.testimonials IS 'Array of {name: string, role: 
 COMMENT ON COLUMN public.courses.value_breakdown IS 'Array of {item: string, original_price: number}';
 COMMENT ON COLUMN public.courses.stats IS 'Object {students: number, community: string, support: string}';
 
+
+
+

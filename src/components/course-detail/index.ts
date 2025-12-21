@@ -12,3 +12,4 @@ export { default as PricingSection } from './PricingSection';
 export { default as FAQSection } from './FAQSection';
 export { default as CountdownTimer } from './CountdownTimer';
 export { default as StickyFooterCTA } from './StickyFooterCTA';
+export { default as EverythingYoureGettingSection } from './EverythingYoureGettingSection';
