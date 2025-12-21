@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -8,91 +8,39 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Building2, MapPin } from 'lucide-react';
+import { usePortfolio } from '@/hooks/usePortfolio';
 
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [projects, setProjects] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = ['all', 'web development', 'mobile apps', 'data science', 'design'];
+  const { fetchPublishedPortfolios, fetchCategories } = usePortfolio();
 
-  const projects = [
-    {
-      id: '1',
-      slug: 'fintech-banking-app',
-      title: 'FinTech Banking Application',
-      summary: 'A modern digital banking platform with real-time transactions, AI-powered insights, and seamless user experience.',
-      client: 'GlobalBank Inc.',
-      country: 'United States',
-      category: 'web development',
-      technologies: ['React', 'Node.js', 'PostgreSQL', 'AWS'],
-      heroImage: '/placeholder.svg',
-      featured: true,
-      duration: '6 months',
-    },
-    {
-      id: '2',
-      slug: 'healthcare-management',
-      title: 'Healthcare Management System',
-      summary: 'Comprehensive healthcare platform connecting patients, doctors, and hospitals with telemedicine capabilities.',
-      client: 'HealthCare Partners',
-      country: 'Canada',
-      category: 'web development',
-      technologies: ['Vue.js', 'Python', 'MongoDB', 'Azure'],
-      heroImage: '/placeholder.svg',
-      featured: true,
-      duration: '8 months',
-    },
-    {
-      id: '3',
-      slug: 'ecommerce-marketplace',
-      title: 'E-Commerce Marketplace Platform',
-      summary: 'Multi-vendor marketplace with advanced search, real-time inventory management, and AI recommendations.',
-      client: 'ShopHub',
-      country: 'United Kingdom',
-      category: 'web development',
-      technologies: ['Next.js', 'Stripe', 'Redis', 'Vercel'],
-      heroImage: '/placeholder.svg',
-      featured: false,
-      duration: '5 months',
-    },
-    {
-      id: '4',
-      slug: 'fitness-tracking-app',
-      title: 'AI-Powered Fitness Tracking App',
-      summary: 'Mobile fitness application with personalized workout plans, nutrition tracking, and social features.',
-      client: 'FitLife Technologies',
-      country: 'Australia',
-      category: 'mobile apps',
-      technologies: ['React Native', 'Firebase', 'TensorFlow', 'GraphQL'],
-      heroImage: '/placeholder.svg',
-      featured: true,
-      duration: '7 months',
-    },
-    {
-      id: '5',
-      slug: 'predictive-analytics-dashboard',
-      title: 'Predictive Analytics Dashboard',
-      summary: 'Real-time analytics platform with machine learning models for business intelligence and forecasting.',
-      client: 'DataVision Corp',
-      country: 'Singapore',
-      category: 'data science',
-      technologies: ['Python', 'TensorFlow', 'D3.js', 'Docker'],
-      heroImage: '/placeholder.svg',
-      featured: false,
-      duration: '4 months',
-    },
-    {
-      id: '6',
-      slug: 'educational-platform',
-      title: 'Interactive Educational Platform',
-      summary: 'Engaging online learning platform with gamification, live classes, and adaptive learning paths.',
-      client: 'EduTech Solutions',
-      country: 'India',
-      category: 'web development',
-      technologies: ['Angular', 'NestJS', 'WebRTC', 'Kubernetes'],
-      heroImage: '/placeholder.svg',
-      featured: false,
-      duration: '9 months',
-    },
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [portfolioData, categoryData] = await Promise.all([
+        fetchPublishedPortfolios(),
+        fetchCategories(),
+      ]);
+      setProjects(portfolioData);
+      setCategories(categoryData);
+    } catch (error) {
+      console.error('Error loading portfolio data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const categoryOptions = [
+    { slug: 'all', name: 'All' },
+    ...categories.map(cat => ({ slug: cat.slug, name: cat.name })),
   ];
 
   const filteredProjects = selectedCategory === 'all' 
@@ -153,14 +101,14 @@ const Portfolio = () => {
               transition={{ delay: 0.1 }}
               className="flex flex-wrap gap-3 justify-center"
             >
-              {categories.map((category) => (
+              {categoryOptions.map((category) => (
                 <Button
-                  key={category}
-                  variant={selectedCategory === category ? 'default' : 'outline'}
-                  onClick={() => setSelectedCategory(category)}
+                  key={category.slug}
+                  variant={selectedCategory === category.slug ? 'default' : 'outline'}
+                  onClick={() => setSelectedCategory(category.slug)}
                   className="capitalize"
                 >
-                  {category}
+                  {category.name}
                 </Button>
               ))}
             </motion.div>
@@ -170,7 +118,11 @@ const Portfolio = () => {
         {/* Projects Grid */}
         <section className="py-16">
           <div className="container-custom">
-            {filteredProjects.length > 0 ? (
+            {loading ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground text-lg">Loading projects...</p>
+              </div>
+            ) : filteredProjects.length > 0 ? (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredProjects.map((project, index) => (
                   <motion.div
@@ -183,9 +135,17 @@ const Portfolio = () => {
                       <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         {/* Image */}
                         <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="text-6xl opacity-50">📊</div>
-                          </div>
+                          {project.hero_image_url ? (
+                            <img
+                              src={project.hero_image_url}
+                              alt={project.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="text-6xl opacity-50">📊</div>
+                            </div>
+                          )}
                           {project.featured && (
                             <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground">
                               Featured
@@ -204,31 +164,39 @@ const Portfolio = () => {
                           </div>
 
                           <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1">
-                              <Building2 className="w-4 h-4" />
-                              <span>{project.client}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <MapPin className="w-4 h-4" />
-                              <span>{project.country}</span>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-wrap gap-2">
-                            {project.technologies.slice(0, 3).map((tech) => (
-                              <Badge key={tech} variant="secondary" className="text-xs">
-                                {tech}
-                              </Badge>
-                            ))}
-                            {project.technologies.length > 3 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{project.technologies.length - 3}
-                              </Badge>
+                            {project.client_name && (
+                              <div className="flex items-center gap-1">
+                                <Building2 className="w-4 h-4" />
+                                <span>{project.client_name}</span>
+                              </div>
+                            )}
+                            {project.country && (
+                              <div className="flex items-center gap-1">
+                                <MapPin className="w-4 h-4" />
+                                <span>{project.country}</span>
+                              </div>
                             )}
                           </div>
 
+                          {project.technologies && project.technologies.length > 0 && (
+                            <div className="flex flex-wrap gap-2">
+                              {project.technologies.slice(0, 3).map((tech: string) => (
+                                <Badge key={tech} variant="secondary" className="text-xs">
+                                  {tech}
+                                </Badge>
+                              ))}
+                              {project.technologies.length > 3 && (
+                                <Badge variant="secondary" className="text-xs">
+                                  +{project.technologies.length - 3}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
+
                           <div className="pt-4 flex items-center justify-between border-t border-border">
-                            <span className="text-sm text-muted-foreground">{project.duration}</span>
+                            <span className="text-sm text-muted-foreground">
+                              {project.duration_text || 'View project'}
+                            </span>
                             <div className="flex items-center gap-1 text-primary font-semibold group-hover:gap-2 transition-all">
                               <span>View Case Study</span>
                               <ArrowRight className="w-4 h-4" />

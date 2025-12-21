@@ -34,6 +34,9 @@ import AdminCertificates from "./pages/admin/AdminCertificates";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminContacts from "./pages/admin/AdminContacts";
 import AdminLessonEditor from "./pages/admin/AdminLessonEditor";
+import AdminPortfolio from "./pages/admin/AdminPortfolio";
+import AdminPortfolioEditor from "./pages/admin/AdminPortfolioEditor";
+import AdminPortfolioCategories from "./pages/admin/AdminPortfolioCategories";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -167,6 +170,38 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminContacts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolio />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio/new"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolioEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolioEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio/categories"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolioCategories />
                   </ProtectedRoute>
                 }
               />
