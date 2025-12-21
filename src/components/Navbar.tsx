@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, GraduationCap, User } from 'lucide-react';
+import { Menu, X, GraduationCap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,7 +16,23 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { user, signOut } = useAuth();
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+      const { data } = await supabase.rpc('has_role', {
+        _user_id: user.id,
+        _role: 'admin',
+      });
+      setIsAdmin(!!data);
+    };
+    checkAdminStatus();
+  }, [user]);
 
   const initials = user?.user_metadata?.full_name
     ?.split(' ')
@@ -86,6 +103,17 @@ const Navbar = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/profile/settings">Settings</Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="flex items-center gap-2 text-primary">
+                          <Shield className="w-4 h-4" />
+                          Admin Dashboard
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()} className="text-destructive">
                     Sign Out
@@ -132,6 +160,14 @@ const Navbar = () => {
                   <Button variant="outline" className="w-full" asChild>
                     <Link to="/dashboard">Dashboard</Link>
                   </Button>
+                  {isAdmin && (
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link to="/admin" className="flex items-center gap-2">
+                        <Shield className="w-4 h-4" />
+                        Admin
+                      </Link>
+                    </Button>
+                  )}
                   <Button variant="outline" className="w-full" onClick={signOut}>
                     Sign Out
                   </Button>
