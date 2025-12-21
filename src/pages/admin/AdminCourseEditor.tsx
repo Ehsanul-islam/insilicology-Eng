@@ -207,14 +207,7 @@ const AdminCourseEditor = () => {
       .trim();
   }, []);
 
-  // Fetch existing course data
-  useEffect(() => {
-    if (isEditing && id) {
-      fetchCourse();
-    }
-  }, [id, isEditing]);
-
-  const fetchCourse = async () => {
+  const fetchCourse = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('courses')
@@ -290,7 +283,14 @@ const AdminCourseEditor = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
+
+  // Fetch existing course data
+  useEffect(() => {
+    if (isEditing && id) {
+      fetchCourse();
+    }
+  }, [id, isEditing, fetchCourse]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
