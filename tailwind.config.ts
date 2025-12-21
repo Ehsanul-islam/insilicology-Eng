@@ -14,9 +14,16 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        bengali: ['Hind Siliguri', 'sans-serif'],
       },
       colors: {
+        "vibe-bg": "#f5f7ff",
+        "vibe-navy": "#0a2463",
+        "vibe-purple": "#6c3cff",
+        "vibe-purple-light": "#8b5cf6",
+        "vibe-green": "#10b981",
+        "vibe-red": "#ef4444",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
