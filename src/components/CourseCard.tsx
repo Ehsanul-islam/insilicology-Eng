@@ -46,22 +46,22 @@ const CourseCard = ({ course }: CourseCardProps) => {
           />
           
           {/* Badges overlay */}
-          <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
             {course.featured && (
-              <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0">
+              <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 text-xs">
                 <Sparkles className="w-3 h-3 mr-1" />
                 Featured
               </Badge>
             )}
             {course.upcoming && (
-              <Badge className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white border-0">
+              <Badge className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white border-0 text-xs">
                 <Calendar className="w-3 h-3 mr-1" />
                 Upcoming
               </Badge>
             )}
           </div>
 
-          <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+          <div className="absolute top-2 right-2 z-10 flex flex-col gap-1">
             {course.difficulty && (
               <Badge className={difficultyColors[course.difficulty] || difficultyColors.beginner}>
                 {course.difficulty.charAt(0).toUpperCase() + course.difficulty.slice(1)}
@@ -76,8 +76,8 @@ const CourseCard = ({ course }: CourseCardProps) => {
 
           {/* Discount badge */}
           {hasDiscount && (
-            <div className="absolute bottom-4 left-4 z-10">
-              <Badge className="bg-destructive text-destructive-foreground">
+            <div className="absolute bottom-2 left-2 z-10">
+              <Badge className="bg-destructive text-destructive-foreground text-xs">
                 {discountPercent}% OFF
               </Badge>
             </div>
@@ -85,10 +85,10 @@ const CourseCard = ({ course }: CourseCardProps) => {
         </div>
       </CardHeader>
 
-      <CardContent className="p-6 space-y-4 flex-1">
+      <CardContent className="p-4 space-y-2 flex-1">
         <div>
           <Link to={`/courses/${course.slug}`}>
-            <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+            <h3 className="text-lg font-bold mb-1 group-hover:text-primary transition-colors line-clamp-2">
               {course.title}
             </h3>
           </Link>
@@ -111,10 +111,10 @@ const CourseCard = ({ course }: CourseCardProps) => {
           </div>
         )}
 
-        <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center justify-between text-xs">
           {course.duration_text && (
             <div className="flex items-center gap-1 text-muted-foreground">
-              <Clock className="w-4 h-4" />
+              <Clock className="w-3 h-3" />
               <span>{course.duration_text}</span>
             </div>
           )}
@@ -125,15 +125,15 @@ const CourseCard = ({ course }: CourseCardProps) => {
           )}
           {course.certificate && (
             <div className="flex items-center gap-1 text-amber-500">
-              <Award className="w-4 h-4" />
+              <Award className="w-3 h-3" />
               <span className="text-xs">Certificate</span>
             </div>
           )}
         </div>
 
         {course.start_date && (
-          <div className="pt-2 border-t border-border">
-            <p className="text-sm text-muted-foreground">
+          <div className="pt-1 border-t border-border">
+            <p className="text-xs text-muted-foreground">
               Starts: {new Date(course.start_date).toLocaleDateString('en-US', { 
                 month: 'short', 
                 day: 'numeric', 
@@ -144,17 +144,17 @@ const CourseCard = ({ course }: CourseCardProps) => {
         )}
       </CardContent>
 
-      <CardFooter className="p-6 pt-0 flex items-center justify-between">
+      <CardFooter className="p-4 pt-0 flex items-center justify-between">
         <div className="flex items-center gap-2">
           {hasDiscount ? (
             <>
-              <span className="text-2xl font-bold text-primary">${Number(course.price_offer).toLocaleString()}</span>
-              <span className="text-sm text-muted-foreground line-through">${Number(course.price_regular).toLocaleString()}</span>
+              <span className="text-xl font-bold text-primary">${Number(course.price_offer).toLocaleString()}</span>
+              <span className="text-xs text-muted-foreground line-through">${Number(course.price_regular).toLocaleString()}</span>
             </>
           ) : course.price_offer ? (
-            <span className="text-2xl font-bold">${Number(course.price_offer).toLocaleString()}</span>
+            <span className="text-xl font-bold">${Number(course.price_offer).toLocaleString()}</span>
           ) : (
-            <span className="text-2xl font-bold text-green-600">Free</span>
+            <span className="text-xl font-bold text-green-600">Free</span>
           )}
         </div>
         <Button className="btn-primary" asChild>
