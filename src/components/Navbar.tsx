@@ -18,22 +18,33 @@ import { Input } from '@/components/ui/input';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isInstructor, setIsInstructor] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const { user, signOut } = useAuth();
 
   useEffect(() => {
-    const checkAdminStatus = async () => {
+    const checkRoles = async () => {
       if (!user) {
         setIsAdmin(false);
+        setIsInstructor(false);
         return;
       }
-      const { data } = await supabase.rpc('has_role', {
+
+      const { data: adminData, error: adminError } = await supabase.rpc('has_role', {
         _user_id: user.id,
         _role: 'admin',
       });
-      setIsAdmin(!!data);
+      if (adminError) console.error('Error checking admin role:', adminError);
+      setIsAdmin(!!adminData);
+
+      const { data: instructorData, error: instructorError } = await supabase.rpc('has_role', {
+        _user_id: user.id,
+        _role: 'instructor',
+      });
+      if (instructorError) console.error('Error checking instructor role:', instructorError);
+      setIsInstructor(!!instructorData);
     };
-    checkAdminStatus();
+    checkRoles();
   }, [user]);
 
   const initials = user?.user_metadata?.full_name
@@ -145,6 +156,14 @@ const Navbar = () => {
                       </Link>
                     </DropdownMenuItem>
                   )}
+                  {isInstructor && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/instructor" className="flex items-center gap-2 text-primary font-medium">
+                        <GraduationCap className="w-4 h-4" />
+                        Instructor Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link to="/my-certificates">My Certificates</Link>
                   </DropdownMenuItem>
@@ -230,6 +249,14 @@ const Navbar = () => {
                       <Link to="/admin" className="flex items-center gap-2">
                         <Shield className="w-4 h-4" />
                         Admin
+                      </Link>
+                    </Button>
+                  )}
+                  {isInstructor && (
+                    <Button variant="outline" className="w-full" asChild>
+                      <Link to="/instructor" className="flex items-center gap-2">
+                        <GraduationCap className="w-4 h-4" />
+                        Instructor
                       </Link>
                     </Button>
                   )}

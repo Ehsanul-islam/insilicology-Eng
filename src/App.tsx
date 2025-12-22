@@ -31,6 +31,12 @@ const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const MyCertificates = lazy(() => import("./pages/MyCertificates"));
 
+// Lazy load instructor pages
+const InstructorLayout = lazy(() => import("./components/layouts/InstructorLayout"));
+const InstructorDashboard = lazy(() => import("./pages/instructor/InstructorDashboard"));
+const InstructorCourses = lazy(() => import("./pages/instructor/InstructorCourses"));
+const InstructorCourseEditor = lazy(() => import("./pages/instructor/InstructorCourseEditor"));
+
 // Lazy load admin pages
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
 const AdminEnrollments = lazy(() => import("./pages/admin/AdminEnrollments"));
@@ -100,8 +106,7 @@ const App = () => (
                       <ProfileSettings />
                     </ProtectedRoute>
                   }
-                />
-                <Route
+                />                <Route
                   path="/my-certificates"
                   element={
                     <ProtectedRoute>
@@ -109,6 +114,21 @@ const App = () => (
                     </ProtectedRoute>
                   }
                 />
+
+                {/* Instructor Routes */}
+                <Route
+                  path="/instructor"
+                  element={
+                    <ProtectedRoute>
+                      <InstructorLayout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<InstructorDashboard />} />
+                  <Route path="courses" element={<InstructorCourses />} />
+                  <Route path="courses/new" element={<InstructorCourseEditor />} />
+                  <Route path="courses/:id/edit" element={<InstructorCourseEditor />} />
+                </Route>
 
                 {/* Admin Routes */}
                 <Route

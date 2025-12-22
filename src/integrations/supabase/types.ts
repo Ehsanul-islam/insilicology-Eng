@@ -491,6 +491,20 @@ export type Database = {
           updated_at: string | null
           whats_included: Json | null
           why_join: Json | null
+          instructor_id: string | null
+          instructor_name: string | null
+          instructor_title: string | null
+          instructor_bio: string | null
+          instructor_photo: string | null
+          comparison_features: Json | null
+          target_audience: Json | null
+          testimonials: Json | null
+          value_breakdown: Json | null
+          stats: Json | null
+          faq: Json | null
+          modules: Json | null
+          promo_video_url: string | null
+          countdown_end_date: string | null
         }
         Insert: {
           certificate?: boolean | null
@@ -521,6 +535,20 @@ export type Database = {
           updated_at?: string | null
           whats_included?: Json | null
           why_join?: Json | null
+          instructor_id?: string | null
+          instructor_name?: string | null
+          instructor_title?: string | null
+          instructor_bio?: string | null
+          instructor_photo?: string | null
+          comparison_features?: Json | null
+          target_audience?: Json | null
+          testimonials?: Json | null
+          value_breakdown?: Json | null
+          stats?: Json | null
+          faq?: Json | null
+          modules?: Json | null
+          promo_video_url?: string | null
+          countdown_end_date?: string | null
         }
         Update: {
           certificate?: boolean | null
@@ -551,6 +579,20 @@ export type Database = {
           updated_at?: string | null
           whats_included?: Json | null
           why_join?: Json | null
+          instructor_id?: string | null
+          instructor_name?: string | null
+          instructor_title?: string | null
+          instructor_bio?: string | null
+          instructor_photo?: string | null
+          comparison_features?: Json | null
+          target_audience?: Json | null
+          testimonials?: Json | null
+          value_breakdown?: Json | null
+          stats?: Json | null
+          faq?: Json | null
+          modules?: Json | null
+          promo_video_url?: string | null
+          countdown_end_date?: string | null
         }
         Relationships: []
       }
