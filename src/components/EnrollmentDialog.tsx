@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   CreditCard, Upload, CheckCircle, Loader2, AlertCircle,
   Building2, Smartphone, Clock, X, FileImage
 } from 'lucide-react';
@@ -83,7 +83,7 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
   const [paymentProofPreview, setPaymentProofPreview] = useState<string>('');
   const [uploading, setUploading] = useState(false);
 
-  const paymentMethods = Array.isArray(course.payment_methods) 
+  const paymentMethods = Array.isArray(course.payment_methods)
     ? course.payment_methods as string[]
     : ['bank_transfer', 'mobile_payment'];
 
@@ -251,11 +251,10 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
             return (
               <div
                 key={method}
-                className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer transition-colors ${
-                  paymentMethod === method
+                className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer transition-colors ${paymentMethod === method
                     ? 'border-primary bg-primary/5'
                     : 'border-border hover:border-primary/50'
-                }`}
+                  }`}
                 onClick={() => setPaymentMethod(method)}
               >
                 <RadioGroupItem value={method} id={method} />
@@ -296,9 +295,8 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
       </div>
 
       <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-          paymentProofPreview ? 'border-primary' : 'border-border hover:border-primary/50'
-        }`}
+        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${paymentProofPreview ? 'border-primary' : 'border-border hover:border-primary/50'
+          }`}
         onClick={() => fileInputRef.current?.click()}
       >
         {paymentProofPreview ? (
@@ -522,52 +520,52 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
               {['form', 'payment', 'upload', 'review'].map((s, i) => (
                 <div key={s} className="flex items-center">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${
-                      step === s
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step === s
                         ? 'bg-primary text-primary-foreground'
                         : ['form', 'payment', 'upload', 'review'].indexOf(step) > i
-                        ? 'bg-primary/20 text-primary'
-                        : 'bg-muted text-muted-foreground'
+                        'bg-primary/20 text-primary'
+                  'bg-muted text-muted-foreground'
                     }`}
                   >
-                    {['form', 'payment', 'upload', 'review'].indexOf(step) > i ? (
-                      <CheckCircle className="w-4 h-4" />
-                    ) : (
-                      i + 1
-                    )}
-                  </div>
-                  {i < 3 && (
-                    <div
-                      className={`w-8 h-0.5 ${
-                        ['form', 'payment', 'upload', 'review'].indexOf(step) > i
-                          ? 'bg-primary'
-                          : 'bg-muted'
-                      }`}
-                    />
+                  {['form', 'payment', 'upload', 'review'].indexOf(step) > i ? (
+                    <CheckCircle className="w-4 h-4" />
+                  ) : (
+                    i + 1
                   )}
                 </div>
+                  {
+                  i< 3 && (
+                    <div
+                      className={`w-8 h-0.5 ${['form', 'payment', 'upload', 'review'].indexOf(step) > i
+                          ? 'bg-primary'
+                          : 'bg-muted'
+                        }`}
+                    />
+                  )
+                }
+                </div>
               ))}
-            </div>
+          </div>
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={step}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-              >
-                {step === 'form' && renderFormStep()}
-                {step === 'payment' && renderPaymentStep()}
-                {step === 'upload' && renderUploadStep()}
-                {step === 'review' && renderReviewStep()}
-              </motion.div>
-            </AnimatePresence>
-          </>
-        ) : (
-          renderExistingEnrollment()
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={step}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            {step === 'form' && renderFormStep()}
+            {step === 'payment' && renderPaymentStep()}
+            {step === 'upload' && renderUploadStep()}
+            {step === 'review' && renderReviewStep()}
+          </motion.div>
+        </AnimatePresence>
+      </>
+      ) : (
+      renderExistingEnrollment()
         )}
-      </DialogContent>
-    </Dialog>
+    </DialogContent>
+    </Dialog >
   );
 };

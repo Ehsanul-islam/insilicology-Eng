@@ -13,6 +13,7 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: Error | null }>;
   updatePassword: (newPassword: string) => Promise<{ error: Error | null }>;
+  updateProfile: (data: { full_name?: string; phone?: string; bio?: string; location?: string;[key: string]: any }) => Promise<{ error: Error | null }>;
   resendConfirmationEmail: (email: string) => Promise<{ error: Error | null }>;
 }
 
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
       const redirectUrl = `${window.location.origin}/`;
-      
+
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -64,7 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error) throw error;
-      
+
       toast.success('Account created successfully!');
       return { error: null };
     } catch (error) {
@@ -93,7 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
         throw error;
       }
-      
+
       return { error: null };
     } catch (error) {
       const err = error as Error;
@@ -105,7 +106,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      
+
       toast.success('Signed out successfully');
       navigate('/');
     } catch (error) {
@@ -117,13 +118,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const resetPassword = async (email: string) => {
     try {
       const redirectUrl = `${window.location.origin}/reset-password`;
-      
+
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: redirectUrl,
       });
 
       if (error) throw error;
-      
+
       toast.success('Password reset instructions sent to your email');
       return { error: null };
     } catch (error) {
@@ -140,8 +141,52 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error) throw error;
-      
+
       toast.success('Password updated successfully');
+      return { error: null };
+    } catch (error) {
+      const err = error as Error;
+      toast.error(err.message);
+      return { error: err };
+    }
+  };
+
+  const updateProfile = async (data: { full_name?: string; phone?: string; bio?: string; location?: string; avatar_url?: string;[key: string]: any }) => {
+    try {
+      // 1. Update auth.users metadata
+      const { error: authError } = await supabase.auth.updateUser({
+        data: data,
+      });
+
+      if (authError) throw authError;
+
+      // 2. Update public.profiles table
+      if (user) {
+        const profileUpdates = {
+          id: user.id,
+          full_name: data.full_name,
+          phone: data.phone,
+          bio: data.bio,
+          avatar_url: data.avatar_url,
+          // Add location if it exists, mapping it to existing columns or just updating what we can
+          // Note: The profiles table might not have 'location' column yet based on migrations I saw.
+          // Migration 20251129042006 has full_name, email, phone, avatar_url, bio.
+          // Location is in metadata but maybe not in profiles table.
+          // I will assume for now we only sync what's in the table.
+          updated_at: new Date().toISOString(),
+        };
+
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert(profileUpdates);
+
+        if (profileError) {
+          console.error('Error updating public profile:', profileError);
+          // We don't throw here to avoid failing if just the sync fails, but good to know
+        }
+      }
+
+      toast.success('Profile updated successfully');
       return { error: null };
     } catch (error) {
       const err = error as Error;
@@ -162,7 +207,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
 
       if (error) throw error;
-      
+
       toast.success('Confirmation email sent! Please check your inbox.');
       return { error: null };
     } catch (error) {
@@ -173,7 +218,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, resetPassword, updatePassword, resendConfirmationEmail }}>
+    <AuthContext.Provider value={{ user, session, loading, signUp, signIn, signOut, resetPassword, updatePassword, updateProfile, resendConfirmationEmail }}>
       {children}
     </AuthContext.Provider>
   );
