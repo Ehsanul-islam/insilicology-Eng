@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Play, PlayCircle, Users, BookOpen, Star, Award, Check } from 'lucide-react';
+import { ArrowRight, Play, PlayCircle, Users, BookOpen, Star, Award, Check, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type HeroVariant = 'default' | 'skilltori' | 'bio' | 'vibe';
@@ -44,6 +44,13 @@ const UnifiedHero = memo(({
 
     // Skilltori variant
     if (variant === 'skilltori') {
+        const heroStats = [
+            { icon: Play, value: '35+', label: 'Courses' },
+            { icon: Calendar, value: '8', label: 'Live Batches' },
+            { icon: Users, value: '10k+', label: 'Learners' },
+            { icon: Star, value: '4.9/5', label: 'Avg. Rating' },
+        ];
+
         return (
             <section className="relative min-h-screen flex items-center py-20 overflow-hidden bg-[#F9FAFB]">
                 {/* Background Blobs with Animation */}
@@ -180,6 +187,32 @@ const UnifiedHero = memo(({
                                     {ctaSecondary?.text || 'Get Started'}
                                 </Link>
                             </Button>
+                        </div>
+
+                        {/* Stats Section */}
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6">
+                            {heroStats.map((stat, index) => {
+                                const Icon = stat.icon;
+                                return (
+                                    <motion.div
+                                        key={stat.label}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: 0.6 + index * 0.1 }}
+                                        className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border-2 border-yellow-400 flex items-center justify-center">
+                                                <Icon className="w-5 h-5 text-yellow-500" strokeWidth={2} />
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-[10px] text-gray-500 font-medium">{stat.label}</span>
+                                                <span className="text-lg font-bold text-gray-900">{stat.value}</span>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
                         </div>
                     </motion.div>
                 </div>
