@@ -10,7 +10,8 @@ import {
     LogOut,
     Menu,
     X,
-    Plus
+    Plus,
+    GraduationCap
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { startCase } from 'lodash';
@@ -39,7 +40,9 @@ const InstructorLayout = () => {
             {/* Mobile Header */}
             <div className="lg:hidden flex items-center justify-between p-4 border-b bg-white dark:bg-slate-900">
                 <div className="flex items-center gap-2">
-                    <img src="/lovable-uploads/d3e9112a-3a25-467f-94de-546051786196.png" alt="Logo" className="h-8 w-8" />
+                    <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                        <GraduationCap className="h-5 w-5 text-white" />
+                    </div>
                     <span className="font-bold text-xl">Instructor</span>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
@@ -57,7 +60,9 @@ const InstructorLayout = () => {
                 >
                     <div className="h-full flex flex-col">
                         <div className="p-6 border-b flex items-center gap-2">
-                            <img src="/lovable-uploads/d3e9112a-3a25-467f-94de-546051786196.png" alt="Logo" className="h-8 w-8" />
+                            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center">
+                                <GraduationCap className="h-5 w-5 text-white" />
+                            </div>
                             <span className="font-bold text-xl text-purple-600 dark:text-purple-400">Instructor</span>
                         </div>
 
