@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, MoreVertical, Edit, Trash, Eye, BookOpen } from 'lucide-react';
+import { Search, MoreVertical, Edit, Trash, Eye, BookOpen } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -43,7 +43,7 @@ const InstructorCourses = () => {
             setCourses(data || []);
         } catch (error) {
             console.error('Error fetching courses:', error);
-            toast.error('Failed to load courses');
+            toast.error(`Failed to load courses: ${(error as any).message || 'Unknown error'}`);
         } finally {
             setLoading(false);
         }
@@ -78,9 +78,7 @@ const InstructorCourses = () => {
                     <h1 className="text-3xl font-bold tracking-tight">My Courses</h1>
                     <p className="text-muted-foreground">Manage your courses and content</p>
                 </div>
-                <Button onClick={() => navigate('/instructor/courses/new')}>
-                    <Plus className="mr-2 h-4 w-4" /> Create Course
-                </Button>
+                <div></div>
             </div>
 
             <div className="flex items-center space-x-2">
@@ -100,10 +98,7 @@ const InstructorCourses = () => {
             ) : filteredCourses.length === 0 ? (
                 <div className="text-center py-12 bg-white dark:bg-slate-900 rounded-lg border border-dashed">
                     <h3 className="text-lg font-medium">No courses found</h3>
-                    <p className="text-muted-foreground mb-4">Get started by creating your first course</p>
-                    <Button onClick={() => navigate('/instructor/courses/new')}>
-                        <Plus className="mr-2 h-4 w-4" /> Create Course
-                    </Button>
+                    <p className="text-muted-foreground mb-4">Contact admin to get courses assigned</p>
                 </div>
             ) : (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

@@ -126,7 +126,7 @@ const App = () => (
                 >
                   <Route index element={<InstructorDashboard />} />
                   <Route path="courses" element={<InstructorCourses />} />
-                  <Route path="courses/new" element={<InstructorCourseEditor />} />
+
                   <Route path="courses/:id/edit" element={<InstructorCourseEditor />} />
                 </Route>
 

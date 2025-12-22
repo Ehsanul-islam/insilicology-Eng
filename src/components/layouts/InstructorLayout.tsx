@@ -10,7 +10,6 @@ import {
     LogOut,
     Menu,
     X,
-    Plus,
     GraduationCap
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -66,12 +65,7 @@ const InstructorLayout = () => {
                             <span className="font-bold text-xl text-purple-600 dark:text-purple-400">Instructor</span>
                         </div>
 
-                        <div className="p-4">
-                            <Button className="w-full justify-start gap-2" onClick={() => navigate('/instructor/courses/new')}>
-                                <Plus className="h-4 w-4" />
-                                Create New Course
-                            </Button>
-                        </div>
+
 
                         <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
                             {navigation.map((item) => {

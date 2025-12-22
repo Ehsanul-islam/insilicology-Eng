@@ -141,6 +141,14 @@ const InstructorCourseEditor = () => {
     const [formData, setFormData] = useState<CourseFormData>(getDefaultFormData());
 
     // Initialize instructor info from profile if new
+    // GUARD: Prevent instructors from creating new courses
+    useEffect(() => {
+        if (id === 'new') {
+            toast.error("Only admins can create new courses");
+            navigate('/instructor/courses');
+        }
+    }, [id, navigate]);
+
     useEffect(() => {
         if (!isEditing && user) {
             const fetchProfile = async () => {
