@@ -154,10 +154,10 @@ const AdminCourses = () => {
         <div>
           {item.price_offer ? (
             <>
-              <span className="font-medium">৳{item.price_offer}</span>
+              <span className="font-medium">${item.price_offer}</span>
               {item.price_regular && item.price_regular !== item.price_offer && (
                 <span className="text-xs text-muted-foreground line-through ml-2">
-                  ৳{item.price_regular}
+                  ${item.price_regular}
                 </span>
               )}
             </>

@@ -46,6 +46,16 @@ ADD COLUMN IF NOT EXISTS countdown_end_date timestamptz;
 ALTER TABLE public.courses 
 ADD COLUMN IF NOT EXISTS stats jsonb DEFAULT '{}'::jsonb;
 
+-- What's Included (Array of strings)
+-- Example: ["Lifetime access", "24/7 support", "Certificate of completion"]
+ALTER TABLE public.courses 
+ADD COLUMN IF NOT EXISTS whats_included jsonb DEFAULT '[]'::jsonb;
+
+-- Modules (Array of {title, subtitle, description, icon})
+-- Example: [{"title": "Module 1", "subtitle": "Introduction", "description": "...", "icon": "Database"}]
+ALTER TABLE public.courses 
+ADD COLUMN IF NOT EXISTS modules jsonb DEFAULT '[]'::jsonb;
+
 -- Add comments to document the JSON structures
 COMMENT ON COLUMN public.courses.comparison_features IS 'Array of {feature: string, us: boolean, others: boolean}';
 COMMENT ON COLUMN public.courses.target_audience IS 'Array of {title: string, description: string, icon: string}';
@@ -53,4 +63,10 @@ COMMENT ON COLUMN public.courses.faq IS 'Array of {question: string, answer: str
 COMMENT ON COLUMN public.courses.testimonials IS 'Array of {name: string, role: string, video_url: string, thumbnail: string}';
 COMMENT ON COLUMN public.courses.value_breakdown IS 'Array of {item: string, original_price: number}';
 COMMENT ON COLUMN public.courses.stats IS 'Object {students: number, community: string, support: string}';
+COMMENT ON COLUMN public.courses.whats_included IS 'Array of strings';
+COMMENT ON COLUMN public.courses.modules IS 'Array of {title: string, subtitle?: string, description?: string, icon?: string}';
+
+
+
+
 

@@ -14,7 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'Hind Siliguri', 'system-ui', 'sans-serif'],
+        siliguri: ['Hind Siliguri', 'Inter', 'system-ui', 'sans-serif'],
         bengali: ['Hind Siliguri', 'sans-serif'],
       },
       colors: {
@@ -50,6 +51,13 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
           light: "hsl(var(--accent-light))",
+        },
+        bio: {
+          gold: "hsl(var(--bio-gold))",
+          teal: "hsl(var(--bio-teal))",
+          cyan: "hsl(var(--bio-cyan))",
+          purple: "hsl(var(--bio-purple))",
+          "off-white": "hsl(var(--bio-off-white))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

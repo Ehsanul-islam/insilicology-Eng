@@ -148,11 +148,11 @@ const CourseCard = ({ course }: CourseCardProps) => {
         <div className="flex items-center gap-2">
           {hasDiscount ? (
             <>
-              <span className="text-2xl font-bold text-primary">৳{Number(course.price_offer).toLocaleString()}</span>
-              <span className="text-sm text-muted-foreground line-through">৳{Number(course.price_regular).toLocaleString()}</span>
+              <span className="text-2xl font-bold text-primary">${Number(course.price_offer).toLocaleString()}</span>
+              <span className="text-sm text-muted-foreground line-through">${Number(course.price_regular).toLocaleString()}</span>
             </>
           ) : course.price_offer ? (
-            <span className="text-2xl font-bold">৳{Number(course.price_offer).toLocaleString()}</span>
+            <span className="text-2xl font-bold">${Number(course.price_offer).toLocaleString()}</span>
           ) : (
             <span className="text-2xl font-bold text-green-600">Free</span>
           )}

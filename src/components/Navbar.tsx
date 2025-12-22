@@ -97,23 +97,20 @@ const Navbar = () => {
                   <DropdownMenuItem asChild>
                     <Link to="/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin" className="flex items-center gap-2 text-primary font-medium">
+                        <Shield className="w-4 h-4" />
+                        Admin Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link to="/my-certificates">My Certificates</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to="/profile/settings">Settings</Link>
                   </DropdownMenuItem>
-                  {isAdmin && (
-                    <>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem asChild>
-                        <Link to="/admin" className="flex items-center gap-2 text-primary">
-                          <Shield className="w-4 h-4" />
-                          Admin Dashboard
-                        </Link>
-                      </DropdownMenuItem>
-                    </>
-                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => signOut()} className="text-destructive">
                     Sign Out

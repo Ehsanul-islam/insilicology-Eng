@@ -88,13 +88,13 @@ const StickyFooterCTA = ({
                 </span>
               )}
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-bold text-foreground">
-                  {price ? `৳${Number(price).toLocaleString()}` : 'Free'}
+                <span className="text-lg font-bold text-foreground">
+                  {price ? `$${Number(price).toLocaleString()}` : 'Free'}
                 </span>
                 {hasDiscount && (
                   <>
                     <span className="text-sm line-through text-muted-foreground">
-                      ৳{Number(priceRegular).toLocaleString()}
+                      ${Number(priceRegular).toLocaleString()}
                     </span>
                     <span className="text-xs font-semibold text-green-600 dark:text-green-400">
                       {discountPercent}% off

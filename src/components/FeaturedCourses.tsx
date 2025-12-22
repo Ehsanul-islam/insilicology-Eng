@@ -34,20 +34,32 @@ const FeaturedCourses = () => {
   }, []);
 
   return (
-    <section className="section-padding bg-muted/30">
+    <section className="py-20 bg-white">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Featured <span className="gradient-text">Courses</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Explore our handpicked courses designed to help you achieve your learning goals
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
+                Featured Courses
+              </h2>
+              <div className="h-1 w-24 bg-gradient-to-r from-bio-teal to-bio-gold rounded-full"></div>
+            </div>
+            <Link 
+              to="/courses" 
+              className="hidden md:flex items-center gap-2 text-bio-teal hover:opacity-80 font-medium transition-colors"
+            >
+              Browse All
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            Hand-picked courses to kickstart your bioinformatics journey
           </p>
         </motion.div>
 
@@ -87,9 +99,13 @@ const FeaturedCourses = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          className="text-center mt-12 md:hidden"
         >
-          <Button size="lg" className="btn-primary" asChild>
+          <Button 
+            size="lg" 
+            className="bg-bio-teal hover:opacity-90 text-white font-semibold px-8" 
+            asChild
+          >
             <Link to="/courses">
               View All Courses
               <ArrowRight className="ml-2 w-5 h-5" />

@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronRight, Building2, MapPin, Calendar, Users, TrendingUp, CheckCircle2, ArrowRight } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -7,67 +8,84 @@ import SEOHead from '@/components/SEOHead';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { usePortfolio } from '@/hooks/usePortfolio';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 const PortfolioDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { fetchPortfolioBySlug } = usePortfolio();
+  
+  const [project, setProject] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  // Mock data - replace with actual data fetching
-  const project = {
-    id: '1',
-    slug: slug || 'fintech-banking-app',
-    title: 'FinTech Banking Application',
-    summary: 'A modern digital banking platform with real-time transactions, AI-powered insights, and seamless user experience.',
-    description: 'Developed a comprehensive digital banking solution that revolutionizes how customers manage their finances. The platform integrates cutting-edge security features, real-time transaction processing, and AI-powered financial insights to provide users with a superior banking experience.',
-    client: 'GlobalBank Inc.',
-    country: 'United States',
-    duration: '6 months',
-    teamSize: '12 members',
-    category: 'Web Development',
-    heroImage: '/placeholder.svg',
-    technologies: ['React', 'Node.js', 'PostgreSQL', 'AWS', 'Redis', 'Docker', 'Kubernetes'],
-    services: [
-      'Full-Stack Development',
-      'Cloud Infrastructure',
-      'Security Implementation',
-      'UI/UX Design',
-      'DevOps & Deployment',
-      'Quality Assurance',
-    ],
-    results: [
-      { metric: '3M+', description: 'Active users within first year' },
-      { metric: '99.9%', description: 'Uptime achieved' },
-      { metric: '50%', description: 'Reduction in transaction time' },
-      { metric: '4.8/5', description: 'User satisfaction rating' },
-    ],
-    challenges: [
-      {
-        title: 'Security & Compliance',
-        description: 'Implementing bank-grade security while maintaining user-friendly experience and meeting regulatory requirements.',
-      },
-      {
-        title: 'Real-time Processing',
-        description: 'Building infrastructure to handle millions of concurrent transactions with minimal latency.',
-      },
-      {
-        title: 'Legacy System Integration',
-        description: 'Seamlessly integrating with existing banking systems while building modern microservices architecture.',
-      },
-    ],
-    solutions: [
-      {
-        title: 'Multi-layer Security',
-        description: 'Implemented end-to-end encryption, biometric authentication, and AI-powered fraud detection.',
-      },
-      {
-        title: 'Scalable Architecture',
-        description: 'Built microservices architecture with auto-scaling capabilities and distributed caching.',
-      },
-      {
-        title: 'API Gateway',
-        description: 'Developed robust API layer to bridge modern and legacy systems with real-time synchronization.',
-      },
-    ],
+  useEffect(() => {
+    loadProject();
+  }, [slug]);
+
+  const loadProject = async () => {
+    if (!slug) {
+      setNotFound(true);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const data = await fetchPortfolioBySlug(slug);
+      if (data && data.status === 'published') {
+        setProject(data);
+        setNotFound(false);
+      } else {
+        setNotFound(true);
+      }
+    } catch (error) {
+      console.error('Error loading portfolio:', error);
+      setNotFound(true);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <div className="flex items-center justify-center h-[50vh]">
+          <div className="text-muted-foreground">Loading...</div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (notFound || !project) {
+    return (
+      <div className="min-h-screen">
+        <SEOHead
+          title="Portfolio Not Found | LearnCraft"
+          description="The portfolio project you're looking for doesn't exist."
+          robots="noindex,nofollow"
+        />
+        <Navbar />
+        <div className="flex flex-col items-center justify-center h-[50vh] text-center px-4">
+          <h1 className="text-4xl font-bold mb-4">Portfolio Not Found</h1>
+          <p className="text-muted-foreground mb-8">
+            The portfolio project you're looking for doesn't exist or is no longer available.
+          </p>
+          <Button asChild>
+            <Link to="/portfolio">
+              <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+              Back to Portfolio
+            </Link>
+          </Button>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -76,8 +94,8 @@ const PortfolioDetail = () => {
         description={project.summary}
         url={`/portfolio/${slug}`}
         type="article"
-        image={project.heroImage}
-        tags={[project.category, 'case study', ...project.technologies]}
+        image={project.hero_image_url}
+        tags={[project.category, 'case study', ...(project.technologies || [])]}
       />
       <Navbar />
       
@@ -95,29 +113,37 @@ const PortfolioDetail = () => {
                   Portfolio
                 </Link>
                 <ChevronRight className="w-4 h-4" />
-                <span>{project.category}</span>
+                <span>{project.category || 'Project'}</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
               <p className="text-xl text-white/90 mb-8 max-w-3xl">{project.summary}</p>
 
               <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-2">
-                  <Building2 className="w-5 h-5" />
-                  <span>{project.client}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-5 h-5" />
-                  <span>{project.country}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  <span>{project.duration}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-5 h-5" />
-                  <span>{project.teamSize}</span>
-                </div>
+                {project.client_name && (
+                  <div className="flex items-center gap-2">
+                    <Building2 className="w-5 h-5" />
+                    <span>{project.client_name}</span>
+                  </div>
+                )}
+                {project.country && (
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-5 h-5" />
+                    <span>{project.country}</span>
+                  </div>
+                )}
+                {project.duration_text && (
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-5 h-5" />
+                    <span>{project.duration_text}</span>
+                  </div>
+                )}
+                {project.team_size && (
+                  <div className="flex items-center gap-2">
+                    <Users className="w-5 h-5" />
+                    <span>{project.team_size}</span>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
@@ -130,9 +156,19 @@ const PortfolioDetail = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl flex items-center justify-center"
+              className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl overflow-hidden"
             >
-              <div className="text-8xl opacity-50">📊</div>
+              {project.hero_image_url ? (
+                <img
+                  src={project.hero_image_url}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-8xl opacity-50">📊</div>
+                </div>
+              )}
             </motion.div>
           </div>
         </section>
@@ -142,122 +178,138 @@ const PortfolioDetail = () => {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-12">
               {/* Overview */}
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <h2 className="text-3xl font-bold mb-4">Project Overview</h2>
-                <p className="text-lg text-foreground/80 leading-relaxed">{project.description}</p>
-              </motion.section>
+              {project.description && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <h2 className="text-3xl font-bold mb-4">Project Overview</h2>
+                  <div className="prose prose-lg dark:prose-invert max-w-none">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {project.description}
+                    </ReactMarkdown>
+                  </div>
+                </motion.section>
+              )}
 
               {/* Challenges */}
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                <h2 className="text-3xl font-bold mb-6">Challenges</h2>
-                <div className="space-y-6">
-                  {project.challenges.map((challenge, index) => (
-                    <Card key={index}>
-                      <CardContent className="p-6">
-                        <h3 className="text-xl font-bold mb-2">{challenge.title}</h3>
-                        <p className="text-foreground/80">{challenge.description}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </motion.section>
+              {project.challenges && project.challenges.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <h2 className="text-3xl font-bold mb-6">Challenges</h2>
+                  <div className="space-y-6">
+                    {project.challenges.map((challenge: any, index: number) => (
+                      <Card key={index}>
+                        <CardContent className="p-6">
+                          <h3 className="text-xl font-bold mb-2">{challenge.title}</h3>
+                          <p className="text-foreground/80">{challenge.description}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
 
               {/* Solutions */}
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <h2 className="text-3xl font-bold mb-6">Solutions</h2>
-                <div className="space-y-6">
-                  {project.solutions.map((solution, index) => (
-                    <Card key={index} className="border-l-4 border-l-primary">
-                      <CardContent className="p-6">
-                        <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
-                          <CheckCircle2 className="w-5 h-5 text-primary" />
-                          {solution.title}
-                        </h3>
-                        <p className="text-foreground/80 ml-7">{solution.description}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </motion.section>
+              {project.solutions && project.solutions.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <h2 className="text-3xl font-bold mb-6">Solutions</h2>
+                  <div className="space-y-6">
+                    {project.solutions.map((solution: any, index: number) => (
+                      <Card key={index} className="border-l-4 border-l-primary">
+                        <CardContent className="p-6">
+                          <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+                            <CheckCircle2 className="w-5 h-5 text-primary" />
+                            {solution.title}
+                          </h3>
+                          <p className="text-foreground/80 ml-7">{solution.description}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
 
               {/* Results */}
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-              >
-                <h2 className="text-3xl font-bold mb-6">Results & Impact</h2>
-                <div className="grid sm:grid-cols-2 gap-6">
-                  {project.results.map((result, index) => (
-                    <Card key={index} className="bg-gradient-to-br from-primary/5 to-accent/5">
-                      <CardContent className="p-6 text-center">
-                        <div className="flex items-center justify-center mb-2">
-                          <TrendingUp className="w-6 h-6 text-primary" />
-                        </div>
-                        <div className="text-4xl font-bold text-primary mb-2">{result.metric}</div>
-                        <p className="text-foreground/80">{result.description}</p>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </motion.section>
+              {project.results && project.results.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <h2 className="text-3xl font-bold mb-6">Results & Impact</h2>
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {project.results.map((result: any, index: number) => (
+                      <Card key={index} className="bg-gradient-to-br from-primary/5 to-accent/5">
+                        <CardContent className="p-6 text-center">
+                          <div className="flex items-center justify-center mb-2">
+                            <TrendingUp className="w-6 h-6 text-primary" />
+                          </div>
+                          <div className="text-4xl font-bold text-primary mb-2">{result.metric}</div>
+                          <p className="text-foreground/80">{result.description}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
             </div>
 
             {/* Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-6">
                 {/* Technologies */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <Card>
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-bold mb-4">Technologies Used</h3>
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech) => (
-                          <Badge key={tech} variant="secondary">
-                            {tech}
-                          </Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                {project.technologies && project.technologies.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    <Card>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold mb-4">Technologies Used</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {project.technologies.map((tech: string) => (
+                            <Badge key={tech} variant="secondary">
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )}
 
                 {/* Services */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                >
-                  <Card>
-                    <CardContent className="p-6">
-                      <h3 className="text-xl font-bold mb-4">Services Provided</h3>
-                      <ul className="space-y-3">
-                        {project.services.map((service, index) => (
-                          <li key={index} className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                            <span>{service}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                {project.services && project.services.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                  >
+                    <Card>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-bold mb-4">Services Provided</h3>
+                        <ul className="space-y-3">
+                          {project.services.map((service: string, index: number) => (
+                            <li key={index} className="flex items-center gap-2">
+                              <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                              <span>{service}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                )}
 
                 {/* CTA */}
                 <motion.div

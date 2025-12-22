@@ -48,6 +48,18 @@ import {
   Users,
   HelpCircle,
   Star,
+  Database,
+  Globe,
+  Bot,
+  Share2,
+  Mic,
+  Layers,
+  Smartphone,
+  Shield,
+  Zap,
+  Brain,
+  Settings,
+  Award,
 } from 'lucide-react';
 
 // Types for form data
@@ -93,6 +105,13 @@ interface CourseFormData {
     support: string;
   };
 
+  // Marketing - FAQ
+  faq: FAQItem[];
+  whats_included: string[];
+
+  // Curriculum - Modules
+  modules: ModuleItem[];
+
   // Enrollment
   payment_methods: string[];
   payment_instructions: string;
@@ -122,6 +141,8 @@ interface Testimonial {
 interface ValueItem {
   item: string;
   original_price: string;
+  is_premium?: boolean;
+  sub_text?: string;
 }
 
 interface EnrollmentFormField {
@@ -130,6 +151,18 @@ interface EnrollmentFormField {
   type: 'text' | 'phone' | 'email' | 'select' | 'textarea';
   required: boolean;
   options?: string[];
+}
+
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface ModuleItem {
+  title: string;
+  subtitle: string;
+  description: string;
+  icon: string;
 }
 
 const AVAILABLE_ICONS = [
@@ -150,6 +183,28 @@ const PAYMENT_METHODS = [
   { value: 'rocket', label: 'Rocket' },
   { value: 'bank_transfer', label: 'Bank Transfer' },
   { value: 'card', label: 'Credit/Debit Card' },
+];
+
+// Icons for module cards (matching CurriculumAccordion)
+const MODULE_ICONS = [
+  { value: 'Database', label: 'Database', icon: Database },
+  { value: 'Globe', label: 'Globe', icon: Globe },
+  { value: 'Bot', label: 'Bot/AI', icon: Bot },
+  { value: 'Share2', label: 'Share', icon: Share2 },
+  { value: 'Mic', label: 'Microphone', icon: Mic },
+  { value: 'Code', label: 'Code', icon: Code },
+  { value: 'Layers', label: 'Layers', icon: Layers },
+  { value: 'Smartphone', label: 'Smartphone', icon: Smartphone },
+  { value: 'Shield', label: 'Shield', icon: Shield },
+  { value: 'Zap', label: 'Zap', icon: Zap },
+  { value: 'BookOpen', label: 'Book', icon: BookOpen },
+  { value: 'Target', label: 'Target', icon: Target },
+  { value: 'Rocket', label: 'Rocket', icon: Rocket },
+  { value: 'Brain', label: 'Brain', icon: Brain },
+  { value: 'Settings', label: 'Settings', icon: Settings },
+  { value: 'Users', label: 'Users', icon: Users },
+  { value: 'Star', label: 'Star', icon: Star },
+  { value: 'Award', label: 'Award', icon: Award },
 ];
 
 const getDefaultFormData = (): CourseFormData => ({
@@ -179,9 +234,12 @@ const getDefaultFormData = (): CourseFormData => ({
   comparison_features: [{ feature: '', us: true, others: false }],
   target_audience: [{ title: '', description: '', icon: 'GraduationCap' }],
   testimonials: [{ name: '', role: '', text: '', video_url: '', rating: 5 }],
-  value_breakdown: [{ item: '', original_price: '' }],
+          value_breakdown: [{ item: '', original_price: '', is_premium: false, sub_text: '' }],
   countdown_end_date: undefined,
   stats: { students: '', community: '', support: '' },
+  faq: [{ question: '', answer: '' }],
+  whats_included: [''],
+  modules: [{ title: '', subtitle: '', description: '', icon: 'Database' }],
   payment_methods: [],
   payment_instructions: '',
   enrollment_form_fields: [],
@@ -207,14 +265,7 @@ const AdminCourseEditor = () => {
       .trim();
   }, []);
 
-  // Fetch existing course data
-  useEffect(() => {
-    if (isEditing && id) {
-      fetchCourse();
-    }
-  }, [id, isEditing]);
-
-  const fetchCourse = async () => {
+  const fetchCourse = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('courses')
@@ -265,17 +316,28 @@ const AdminCourseEditor = () => {
             ? data.testimonials as Testimonial[]
             : [{ name: '', role: '', text: '', video_url: '', rating: 5 }],
           value_breakdown: Array.isArray(data.value_breakdown) && data.value_breakdown.length > 0
-            ? (data.value_breakdown as { item: string; original_price: number }[]).map(v => ({
+            ? (data.value_breakdown as { item: string; original_price: number; is_premium?: boolean; sub_text?: string }[]).map(v => ({
                 item: v.item,
-                original_price: v.original_price?.toString() || ''
+                original_price: v.original_price?.toString() || '',
+                is_premium: v.is_premium || false,
+                sub_text: v.sub_text || ''
               }))
-            : [{ item: '', original_price: '' }],
+            : [{ item: '', original_price: '', is_premium: false, sub_text: '' }],
           countdown_end_date: data.countdown_end_date ? new Date(data.countdown_end_date) : undefined,
           stats: {
             students: (data.stats as Record<string, string>)?.students || '',
             community: (data.stats as Record<string, string>)?.community || '',
             support: (data.stats as Record<string, string>)?.support || '',
           },
+          faq: Array.isArray(data.faq) && data.faq.length > 0
+            ? data.faq as FAQItem[]
+            : [{ question: '', answer: '' }],
+          whats_included: Array.isArray(data.whats_included) && data.whats_included.length > 0
+            ? data.whats_included as string[]
+            : [''],
+          modules: Array.isArray(data.modules) && data.modules.length > 0
+            ? data.modules as ModuleItem[]
+            : [{ title: '', subtitle: '', description: '', icon: 'Database' }],
           payment_methods: Array.isArray(data.payment_methods) ? data.payment_methods as string[] : [],
           payment_instructions: data.payment_instructions || '',
           enrollment_form_fields: Array.isArray(data.enrollment_form_fields)
@@ -290,7 +352,14 @@ const AdminCourseEditor = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, navigate]);
+
+  // Fetch existing course data
+  useEffect(() => {
+    if (isEditing && id) {
+      fetchCourse();
+    }
+  }, [id, isEditing, fetchCourse]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -343,7 +412,9 @@ const AdminCourseEditor = () => {
           .filter(v => v.item.trim())
           .map(v => ({
             item: v.item,
-            original_price: v.original_price ? parseFloat(v.original_price) : 0
+            original_price: v.original_price ? parseFloat(v.original_price) : 0,
+            is_premium: v.is_premium || false,
+            sub_text: v.sub_text?.trim() || undefined,
           })),
         countdown_end_date: formData.countdown_end_date
           ? formData.countdown_end_date.toISOString()
@@ -353,6 +424,9 @@ const AdminCourseEditor = () => {
           community: formData.stats.community || null,
           support: formData.stats.support || null,
         },
+        faq: formData.faq.filter(f => f.question.trim() && f.answer.trim()),
+        whats_included: formData.whats_included.filter(w => w.trim()),
+        modules: formData.modules.filter(m => m.title.trim()),
         payment_methods: formData.payment_methods,
         payment_instructions: formData.payment_instructions.trim() || null,
         enrollment_form_fields: formData.enrollment_form_fields,
@@ -547,11 +621,30 @@ const AdminCourseEditor = () => {
                           value={formData.description}
                           onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                           placeholder="Describe your course in detail. You can use markdown formatting..."
-                          rows={6}
+                          rows={8}
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                          Supports markdown formatting
+                          Supports markdown: **bold** for purple highlights, ## for headings, ### for subheadings, - for bullet points
                         </p>
+                        
+                        {/* Premium Description Format Guide */}
+                        <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                          <h4 className="text-sm font-semibold text-purple-900 dark:text-purple-100 mb-2 flex items-center gap-2">
+                            <Lightbulb className="w-4 h-4" />
+                            Premium Description Format
+                          </h4>
+                          <p className="text-xs text-purple-700 dark:text-purple-300 mb-3">
+                            Use this structure for a premium look on the course page:
+                          </p>
+                          <pre className="text-xs bg-white dark:bg-slate-900 p-3 rounded border overflow-x-auto text-slate-700 dark:text-slate-300">
+{`## Main Heading
+**Highlighted text** — regular text
+
+### Purple Subheading
+- **Bold point:** description
+- Regular bullet point
+- **Another bold:** more text`}</pre>
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -611,7 +704,7 @@ const AdminCourseEditor = () => {
                   <CardContent className="space-y-4">
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
-                        <Label htmlFor="price_regular">Regular Price (৳)</Label>
+                        <Label htmlFor="price_regular">Regular Price ($)</Label>
                         <Input
                           id="price_regular"
                           type="number"
@@ -623,7 +716,7 @@ const AdminCourseEditor = () => {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="price_offer">Offer Price (৳)</Label>
+                        <Label htmlFor="price_offer">Offer Price ($)</Label>
                         <Input
                           id="price_offer"
                           type="number"
@@ -998,37 +1091,142 @@ const AdminCourseEditor = () => {
 
           {/* Tab 4: Curriculum */}
           <TabsContent value="curriculum" className="mt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Course Curriculum</CardTitle>
-                <CardDescription>Manage lessons and modules</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {isEditing ? (
-                  <div className="text-center py-8">
-                    <ListOrdered className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Manage Lessons</h3>
-                    <p className="text-muted-foreground mb-4">
-                      Lessons are managed separately to keep the course editor clean and focused.
-                    </p>
-                    <Button type="button" asChild>
-                      <Link to={`/admin/courses/${id}/lessons`}>
-                        <ListOrdered className="w-4 h-4 mr-2" />
-                        Manage Lessons
-                      </Link>
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <ListOrdered className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">Save Course First</h3>
-                    <p className="text-muted-foreground">
-                      Save the course to enable lesson management. You can add lessons after creating the course.
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              {/* Module Cards Editor */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Module Cards</CardTitle>
+                  <CardDescription>
+                    Define how module cards appear on the course landing page. Each module gets a purple gradient card with icon, title, subtitle, and description.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {formData.modules.map((module, index) => {
+                    const SelectedIcon = MODULE_ICONS.find(i => i.value === module.icon)?.icon || Database;
+                    return (
+                      <div
+                        key={index}
+                        className="p-4 border rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/20 dark:to-purple-950/20"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white shrink-0">
+                            <SelectedIcon className="w-5 h-5" />
+                          </div>
+                          <span className="font-semibold text-lg">Module {index + 1}</span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => removeArrayItem('modules', index)}
+                            className="ml-auto text-red-500 hover:text-red-700 hover:bg-red-50"
+                            disabled={formData.modules.length <= 1}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <Label>Module Title</Label>
+                            <Input
+                              value={module.title}
+                              onChange={(e) => updateArrayItem('modules', index, { ...module, title: e.target.value })}
+                              placeholder="Fundamentals of n8n"
+                            />
+                          </div>
+                          <div>
+                            <Label>Icon</Label>
+                            <Select
+                              value={module.icon}
+                              onValueChange={(value) => updateArrayItem('modules', index, { ...module, icon: value })}
+                            >
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {MODULE_ICONS.map((iconOption) => {
+                                  const IconComp = iconOption.icon;
+                                  return (
+                                    <SelectItem key={iconOption.value} value={iconOption.value}>
+                                      <div className="flex items-center gap-2">
+                                        <IconComp className="w-4 h-4" />
+                                        <span>{iconOption.label}</span>
+                                      </div>
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+
+                        <div className="mt-3">
+                          <Label>Subtitle (short summary)</Label>
+                          <Input
+                            value={module.subtitle}
+                            onChange={(e) => updateArrayItem('modules', index, { ...module, subtitle: e.target.value })}
+                            placeholder="n8n introduction, AI workflow setup, and API configurations"
+                          />
+                        </div>
+
+                        <div className="mt-3">
+                          <Label>Description (longer explanation)</Label>
+                          <Textarea
+                            value={module.description}
+                            onChange={(e) => updateArrayItem('modules', index, { ...module, description: e.target.value })}
+                            placeholder="Setup the Google, OpenAI, and Gemini APIs by learning the basics of the n8n platform."
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => addArrayItem('modules', { title: '', subtitle: '', description: '', icon: 'Database' })}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Module
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Lesson Management */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Lessons</CardTitle>
+                  <CardDescription>Manage individual lessons for each module</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isEditing ? (
+                    <div className="text-center py-8">
+                      <ListOrdered className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">Manage Lessons</h3>
+                      <p className="text-muted-foreground mb-4">
+                        Lessons are managed separately. Each lesson title should start with "Module X:" to group them.
+                      </p>
+                      <Button type="button" asChild>
+                        <Link to={`/admin/courses/${id}/lessons`}>
+                          <ListOrdered className="w-4 h-4 mr-2" />
+                          Manage Lessons
+                        </Link>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <ListOrdered className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">Save Course First</h3>
+                      <p className="text-muted-foreground">
+                        Save the course to enable lesson management.
+                      </p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           {/* Tab 5: Marketing */}
@@ -1422,39 +1620,113 @@ const AdminCourseEditor = () => {
                   <CardDescription>Show the total value of everything included</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     {formData.value_breakdown.map((item, index) => (
+                      <div key={index} className="space-y-2 p-4 border rounded-lg bg-card">
+                        <div className="flex gap-2">
+                          <Input
+                            value={item.item}
+                            onChange={(e) =>
+                              updateArrayField('value_breakdown', index, {
+                                ...item,
+                                item: e.target.value,
+                              })
+                            }
+                            placeholder="e.g., 24+ Hours Video Content"
+                            className="flex-1"
+                          />
+                          <Input
+                            type="number"
+                            min="0"
+                            value={item.original_price}
+                            onChange={(e) =>
+                              updateArrayField('value_breakdown', index, {
+                                ...item,
+                                original_price: e.target.value,
+                              })
+                            }
+                            placeholder="Price"
+                            className="w-32"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeArrayItem('value_breakdown', index)}
+                            disabled={formData.value_breakdown.length === 1}
+                          >
+                            <Trash2 className="w-4 h-4 text-destructive" />
+                          </Button>
+                        </div>
+                        <div className="flex gap-4 items-center">
+                          <div className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`premium-${index}`}
+                              checked={item.is_premium || false}
+                              onCheckedChange={(checked) =>
+                                updateArrayField('value_breakdown', index, {
+                                  ...item,
+                                  is_premium: checked as boolean,
+                                })
+                              }
+                            />
+                            <Label htmlFor={`premium-${index}`} className="text-sm font-normal cursor-pointer">
+                              Premium (Crown Icon)
+                            </Label>
+                          </div>
+                          <Input
+                            value={item.sub_text || ''}
+                            onChange={(e) =>
+                              updateArrayField('value_breakdown', index, {
+                                ...item,
+                                sub_text: e.target.value,
+                              })
+                            }
+                            placeholder="Sub-text (e.g., Usually $240)"
+                            className="flex-1 max-w-xs"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        addArrayItem('value_breakdown', { item: '', original_price: '', is_premium: false, sub_text: '' })
+                      }
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Item
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* What's Included */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>What's Included</CardTitle>
+                  <CardDescription>List of items included in the course (shown in pricing section)</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {formData.whats_included.map((item, index) => (
                       <div key={index} className="flex gap-2">
+                        <div className="flex items-center text-muted-foreground">
+                          <GripVertical className="w-4 h-4" />
+                        </div>
                         <Input
-                          value={item.item}
-                          onChange={(e) =>
-                            updateArrayField('value_breakdown', index, {
-                              ...item,
-                              item: e.target.value,
-                            })
-                          }
-                          placeholder="e.g., 24+ Hours Video Content"
-                          className="flex-1"
-                        />
-                        <Input
-                          type="number"
-                          min="0"
-                          value={item.original_price}
-                          onChange={(e) =>
-                            updateArrayField('value_breakdown', index, {
-                              ...item,
-                              original_price: e.target.value,
-                            })
-                          }
-                          placeholder="Price"
-                          className="w-32"
+                          value={item}
+                          onChange={(e) => updateArrayField('whats_included', index, e.target.value)}
+                          placeholder="e.g., 24+ hours of HD video content"
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
-                          onClick={() => removeArrayItem('value_breakdown', index)}
-                          disabled={formData.value_breakdown.length === 1}
+                          onClick={() => removeArrayItem('whats_included', index)}
+                          disabled={formData.whats_included.length === 1}
                         >
                           <Trash2 className="w-4 h-4 text-destructive" />
                         </Button>
@@ -1464,12 +1736,73 @@ const AdminCourseEditor = () => {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        addArrayItem('value_breakdown', { item: '', original_price: '' })
-                      }
+                      onClick={() => addArrayItem('whats_included', '')}
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Item
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* FAQ */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Frequently Asked Questions</CardTitle>
+                  <CardDescription>Common questions and answers about the course</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {formData.faq.map((faqItem, index) => (
+                      <div key={index} className="flex gap-4 p-4 border rounded-lg">
+                        <div className="flex-1 space-y-3">
+                          <div>
+                            <Label>Question</Label>
+                            <Input
+                              value={faqItem.question}
+                              onChange={(e) =>
+                                updateArrayField('faq', index, {
+                                  ...faqItem,
+                                  question: e.target.value,
+                                })
+                              }
+                              placeholder="e.g., Do I need prior experience?"
+                            />
+                          </div>
+                          <div>
+                            <Label>Answer</Label>
+                            <Textarea
+                              value={faqItem.answer}
+                              onChange={(e) =>
+                                updateArrayField('faq', index, {
+                                  ...faqItem,
+                                  answer: e.target.value,
+                                })
+                              }
+                              placeholder="e.g., Not at all! This course is designed for complete beginners..."
+                              rows={3}
+                            />
+                          </div>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => removeArrayItem('faq', index)}
+                          disabled={formData.faq.length === 1}
+                        >
+                          <Trash2 className="w-4 h-4 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => addArrayItem('faq', { question: '', answer: '' })}
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add FAQ
                     </Button>
                   </div>
                 </CardContent>

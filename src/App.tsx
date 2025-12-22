@@ -33,6 +33,13 @@ import AdminCourseEditor from "./pages/admin/AdminCourseEditor";
 import AdminCertificates from "./pages/admin/AdminCertificates";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminContacts from "./pages/admin/AdminContacts";
+import AdminLessonEditor from "./pages/admin/AdminLessonEditor";
+import AdminPortfolio from "./pages/admin/AdminPortfolio";
+import AdminPortfolioEditor from "./pages/admin/AdminPortfolioEditor";
+import AdminPortfolioCategories from "./pages/admin/AdminPortfolioCategories";
+import AdminBlog from "./pages/admin/AdminBlog";
+import AdminBlogEditor from "./pages/admin/AdminBlogEditor";
+import AdminBlogCategories from "./pages/admin/AdminBlogCategories";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -138,6 +145,14 @@ const App = () => (
                 }
               />
               <Route
+                path="/admin/courses/:id/lessons"
+                element={
+                  <ProtectedRoute>
+                    <AdminLessonEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/admin/certificates"
                 element={
                   <ProtectedRoute>
@@ -158,6 +173,70 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <AdminContacts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolio />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio/new"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolioEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolioEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/portfolio/categories"
+                element={
+                  <ProtectedRoute>
+                    <AdminPortfolioCategories />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog"
+                element={
+                  <ProtectedRoute>
+                    <AdminBlog />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog/new"
+                element={
+                  <ProtectedRoute>
+                    <AdminBlogEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <AdminBlogEditor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/blog/categories"
+                element={
+                  <ProtectedRoute>
+                    <AdminBlogCategories />
                   </ProtectedRoute>
                 }
               />
