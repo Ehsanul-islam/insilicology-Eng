@@ -1,7 +1,7 @@
 import { memo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Play, PlayCircle, Users, BookOpen, Star, Award } from 'lucide-react';
+import { ArrowRight, Play, PlayCircle, Users, BookOpen, Star, Award, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type HeroVariant = 'default' | 'skilltori' | 'bio' | 'vibe';
@@ -37,9 +37,9 @@ const UnifiedHero = memo(({
 
     const getGreeting = () => {
         const hour = new Date().getHours();
-        if (hour < 12) return 'শুভ সকাল';
-        if (hour < 17) return 'শুভ বিকাল';
-        return 'শুভ সন্ধ্যা';
+        if (hour < 12) return 'Good Morning';
+        if (hour < 17) return 'Good Afternoon';
+        return 'Good Evening';
     };
 
     // Skilltori variant
@@ -84,13 +84,13 @@ const UnifiedHero = memo(({
                             className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200 shadow-sm"
                         >
                             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                            <span className="text-sm font-medium text-gray-700" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
+                            <span className="text-sm font-medium text-gray-700">
                                 {getGreeting()}
                             </span>
                         </motion.div>
 
                         <div>
-                            <h1 className="text-5xl md:text-6xl font-bold leading-tight text-gray-900">
+                            <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900">
                                 <div className="flex flex-wrap items-baseline gap-3">
                                     <span>Your Partner in</span>
                                     <span className="relative inline-block min-w-[200px]">
@@ -112,28 +112,45 @@ const UnifiedHero = memo(({
                                         </AnimatePresence>
                                     </span>
                                 </div>
-                                <div className="mt-2 text-5xl md:text-6xl font-bold leading-tight text-gray-900">
+                                <div className="mt-2 text-4xl md:text-5xl font-bold leading-tight text-gray-900">
                                     Insilicology
                                 </div>
                             </h1>
                         </div>
 
-                        <p
-                            className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-2xl"
-                            style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
-                        >
-                            {subtitle || 'স্কিল শেখা এখন আরও সহজ। ছোট ছোট লেসনে শিখুন কাজে লাগার মতো স্কিল — জব হোক বা ফ্রিল্যান্সিং, আপনি তৈরি তো?'}
+                        <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl">
+                            {subtitle || "We don't just teach skills — we build research-ready scientists."}
                         </p>
+
+                        <div className="flex flex-wrap gap-3 pt-2">
+                            <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
+                                <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
+                                    <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                </div>
+                                <span className="text-sm font-semibold text-gray-700">Thesis</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
+                                <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
+                                    <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                </div>
+                                <span className="text-sm font-semibold text-gray-700">Publications</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
+                                <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
+                                    <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                </div>
+                                <span className="text-sm font-semibold text-gray-700">Industry & Freelancing</span>
+                            </div>
+                        </div>
 
                         <div className="flex flex-wrap gap-4 pt-2">
                             <Button
                                 size="lg"
                                 asChild
                                 className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold px-8 rounded-lg shadow-lg hover:shadow-xl transition-all"
-                                style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
                             >
                                 <Link to={ctaPrimary?.href || '/courses'}>
-                                    {ctaPrimary?.text || 'রিসার্চ ওয়ার্কশপ'}
+                                    {ctaPrimary?.text || 'Explore Courses'}
                                 </Link>
                             </Button>
                             <Button
@@ -141,10 +158,9 @@ const UnifiedHero = memo(({
                                 variant="outline"
                                 asChild
                                 className="bg-white/80 backdrop-blur-sm border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED]/10 font-semibold px-8 rounded-lg shadow-md hover:shadow-lg transition-all"
-                                style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
                             >
                                 <Link to={ctaSecondary?.href || '/auth'}>
-                                    {ctaSecondary?.text || 'একাউন্ট খুলুন'}
+                                    {ctaSecondary?.text || 'Get Started'}
                                 </Link>
                             </Button>
                         </div>
