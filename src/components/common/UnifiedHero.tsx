@@ -70,6 +70,23 @@ const UnifiedHero = memo(({
                     />
                 </div>
 
+                {/* Ambient Glow Pulse Effect (Left, Right, Bottom) */}
+                <motion.div
+                    className="absolute inset-0 pointer-events-none z-0"
+                    animate={{
+                        boxShadow: [
+                            "inset 20px 0 60px -10px rgba(124, 58, 237, 0.05), inset -20px 0 60px -10px rgba(124, 58, 237, 0.05), inset 0 -20px 60px -10px rgba(124, 58, 237, 0.05)",
+                            "inset 50px 0 100px -10px rgba(124, 58, 237, 0.25), inset -50px 0 100px -10px rgba(124, 58, 237, 0.25), inset 0 -50px 100px -10px rgba(124, 58, 237, 0.25)"
+                        ]
+                    }}
+                    transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut"
+                    }}
+                />
+
                 <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
