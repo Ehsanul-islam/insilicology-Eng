@@ -60,6 +60,7 @@ import {
   Brain,
   Settings,
   Award,
+  Lightbulb,
 } from 'lucide-react';
 
 // Types for form data
@@ -234,7 +235,7 @@ const getDefaultFormData = (): CourseFormData => ({
   comparison_features: [{ feature: '', us: true, others: false }],
   target_audience: [{ title: '', description: '', icon: 'GraduationCap' }],
   testimonials: [{ name: '', role: '', text: '', video_url: '', rating: 5 }],
-          value_breakdown: [{ item: '', original_price: '', is_premium: false, sub_text: '' }],
+  value_breakdown: [{ item: '', original_price: '', is_premium: false, sub_text: '' }],
   countdown_end_date: undefined,
   stats: { students: '', community: '', support: '' },
   faq: [{ question: '', answer: '' }],
@@ -317,11 +318,11 @@ const AdminCourseEditor = () => {
             : [{ name: '', role: '', text: '', video_url: '', rating: 5 }],
           value_breakdown: Array.isArray(data.value_breakdown) && data.value_breakdown.length > 0
             ? (data.value_breakdown as { item: string; original_price: number; is_premium?: boolean; sub_text?: string }[]).map(v => ({
-                item: v.item,
-                original_price: v.original_price?.toString() || '',
-                is_premium: v.is_premium || false,
-                sub_text: v.sub_text || ''
-              }))
+              item: v.item,
+              original_price: v.original_price?.toString() || '',
+              is_premium: v.is_premium || false,
+              sub_text: v.sub_text || ''
+            }))
             : [{ item: '', original_price: '', is_premium: false, sub_text: '' }],
           countdown_end_date: data.countdown_end_date ? new Date(data.countdown_end_date) : undefined,
           stats: {
@@ -626,7 +627,7 @@ const AdminCourseEditor = () => {
                         <p className="text-xs text-muted-foreground mt-1">
                           Supports markdown: **bold** for purple highlights, ## for headings, ### for subheadings, - for bullet points
                         </p>
-                        
+
                         {/* Premium Description Format Guide */}
                         <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 rounded-lg">
                           <h4 className="text-sm font-semibold text-purple-900 dark:text-purple-100 mb-2 flex items-center gap-2">
@@ -637,7 +638,7 @@ const AdminCourseEditor = () => {
                             Use this structure for a premium look on the course page:
                           </p>
                           <pre className="text-xs bg-white dark:bg-slate-900 p-3 rounded border overflow-x-auto text-slate-700 dark:text-slate-300">
-{`## Main Heading
+                            {`## Main Heading
 **Highlighted text** — regular text
 
 ### Purple Subheading
@@ -1130,7 +1131,7 @@ const AdminCourseEditor = () => {
                             <Label>Module Title</Label>
                             <Input
                               value={module.title}
-                              onChange={(e) => updateArrayItem('modules', index, { ...module, title: e.target.value })}
+                              onChange={(e) => updateArrayField('modules', index, { ...module, title: e.target.value })}
                               placeholder="Fundamentals of n8n"
                             />
                           </div>
@@ -1138,7 +1139,7 @@ const AdminCourseEditor = () => {
                             <Label>Icon</Label>
                             <Select
                               value={module.icon}
-                              onValueChange={(value) => updateArrayItem('modules', index, { ...module, icon: value })}
+                              onValueChange={(value) => updateArrayField('modules', index, { ...module, icon: value })}
                             >
                               <SelectTrigger>
                                 <SelectValue />
@@ -1164,7 +1165,7 @@ const AdminCourseEditor = () => {
                           <Label>Subtitle (short summary)</Label>
                           <Input
                             value={module.subtitle}
-                            onChange={(e) => updateArrayItem('modules', index, { ...module, subtitle: e.target.value })}
+                            onChange={(e) => updateArrayField('modules', index, { ...module, subtitle: e.target.value })}
                             placeholder="n8n introduction, AI workflow setup, and API configurations"
                           />
                         </div>
@@ -1173,7 +1174,7 @@ const AdminCourseEditor = () => {
                           <Label>Description (longer explanation)</Label>
                           <Textarea
                             value={module.description}
-                            onChange={(e) => updateArrayItem('modules', index, { ...module, description: e.target.value })}
+                            onChange={(e) => updateArrayField('modules', index, { ...module, description: e.target.value })}
                             placeholder="Setup the Google, OpenAI, and Gemini APIs by learning the basics of the n8n platform."
                             rows={2}
                           />
