@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar';
-import SkilltoriHero from '@/components/SkilltoriHero';
+import UnifiedHero from '@/components/common/UnifiedHero';
 import Features from '@/components/Features';
 import FeaturedCourses from '@/components/FeaturedCourses';
 import Footer from '@/components/Footer';
@@ -17,7 +17,7 @@ const Index = () => {
       />
       <Navbar />
       <main className="flex-1">
-        <SkilltoriHero />
+        <UnifiedHero variant="skilltori" />
         <Features />
         <FeaturedCourses />
       </main>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, GraduationCap, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -187,4 +187,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default memo(Navbar);
