@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BookOpen, Users, DollarSign, TrendingUp, Plus } from 'lucide-react';
+import { BookOpen, Users, DollarSign, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -85,11 +85,6 @@ const InstructorDashboard = () => {
                     <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
                     <p className="text-muted-foreground">Welcome back, {user?.user_metadata?.full_name || 'Instructor'}!</p>
                 </div>
-                <Button asChild>
-                    <Link to="/instructor/courses/new">
-                        <Plus className="mr-2 h-4 w-4" /> Create Course
-                    </Link>
-                </Button>
             </div>
 
             {/* Stats Grid */}
@@ -164,7 +159,7 @@ const InstructorDashboard = () => {
                             </div>
                         ) : (
                             <div className="text-center py-6 text-muted-foreground">
-                                No courses found. Create your first course!
+                                No courses found. Contact admin to get courses assigned.
                             </div>
                         )}
                     </CardContent>

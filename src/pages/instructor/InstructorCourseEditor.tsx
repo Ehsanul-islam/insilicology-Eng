@@ -140,6 +140,14 @@ const InstructorCourseEditor = () => {
     const [activeTab, setActiveTab] = useState('basic');
     const [formData, setFormData] = useState<CourseFormData>(getDefaultFormData());
 
+    // Prevent new course creation - only admins can create courses
+    useEffect(() => {
+        if (id === 'new') {
+            toast.error('Only admins can create new courses');
+            navigate('/instructor/courses');
+        }
+    }, [id, navigate]);
+
     // Initialize instructor info from profile if new
     useEffect(() => {
         if (!isEditing && user) {
