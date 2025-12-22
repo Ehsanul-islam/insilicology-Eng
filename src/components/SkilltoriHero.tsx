@@ -91,8 +91,8 @@ const SkilltoriHero = () => {
             </div>
 
             <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
-                <div className="grid lg:grid-cols-[55%_45%] gap-12 items-center">
-                    {/* Left Column - Text Content */}
+                <div className="grid gap-12 items-center">
+                    {/* Text Content */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -170,114 +170,6 @@ const SkilltoriHero = () => {
                                 একাউন্ট খুলুন
                             </Button>
                         </div>
-                    </motion.div>
-
-                    {/* Right Column - Dashboard Mockup */}
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8, delay: 0.3 }}
-                        className="relative"
-                    >
-                        {/* Main Dashboard Card */}
-                        <div className="relative bg-gradient-to-br from-[#7C3AED] via-[#6D28D9] to-[#5B21B6] rounded-3xl p-8 shadow-2xl">
-                            {/* Top Bar */}
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                                    <span className="text-white text-sm font-medium" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                        লাইভ লার্নিং চলছে
-                                    </span>
-                                </div>
-                                <div className="text-white text-sm" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                    ১২৮+ একটিভ লার্নার
-                                </div>
-                            </div>
-
-                            {/* Current Lesson Card */}
-                            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
-                                <div className="text-white/80 text-sm mb-2" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                    বর্তমান লেসন
-                                </div>
-                                <div className="text-white text-xl font-semibold mb-4" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                    Qualitative Research Design
-                                </div>
-
-                                {/* Play Button */}
-                                <div className="relative h-48 bg-gradient-to-br from-white/20 to-white/5 rounded-xl flex items-center justify-center mb-4 border border-white/10">
-                                    <motion.div
-                                        whileHover={{ scale: 1.1 }}
-                                        className="w-20 h-20 bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center cursor-pointer"
-                                    >
-                                        <PlayCircle className="w-10 h-10 text-white fill-white/20" />
-                                    </motion.div>
-                                </div>
-
-                                {/* Progress Bar */}
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm text-white/80">
-                                        <span style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>অগ্রগতি</span>
-                                        <span className="font-semibold">৬৫%</span>
-                                    </div>
-                                    <div className="h-2 bg-white/20 rounded-full overflow-hidden">
-                                        <motion.div
-                                            initial={{ width: 0 }}
-                                            animate={{ width: '65%' }}
-                                            transition={{ duration: 1.5, delay: 0.5 }}
-                                            className="h-full bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Sub Cards */}
-                            <div className="grid grid-cols-2 gap-3 mt-4">
-                                <motion.div
-                                    whileHover={{ scale: 1.05, y: -2 }}
-                                    className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 cursor-pointer"
-                                >
-                                    <div className="text-white/70 text-xs mb-1" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                        পরবর্তী
-                                    </div>
-                                    <div className="text-white text-sm font-medium" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                        Research Methods 101
-                                    </div>
-                                </motion.div>
-                                <motion.div
-                                    whileHover={{ scale: 1.05, y: -2 }}
-                                    className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 cursor-pointer"
-                                >
-                                    <div className="text-white/70 text-xs mb-1" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                        সম্পন্ন
-                                    </div>
-                                    <div className="text-white text-sm font-medium">12/18</div>
-                                </motion.div>
-                            </div>
-                        </div>
-
-                        {/* Floating Badge - Micro Lesson */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 1, duration: 0.6 }}
-                            className="absolute left-4 top-24 bg-white rounded-full px-4 py-2 shadow-xl border border-gray-200"
-                        >
-                            <span className="text-sm font-semibold text-gray-800" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                মাইক্রো লেসন
-                            </span>
-                        </motion.div>
-
-                        {/* Floating Badge - Certificate Track */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 1.2, duration: 0.6 }}
-                            className="absolute right-4 bottom-24 bg-white rounded-full px-4 py-2 shadow-xl border border-gray-200"
-                        >
-                            <span className="text-sm font-semibold text-gray-800" style={{ fontFamily: "'Hind Siliguri', sans-serif" }}>
-                                সার্টিফিকেট ট্র্যাক
-                            </span>
-                        </motion.div>
                     </motion.div>
                 </div>
             </div>
