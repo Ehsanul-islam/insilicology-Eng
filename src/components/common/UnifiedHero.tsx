@@ -23,7 +23,7 @@ const UnifiedHero = memo(({
 }: UnifiedHeroProps) => {
 
     // Skilltori variant state
-    const animatedWords = ['সাফল্যে', 'স্বপ্নে', 'অর্জনে', 'আস্থায়'];
+    const animatedWords = ['Research', 'Innovation', 'Career', 'Future', 'Success'];
     const [currentWordIndex, setCurrentWordIndex] = useState(0);
 
     useEffect(() => {
@@ -90,33 +90,31 @@ const UnifiedHero = memo(({
                         </motion.div>
 
                         <div>
-                            <h1
-                                className="text-5xl md:text-6xl font-bold leading-tight text-gray-900"
-                                style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
-                            >
-                                আপনার{' '}
-                                <span className="inline-flex items-center relative align-bottom min-w-[180px]" style={{ height: '1.2em' }}>
-                                    <AnimatePresence mode="wait">
-                                        <motion.span
-                                            key={currentWordIndex}
-                                            initial={{ y: 30, opacity: 0 }}
-                                            animate={{ y: 0, opacity: 1 }}
-                                            exit={{ y: -30, opacity: 0 }}
-                                            transition={{ duration: 0.4, ease: "easeInOut" }}
-                                            className="absolute left-0 top-0 text-[#7C3AED]"
-                                        >
+                            <h1 className="text-5xl md:text-6xl font-bold leading-tight text-gray-900">
+                                <div className="flex flex-wrap items-baseline gap-3">
+                                    <span>Your Partner in</span>
+                                    <span className="relative inline-block min-w-[200px]">
+                                        {/* Invisible spacer ensures perfect baseline alignment */}
+                                        <span className="opacity-0 select-none pointer-events-none" aria-hidden="true">
                                             {animatedWords[currentWordIndex]}
-                                        </motion.span>
-                                    </AnimatePresence>
-                                </span>
-                                {' '} সঙ্গী{' '}
-                                <span className="inline-flex items-center gap-1">
-                                    skillt
-                                    <span className="inline-flex items-center justify-center w-[0.85em] h-[0.85em] bg-[#7C3AED] rounded-full">
-                                        <PlayCircle className="w-[0.5em] h-[0.5em] text-white fill-white" />
+                                        </span>
+                                        <AnimatePresence mode="wait">
+                                            <motion.span
+                                                key={currentWordIndex}
+                                                initial={{ y: 30, opacity: 0 }}
+                                                animate={{ y: 0, opacity: 1 }}
+                                                exit={{ y: -30, opacity: 0 }}
+                                                transition={{ duration: 0.4, ease: "easeInOut" }}
+                                                className="absolute left-0 top-0 text-[#7C3AED]"
+                                            >
+                                                {animatedWords[currentWordIndex]}
+                                            </motion.span>
+                                        </AnimatePresence>
                                     </span>
-                                    ri
-                                </span>
+                                </div>
+                                <div className="mt-2 text-5xl md:text-6xl font-bold leading-tight text-gray-900">
+                                    Insilicology
+                                </div>
                             </h1>
                         </div>
 
