@@ -34,8 +34,25 @@ const FeaturedCourses = () => {
   }, []);
 
   return (
-    <section className="pt-8 pb-20 bg-white">
-      <div className="container-custom">
+    <section className="pt-8 pb-20 bg-white relative overflow-hidden">
+      {/* Breathing Motion - Ambient Glow Pulse Effect (All Corners) */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none z-0"
+        animate={{
+          boxShadow: [
+            "inset 20px 0 60px -10px rgba(208, 255, 20, 0.05), inset -20px 0 60px -10px rgba(208, 255, 20, 0.05), inset 0 20px 60px -10px rgba(208, 255, 20, 0.05), inset 0 -20px 60px -10px rgba(208, 255, 20, 0.05)",
+            "inset 50px 0 100px -10px rgba(208, 255, 20, 0.25), inset -50px 0 100px -10px rgba(208, 255, 20, 0.25), inset 0 50px 100px -10px rgba(208, 255, 20, 0.25), inset 0 -50px 100px -10px rgba(208, 255, 20, 0.25)"
+          ]
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut"
+        }}
+      />
+
+      <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -89,9 +106,9 @@ const FeaturedCourses = () => {
           viewport={{ once: true }}
           className="text-center mt-12"
         >
-          <Button 
-            size="lg" 
-            className="bg-bio-teal hover:opacity-90 text-white font-semibold px-8" 
+          <Button
+            size="lg"
+            className="bg-bio-teal hover:opacity-90 text-white font-semibold px-8"
             asChild
           >
             <Link to="/courses">
