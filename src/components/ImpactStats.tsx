@@ -8,17 +8,17 @@ const useCounter = (end: number, duration: number = 2000, startCounting: boolean
 
   useEffect(() => {
     if (!startCounting) return;
-    
+
     let startTime: number;
     let animationFrame: number;
 
     const animate = (currentTime: number) => {
       if (!startTime) startTime = currentTime;
       const progress = Math.min((currentTime - startTime) / duration, 1);
-      
+
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
       setCount(Math.floor(easeOutQuart * end));
-      
+
       if (progress < 1) {
         animationFrame = requestAnimationFrame(animate);
       }
@@ -147,14 +147,14 @@ const ImpactStats = () => {
               </p>
             </div>
           </motion.div>
-          
+
           <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent">
             Our Success Story
           </h2>
           <p className="text-sm md:text-base text-muted-foreground max-w-3xl mx-auto mb-4">
             Empowering thousands of learners to build skills and shape their future
           </p>
-          
+
           {/* Live Stats Badge with pulse animation */}
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
@@ -171,13 +171,13 @@ const ImpactStats = () => {
           </motion.div>
         </motion.div>
 
-        {/* Main Stats Grid - Compact */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
+        {/* Main Stats Grid - Compact & Centered */}
+        <div className="flex flex-wrap justify-center gap-4 lg:gap-5 mb-6 max-w-5xl mx-auto">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             const count = useCounter(stat.count, 2500, startCounting);
             const progress = (stat.milestone.current / stat.milestone.target) * 100;
-            
+
             return (
               <motion.div
                 key={index}
@@ -187,11 +187,11 @@ const ImpactStats = () => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 onHoverStart={() => setHoveredIndex(index)}
                 onHoverEnd={() => setHoveredIndex(null)}
-                className={`relative group bg-card rounded-xl border-t-4 ${stat.borderColor} border-x border-b border-border overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer`}
+                className={`relative group bg-card rounded-2xl border-t-4 ${stat.borderColor} border-x border-b border-border overflow-hidden hover:shadow-2xl shadow-lg transition-all duration-300 cursor-pointer w-full sm:w-[calc(50%-0.5rem)] lg:w-[220px]`}
               >
                 {/* Gradient overlay on hover */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-                
+
                 {/* Shimmer effect */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -200,8 +200,8 @@ const ImpactStats = () => {
                   } : {}}
                   transition={{ duration: 1.5 }}
                 />
-                
-                <div className="relative p-4">
+
+                <div className="relative p-3">
                   {/* Icon */}
                   <motion.div
                     animate={hoveredIndex === index ? { rotate: [0, -10, 10, 0] } : {}}
@@ -212,7 +212,7 @@ const ImpactStats = () => {
                     {/* Glow effect */}
                     <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-300`}></div>
                   </motion.div>
-                  
+
                   {/* Count */}
                   <div className="relative mb-1">
                     <motion.div
@@ -222,14 +222,14 @@ const ImpactStats = () => {
                     >
                       {count}+
                     </motion.div>
-                    
+
                     {/* Growth badge */}
                     <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-500/10 border border-green-500/30 rounded-full mb-2`}>
                       <TrendingUp className="w-2.5 h-2.5 text-green-600" />
                       <span className="text-xs font-bold text-green-600">{stat.growth}</span>
                     </div>
                   </div>
-                  
+
                   {/* Labels */}
                   <p className="text-xs text-muted-foreground font-medium mb-0.5">
                     {stat.sublabel}
@@ -237,32 +237,32 @@ const ImpactStats = () => {
                   <p className="text-sm font-bold mb-2">
                     {stat.label}
                   </p>
-                  
+
                   {/* Mini sparkline chart */}
-                  <div className="flex items-end gap-0.5 h-5 mb-2">
+                  <div className="flex items-end gap-1 h-12 mb-2">
                     {stat.sparkline.map((value, i) => (
                       <motion.div
                         key={i}
                         initial={{ height: 0 }}
                         whileInView={{ height: `${value}%` }}
                         transition={{ duration: 0.5, delay: startCounting ? i * 0.1 : 0 }}
-                        className={`flex-1 bg-gradient-to-t ${stat.gradient} rounded-t opacity-30 group-hover:opacity-60 transition-opacity`}
+                        className={`flex-1 bg-gradient-to-t ${stat.gradient} rounded-md opacity-50 group-hover:opacity-80 transition-all duration-300 shadow-sm`}
                       />
                     ))}
                   </div>
-                  
+
                   {/* Progress bar to milestone */}
                   <div className="space-y-0.5">
                     <div className="flex justify-between text-xs text-muted-foreground">
                       <span className="text-[10px]">Progress to {stat.milestone.target}</span>
                       <span className="font-semibold text-[10px]">{Math.round(progress)}%</span>
                     </div>
-                    <div className="h-1 bg-muted rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-muted rounded-full overflow-hidden shadow-inner">
                       <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${progress}%` }}
                         transition={{ duration: 1.5, delay: 0.5 }}
-                        className={`h-full bg-gradient-to-r ${stat.gradient} rounded-full`}
+                        className={`h-full bg-gradient-to-r ${stat.gradient} rounded-full shadow-sm`}
                       />
                     </div>
                   </div>
@@ -278,14 +278,14 @@ const ImpactStats = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8"
+          className="flex flex-wrap justify-center gap-3 mb-8 max-w-5xl mx-auto"
         >
           {additionalStats.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div
                 key={index}
-                className="flex items-center gap-2 p-3 bg-card/50 backdrop-blur-sm border border-border rounded-lg hover:shadow-md transition-all duration-300"
+                className="flex items-center gap-2 p-3 bg-card/50 backdrop-blur-sm border border-border rounded-lg hover:shadow-md transition-all duration-300 w-full sm:w-[calc(50%-0.375rem)] lg:w-[200px]"
               >
                 <Icon className="w-5 h-5 text-primary flex-shrink-0" />
                 <div>
@@ -312,7 +312,7 @@ const ImpactStats = () => {
           >
             {/* Shine effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-            
+
             <span className="relative">Join Our Growing Community</span>
             <motion.svg
               animate={{ x: [0, 4, 0] }}
@@ -325,7 +325,7 @@ const ImpactStats = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </motion.svg>
           </motion.button>
-          
+
           <p className="mt-2 text-xs text-muted-foreground">
             🎉 Join 1,100+ learners already transforming their careers
           </p>
