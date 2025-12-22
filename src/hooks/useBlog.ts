@@ -10,7 +10,6 @@ export type BlogPostUpdate = TablesUpdate<'blog_posts'>;
 interface FetchBlogPostsOptions {
   published?: boolean;
   category?: string;
-  featured?: boolean;
   search?: string;
 }
 
@@ -69,9 +68,6 @@ export const useBlog = () => {
       }
       if (options.category) {
         query = query.eq('category_id', options.category);
-      }
-      if (options.featured !== undefined) {
-        query = query.eq('featured', options.featured);
       }
       if (options.search) {
         query = query.or(`title.ilike.%${options.search}%,excerpt.ilike.%${options.search}%`);
@@ -269,13 +265,6 @@ export const useBlog = () => {
   };
 
   /**
-   * Toggle featured status
-   */
-  const toggleFeatured = async (id: string, featured: boolean) => {
-    return updateBlogPost(id, { featured });
-  };
-
-  /**
    * Fetch all categories
    */
   const fetchCategories = async () => {
@@ -454,7 +443,6 @@ export const useBlog = () => {
     updateBlogPost,
     deleteBlogPost,
     updateBlogPostStatus,
-    toggleFeatured,
     fetchCategories,
     createCategory,
     updateCategory,
@@ -465,4 +453,3 @@ export const useBlog = () => {
     fetchRelatedPosts,
   };
 };
-

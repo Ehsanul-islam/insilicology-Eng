@@ -3,13 +3,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { Tables, TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
 
 export type PortfolioProject = Tables<'portfolio_projects'>;
-export type PortfolioCategory = Tables<'portfolio_categories'>;
 export type PortfolioInsert = TablesInsert<'portfolio_projects'>;
 export type PortfolioUpdate = TablesUpdate<'portfolio_projects'>;
 
 interface FetchPortfoliosOptions {
-  status?: string;
-  category?: string;
+  status?: 'draft' | 'published' | 'archived';
   featured?: boolean;
   search?: string;
 }
@@ -33,9 +31,6 @@ export const usePortfolio = () => {
       // Apply filters
       if (options.status) {
         query = query.eq('status', options.status);
-      }
-      if (options.category) {
-        query = query.eq('category', options.category);
       }
       if (options.featured !== undefined) {
         query = query.eq('featured', options.featured);
@@ -61,8 +56,8 @@ export const usePortfolio = () => {
   /**
    * Fetch all published portfolios (for public page)
    */
-  const fetchPublishedPortfolios = async (category?: string) => {
-    return fetchPortfolios({ status: 'published', category });
+  const fetchPublishedPortfolios = async () => {
+    return fetchPortfolios({ status: 'published' });
   };
 
   /**
@@ -204,104 +199,6 @@ export const usePortfolio = () => {
   };
 
   /**
-   * Fetch all categories
-   */
-  const fetchCategories = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const { data, error: fetchError } = await supabase
-        .from('portfolio_categories')
-        .select('*')
-        .order('display_order', { ascending: true });
-
-      if (fetchError) throw fetchError;
-      return data || [];
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch categories';
-      setError(errorMessage);
-      console.error('Error fetching categories:', err);
-      return [];
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
-   * Create a new category
-   */
-  const createCategory = async (category: TablesInsert<'portfolio_categories'>) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const { data, error: createError } = await supabase
-        .from('portfolio_categories')
-        .insert(category)
-        .select()
-        .single();
-
-      if (createError) throw createError;
-      return data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create category';
-      setError(errorMessage);
-      console.error('Error creating category:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
-   * Update a category
-   */
-  const updateCategory = async (id: string, updates: TablesUpdate<'portfolio_categories'>) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const { data, error: updateError } = await supabase
-        .from('portfolio_categories')
-        .update(updates)
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (updateError) throw updateError;
-      return data;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to update category';
-      setError(errorMessage);
-      console.error('Error updating category:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
-   * Delete a category
-   */
-  const deleteCategory = async (id: string) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const { error: deleteError } = await supabase
-        .from('portfolio_categories')
-        .delete()
-        .eq('id', id);
-
-      if (deleteError) throw deleteError;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete category';
-      setError(errorMessage);
-      console.error('Error deleting category:', err);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
    * Generate slug from title
    */
   const generateSlug = (title: string): string => {
@@ -345,12 +242,7 @@ export const usePortfolio = () => {
     deletePortfolio,
     updatePortfolioStatus,
     toggleFeatured,
-    fetchCategories,
-    createCategory,
-    updateCategory,
-    deleteCategory,
     generateSlug,
     isSlugUnique,
   };
 };
-
