@@ -1,10 +1,7 @@
 import Navbar from '@/components/Navbar';
-<<<<<<< HEAD
 import SkilltoriHero from '@/components/SkilltoriHero';
 import Features from '@/components/Features';
 import FeaturedCourses from '@/components/FeaturedCourses';
-=======
->>>>>>> c32b8299aad385db5480326ac979d55ab6213aa2
 import Footer from '@/components/Footer';
 import SEOHead from '@/components/SEOHead';
 
@@ -19,15 +16,11 @@ const Index = () => {
         tags={['online learning', 'professional development', 'courses', 'skills training', 'certification']}
       />
       <Navbar />
-<<<<<<< HEAD
-      <main>
+      <main className="flex-1">
         <SkilltoriHero />
         <Features />
         <FeaturedCourses />
       </main>
-=======
-      <main className="flex-1" />
->>>>>>> c32b8299aad385db5480326ac979d55ab6213aa2
       <Footer />
     </div>
   );
