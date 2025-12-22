@@ -34,33 +34,21 @@ const FeaturedCourses = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-white">
+    <section className="pt-8 pb-20 bg-white">
       <div className="container-custom">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="mb-16"
+          className="mb-16 text-center"
         >
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
-                Featured Courses
-              </h2>
-              <div className="h-1 w-24 bg-gradient-to-r from-bio-teal to-bio-gold rounded-full"></div>
-            </div>
-            <Link 
-              to="/courses" 
-              className="hidden md:flex items-center gap-2 text-bio-teal hover:opacity-80 font-medium transition-colors"
-            >
-              Browse All
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+          <div className="mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3">
+              Featured Courses
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-bio-teal to-bio-gold rounded-full mx-auto"></div>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Hand-picked courses to kickstart your bioinformatics journey
-          </p>
         </motion.div>
 
         {loading ? (
@@ -99,7 +87,7 @@ const FeaturedCourses = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           viewport={{ once: true }}
-          className="text-center mt-12 md:hidden"
+          className="text-center mt-12"
         >
           <Button 
             size="lg" 

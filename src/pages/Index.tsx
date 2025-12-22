@@ -18,8 +18,8 @@ const Index = () => {
       <Navbar />
       <main className="flex-1">
         <UnifiedHero variant="skilltori" />
-        <Features />
         <FeaturedCourses />
+        <Features />
       </main>
       <Footer />
     </div>
