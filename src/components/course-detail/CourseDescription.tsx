@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ArrowRight, Lightbulb } from 'lucide-react';
+import { ChevronDown, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface CourseDescriptionProps {
+  title: string;
   description: string;
   maxLength?: number;
   onEnrollClick?: () => void;
@@ -11,6 +12,7 @@ interface CourseDescriptionProps {
 }
 
 const CourseDescription = ({
+  title,
   description,
   maxLength = 500,
   onEnrollClick,
@@ -52,14 +54,14 @@ const CourseDescription = ({
       // Check if it's a heading (starts with #)
       if (paragraph.startsWith('## ')) {
         return (
-          <h3 key={pIndex} className="text-lg font-bold text-foreground mt-5 mb-2.5 first:mt-0">
+          <h3 key={pIndex} className="text-xl lg:text-2xl font-bold text-slate-900 dark:text-white mt-6 mb-4 first:mt-0">
             {paragraph.replace('## ', '')}
           </h3>
         );
       }
       if (paragraph.startsWith('### ')) {
         return (
-          <h4 key={pIndex} className="text-base font-semibold text-foreground mt-3 mb-2">
+          <h4 key={pIndex} className="text-lg font-bold text-purple-600 dark:text-purple-400 mt-5 mb-3">
             {paragraph.replace('### ', '')}
           </h4>
         );
@@ -69,10 +71,10 @@ const CourseDescription = ({
       if (paragraph.includes('\n- ') || paragraph.startsWith('- ')) {
         const items = paragraph.split('\n').filter(item => item.startsWith('- '));
         return (
-          <ul key={pIndex} className="my-4 space-y-2">
+          <ul key={pIndex} className="my-4 space-y-3">
             {items.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3 text-foreground/80 text-sm">
-                <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 mt-2 shrink-0" />
+              <li key={idx} className="flex items-start gap-3 text-slate-700 dark:text-slate-300">
+                <span className="w-2 h-2 rounded-full bg-purple-600 mt-2 shrink-0" />
                 <span className="leading-relaxed">{renderInlineFormatting(item.replace('- ', ''))}</span>
               </li>
             ))}
@@ -84,7 +86,7 @@ const CourseDescription = ({
       const lines = paragraph.split('\n');
       
       return (
-        <p key={pIndex} className="text-foreground/80 leading-relaxed mb-3 last:mb-0 text-[15px]">
+        <p key={pIndex} className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4 last:mb-0">
           {lines.map((line, lIndex) => (
             <span key={lIndex}>
               {lIndex > 0 && <br />}
@@ -109,7 +111,7 @@ const CourseDescription = ({
         parts.push(text.slice(lastIndex, match.index));
       }
       parts.push(
-        <strong key={`bold-${match.index}`} className="font-semibold text-foreground">
+        <strong key={`bold-${match.index}`} className="font-semibold text-purple-600 dark:text-purple-400">
           {match[1]}
         </strong>
       );
@@ -124,96 +126,106 @@ const CourseDescription = ({
   };
 
   return (
-    <div className="relative">
-      {/* Decorative Gradient Line */}
-      <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-pink-500 via-purple-500 to-indigo-500 rounded-full" />
-      
-      <div className="ml-6 lg:ml-8">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-6"
-        >
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-500/10 to-purple-500/10 flex items-center justify-center">
-              <Lightbulb className="w-5 h-5 text-pink-500" />
+    <section className="w-full max-w-4xl mx-auto px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden"
+      >
+        {/* Premium Gradient Header */}
+        <div className="relative bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 px-6 lg:px-8 py-6">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 flex-1 min-w-0">
+              {/* Icon */}
+              <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                <Lightbulb className="w-6 h-6 lg:w-7 lg:h-7 text-yellow-300" />
+              </div>
+              
+              {/* Title */}
+              <h2 className="text-xl lg:text-2xl font-bold text-white truncate">
+                {title}
+              </h2>
             </div>
-            <h2 className="text-2xl font-bold text-foreground">
-              Course Details
-            </h2>
-          </div>
-          <p className="text-muted-foreground">
-            Everything you need to know about this program
-          </p>
-        </motion.div>
 
-        {/* Expandable Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="relative bg-white dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
-        >
-          {/* Content */}
-          <div className="p-6 lg:p-8">
+            {/* Expand/Collapse Button (in header) */}
+            {needsTruncation && (
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="shrink-0 p-2 rounded-lg hover:bg-white/10 transition-colors"
+                aria-label={isExpanded ? 'Show less' : 'Show more'}
+              >
+                <motion.div
+                  animate={{ rotate: isExpanded ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ChevronDown className="w-6 h-6 text-white" />
+                </motion.div>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="relative">
+          <div className="px-6 lg:px-8 py-6 lg:py-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={isExpanded ? 'expanded' : 'collapsed'}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                transition={{ duration: 0.2 }}
                 className="prose prose-slate dark:prose-invert max-w-none"
               >
                 {renderFormattedText(displayText)}
               </motion.div>
             </AnimatePresence>
-
-            {/* Fade Overlay when collapsed */}
-            {needsTruncation && !isExpanded && (
-              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white dark:from-slate-900 to-transparent pointer-events-none" />
-            )}
           </div>
 
-          {/* Expand/Collapse Button */}
-          {needsTruncation && (
-            <motion.button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="w-full flex items-center justify-center gap-2 py-4 px-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 text-foreground font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors group"
-              whileTap={{ scale: 0.99 }}
-            >
-              <span>{isExpanded ? 'Show Less' : 'Read Full Description'}</span>
-              <motion.div
-                animate={{ rotate: isExpanded ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <ChevronDown className="w-5 h-5" />
-              </motion.div>
-            </motion.button>
+          {/* Fade overlay when collapsed */}
+          {needsTruncation && !isExpanded && (
+            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white dark:from-slate-900 to-transparent pointer-events-none" />
           )}
-        </motion.div>
+        </div>
 
-        {/* CTA Button */}
-        {showCta && onEnrollClick && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-6 flex justify-center lg:justify-start"
+        {/* Read Full button at bottom */}
+        {needsTruncation && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-full flex items-center justify-center gap-2 py-4 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
-            <Button
-              onClick={onEnrollClick}
-              className="vibe-cta-gradient text-white px-8 py-6 text-base font-semibold rounded-xl shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all duration-300 group"
+            <span>{isExpanded ? 'Show Less' : 'Read Full Description'}</span>
+            <motion.div
+              animate={{ rotate: isExpanded ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
             >
-              <span>Enroll Now</span>
-              <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </motion.div>
+              <ChevronDown className="w-5 h-5" />
+            </motion.div>
+          </button>
         )}
-      </div>
-    </div>
+      </motion.div>
+
+      {/* CTA Button - Centered below card */}
+      {showCta && onEnrollClick && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="mt-8 flex justify-center"
+        >
+          <Button
+            onClick={onEnrollClick}
+            size="lg"
+            className="bg-gradient-to-r from-purple-600 to-violet-600 hover:from-purple-700 hover:to-violet-700 text-white px-12 py-6 text-lg font-bold rounded-xl shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300"
+          >
+            Enroll Now
+          </Button>
+        </motion.div>
+      )}
+    </section>
   );
 };
 

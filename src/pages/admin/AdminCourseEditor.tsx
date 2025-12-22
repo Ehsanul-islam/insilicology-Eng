@@ -621,11 +621,30 @@ const AdminCourseEditor = () => {
                           value={formData.description}
                           onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                           placeholder="Describe your course in detail. You can use markdown formatting..."
-                          rows={6}
+                          rows={8}
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                          Supports markdown formatting
+                          Supports markdown: **bold** for purple highlights, ## for headings, ### for subheadings, - for bullet points
                         </p>
+                        
+                        {/* Premium Description Format Guide */}
+                        <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800 rounded-lg">
+                          <h4 className="text-sm font-semibold text-purple-900 dark:text-purple-100 mb-2 flex items-center gap-2">
+                            <Lightbulb className="w-4 h-4" />
+                            Premium Description Format
+                          </h4>
+                          <p className="text-xs text-purple-700 dark:text-purple-300 mb-3">
+                            Use this structure for a premium look on the course page:
+                          </p>
+                          <pre className="text-xs bg-white dark:bg-slate-900 p-3 rounded border overflow-x-auto text-slate-700 dark:text-slate-300">
+{`## Main Heading
+**Highlighted text** — regular text
+
+### Purple Subheading
+- **Bold point:** description
+- Regular bullet point
+- **Another bold:** more text`}</pre>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

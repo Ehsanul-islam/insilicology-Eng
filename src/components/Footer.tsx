@@ -42,7 +42,7 @@ const Footer = () => {
               </div>
               <span className="text-xl font-bold gradient-text">LearnCraft</span>
             </Link>
-            <p className="text-muted-foreground mb-4 max-w-sm">
+            <p className="text-xs text-muted-foreground mb-4 max-w-sm">
               Empowering professionals worldwide with cutting-edge skills and knowledge through expert-led online courses.
             </p>
             <div className="flex space-x-4">
@@ -68,7 +68,7 @@ const Footer = () => {
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.name}
                     </Link>

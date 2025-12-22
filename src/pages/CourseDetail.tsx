@@ -221,6 +221,7 @@ const CourseDetail = () => {
                 transition={{ duration: 0.5 }}
               >
                 <CourseDescription
+                  title={course.title}
                   description={course.description}
                   maxLength={600}
                   onEnrollClick={handleEnroll}

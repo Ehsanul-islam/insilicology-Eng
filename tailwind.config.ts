@@ -51,6 +51,13 @@ export default {
           foreground: "hsl(var(--accent-foreground))",
           light: "hsl(var(--accent-light))",
         },
+        bio: {
+          gold: "hsl(var(--bio-gold))",
+          teal: "hsl(var(--bio-teal))",
+          cyan: "hsl(var(--bio-cyan))",
+          purple: "hsl(var(--bio-purple))",
+          "off-white": "hsl(var(--bio-off-white))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
