@@ -1,5 +1,5 @@
 import Navbar from '@/components/Navbar';
-import Hero from '@/components/Hero';
+import SkilltoriHero from '@/components/SkilltoriHero';
 import Features from '@/components/Features';
 import FeaturedCourses from '@/components/FeaturedCourses';
 import Footer from '@/components/Footer';
@@ -17,7 +17,7 @@ const Index = () => {
       />
       <Navbar />
       <main>
-        <Hero />
+        <SkilltoriHero />
         <Features />
         <FeaturedCourses />
       </main>
