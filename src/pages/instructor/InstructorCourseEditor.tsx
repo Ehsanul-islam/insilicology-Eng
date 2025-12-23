@@ -10,124 +10,17 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import { format } from 'date-fns';
 import {
     Save,
     ArrowLeft,
-    FileText,
-    User,
-    BookOpen,
-    ListOrdered,
-    Target,
-    CreditCard,
-    ExternalLink,
-    Lightbulb,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
-// Types for form data (Reusing from AdminCourseEditor for consistency)
-// Ideally this should be shared in a generic type file
-interface CourseFormData {
-    // Basic Info
-    title: string;
-    slug: string;
-    description: string;
-    poster_url: string;
-    promo_video_url: string;
-    course_type: 'live' | 'recorded' | 'hybrid';
-    difficulty: 'beginner' | 'intermediate' | 'advanced' | '';
-    status: 'draft' | 'published' | 'archived';
-    featured: boolean;
-    upcoming: boolean;
-    certificate: boolean;
-    price_regular: string;
-    price_offer: string;
-    start_date: Date | undefined;
-    duration_text: string;
-    module_count: string;
-
-    // Instructor
-    instructor_name: string;
-    instructor_title: string;
-    instructor_bio: string;
-    instructor_photo: string;
-
-    // Content
-    learning_outcomes: string[];
-    requirements: string[];
-    topics: string[];
-
-    // Marketing
-    comparison_features: any[]; // Simplified type handling for brevity
-    target_audience: any[];
-    testimonials: any[];
-    value_breakdown: any[];
-    countdown_end_date: Date | undefined;
-    stats: {
-        students: string;
-        community: string;
-        support: string;
-    };
-
-    // Marketing - FAQ
-    faq: any[];
-    whats_included: string[];
-
-    // Curriculum - Modules
-    modules: any[];
-
-    // Enrollment
-    payment_methods: string[];
-    payment_instructions: string;
-    enrollment_form_fields: any[];
-}
-
-const getDefaultFormData = (): CourseFormData => ({
-    title: '',
-    slug: '',
-    description: '',
-    poster_url: '',
-    promo_video_url: '',
-    course_type: 'recorded',
-    difficulty: '',
-    status: 'draft',
-    featured: false,
-    upcoming: false,
-    certificate: true,
-    price_regular: '',
-    price_offer: '',
-    start_date: undefined,
-    duration_text: '',
-    module_count: '',
-    instructor_name: '',
-    instructor_title: '',
-    instructor_bio: '',
-    instructor_photo: '',
-    learning_outcomes: [''],
-    requirements: [''],
-    topics: [''],
-    comparison_features: [{ feature: '', us: true, others: false }],
-    target_audience: [{ title: '', description: '', icon: 'GraduationCap' }],
-    testimonials: [{ name: '', role: '', text: '', video_url: '', rating: 5 }],
-    value_breakdown: [{ item: '', original_price: '', is_premium: false, sub_text: '' }],
-    countdown_end_date: undefined,
-    stats: { students: '', community: '', support: '' },
-    faq: [{ question: '', answer: '' }],
-    whats_included: [''],
-    modules: [{ title: '', subtitle: '', description: '', icon: 'Database' }],
-    payment_methods: [],
-    payment_instructions: '',
-    enrollment_form_fields: [],
-});
+// Import shared types and utilities
+import type { CourseFormData } from '@/types/course';
+import { generateSlug, getDefaultFormData } from '@/utils/courseHelpers';
 
 const InstructorCourseEditor = () => {
     const { id } = useParams();
@@ -166,15 +59,7 @@ const InstructorCourseEditor = () => {
         }
     }, [isEditing, user]);
 
-    // Generate slug from title
-    const generateSlug = useCallback((title: string) => {
-        return title
-            .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-')
-            .trim();
-    }, []);
+
 
     const fetchCourse = useCallback(async () => {
         try {
@@ -211,6 +96,7 @@ const InstructorCourseEditor = () => {
                     start_date: data.start_date ? new Date(data.start_date) : undefined,
                     duration_text: data.duration_text || '',
                     module_count: data.module_count?.toString() || '',
+                    instructor_id: data.instructor_id || '',
                     instructor_name: data.instructor_name || '',
                     instructor_title: data.instructor_title || '',
                     instructor_bio: data.instructor_bio || '',
@@ -242,7 +128,6 @@ const InstructorCourseEditor = () => {
                 });
             }
         } catch (error) {
-            console.error('Error fetching course:', error);
             toast.error('Failed to load course data');
             navigate('/instructor/courses');
         } finally {
@@ -325,7 +210,6 @@ const InstructorCourseEditor = () => {
                 navigate('/instructor/courses');
             }
         } catch (error: any) {
-            console.error('Error saving course:', error);
             toast.error(error.message || 'Failed to save course');
         } finally {
             setSaving(false);

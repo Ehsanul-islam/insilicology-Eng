@@ -47,17 +47,15 @@ const Contact = () => {
 
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    console.log('Contact form submitted:', data);
-    
+
     toast({
       title: 'Message sent!',
       description: "We'll get back to you as soon as possible.",
     });
-    
+
     form.reset();
     setIsSubmitting(false);
   };
@@ -99,7 +97,7 @@ const Contact = () => {
         tags={['contact', 'support', 'get in touch', 'customer service']}
       />
       <Navbar />
-      
+
       <main className="pt-16">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">

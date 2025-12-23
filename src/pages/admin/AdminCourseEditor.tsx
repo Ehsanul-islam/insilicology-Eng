@@ -40,213 +40,21 @@ import {
   Target,
   CreditCard,
   ExternalLink,
-  GraduationCap,
-  Briefcase,
-  Laptop,
-  Rocket,
-  Code,
-  Users,
-  HelpCircle,
-  Star,
-  Database,
-  Globe,
-  Bot,
-  Share2,
-  Mic,
-  Layers,
-  Smartphone,
-  Shield,
-  Zap,
-  Brain,
-  Settings,
-  Award,
   Lightbulb,
 } from 'lucide-react';
 
-// Types for form data
-interface CourseFormData {
-  // Basic Info
-  title: string;
-  slug: string;
-  description: string;
-  poster_url: string;
-  promo_video_url: string;
-  course_type: 'live' | 'recorded' | 'hybrid';
-  difficulty: 'beginner' | 'intermediate' | 'advanced' | '';
-  status: 'draft' | 'published' | 'archived';
-  featured: boolean;
-  upcoming: boolean;
-  certificate: boolean;
-  price_regular: string;
-  price_offer: string;
-  start_date: Date | undefined;
-  duration_text: string;
-  module_count: string;
-
-  // Instructor
-  instructor_id: string;
-  instructor_name: string;
-  instructor_title: string;
-  instructor_bio: string;
-  instructor_photo: string;
-
-  // Content
-  learning_outcomes: string[];
-  requirements: string[];
-  topics: string[];
-
-  // Marketing
-  comparison_features: ComparisonFeature[];
-  target_audience: TargetAudienceCard[];
-  testimonials: Testimonial[];
-  value_breakdown: ValueItem[];
-  countdown_end_date: Date | undefined;
-  stats: {
-    students: string;
-    community: string;
-    support: string;
-  };
-
-  // Marketing - FAQ
-  faq: FAQItem[];
-  whats_included: string[];
-
-  // Curriculum - Modules
-  modules: ModuleItem[];
-
-  // Enrollment
-  payment_methods: string[];
-  payment_instructions: string;
-  enrollment_form_fields: EnrollmentFormField[];
-}
-
-interface ComparisonFeature {
-  feature: string;
-  us: boolean;
-  others: boolean;
-}
-
-interface TargetAudienceCard {
-  title: string;
-  description: string;
-  icon: string;
-}
-
-interface Testimonial {
-  name: string;
-  role: string;
-  text: string;
-  video_url: string;
-  rating: number;
-}
-
-interface ValueItem {
-  item: string;
-  original_price: string;
-  is_premium?: boolean;
-  sub_text?: string;
-}
-
-interface EnrollmentFormField {
-  id: string;
-  label: string;
-  type: 'text' | 'phone' | 'email' | 'select' | 'textarea';
-  required: boolean;
-  options?: string[];
-}
-
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-interface ModuleItem {
-  title: string;
-  subtitle: string;
-  description: string;
-  icon: string;
-}
-
-const AVAILABLE_ICONS = [
-  { value: 'GraduationCap', label: 'Graduation Cap', icon: GraduationCap },
-  { value: 'Briefcase', label: 'Briefcase', icon: Briefcase },
-  { value: 'BookOpen', label: 'Book', icon: BookOpen },
-  { value: 'Laptop', label: 'Laptop', icon: Laptop },
-  { value: 'Rocket', label: 'Rocket', icon: Rocket },
-  { value: 'Code', label: 'Code', icon: Code },
-  { value: 'Users', label: 'Users', icon: Users },
-  { value: 'Star', label: 'Star', icon: Star },
-  { value: 'HelpCircle', label: 'Help', icon: HelpCircle },
-];
-
-const PAYMENT_METHODS = [
-  { value: 'bkash', label: 'bKash' },
-  { value: 'nagad', label: 'Nagad' },
-  { value: 'rocket', label: 'Rocket' },
-  { value: 'bank_transfer', label: 'Bank Transfer' },
-  { value: 'card', label: 'Credit/Debit Card' },
-];
-
-// Icons for module cards (matching CurriculumAccordion)
-const MODULE_ICONS = [
-  { value: 'Database', label: 'Database', icon: Database },
-  { value: 'Globe', label: 'Globe', icon: Globe },
-  { value: 'Bot', label: 'Bot/AI', icon: Bot },
-  { value: 'Share2', label: 'Share', icon: Share2 },
-  { value: 'Mic', label: 'Microphone', icon: Mic },
-  { value: 'Code', label: 'Code', icon: Code },
-  { value: 'Layers', label: 'Layers', icon: Layers },
-  { value: 'Smartphone', label: 'Smartphone', icon: Smartphone },
-  { value: 'Shield', label: 'Shield', icon: Shield },
-  { value: 'Zap', label: 'Zap', icon: Zap },
-  { value: 'BookOpen', label: 'Book', icon: BookOpen },
-  { value: 'Target', label: 'Target', icon: Target },
-  { value: 'Rocket', label: 'Rocket', icon: Rocket },
-  { value: 'Brain', label: 'Brain', icon: Brain },
-  { value: 'Settings', label: 'Settings', icon: Settings },
-  { value: 'Users', label: 'Users', icon: Users },
-  { value: 'Star', label: 'Star', icon: Star },
-  { value: 'Award', label: 'Award', icon: Award },
-];
-
-const getDefaultFormData = (): CourseFormData => ({
-  title: '',
-  slug: '',
-  description: '',
-  poster_url: '',
-  promo_video_url: '',
-  course_type: 'recorded',
-  difficulty: '',
-  status: 'draft',
-  featured: false,
-  upcoming: false,
-  certificate: true,
-  price_regular: '',
-  price_offer: '',
-  start_date: undefined,
-  duration_text: '',
-  module_count: '',
-  instructor_id: '',
-  instructor_name: '',
-  instructor_title: '',
-  instructor_bio: '',
-  instructor_photo: '',
-  learning_outcomes: [''],
-  requirements: [''],
-  topics: [''],
-  comparison_features: [{ feature: '', us: true, others: false }],
-  target_audience: [{ title: '', description: '', icon: 'GraduationCap' }],
-  testimonials: [{ name: '', role: '', text: '', video_url: '', rating: 5 }],
-  value_breakdown: [{ item: '', original_price: '', is_premium: false, sub_text: '' }],
-  countdown_end_date: undefined,
-  stats: { students: '', community: '', support: '' },
-  faq: [{ question: '', answer: '' }],
-  whats_included: [''],
-  modules: [{ title: '', subtitle: '', description: '', icon: 'Database' }],
-  payment_methods: [],
-  payment_instructions: '',
-  enrollment_form_fields: [],
-});
+// Import shared types, utilities, and constants
+import type {
+  CourseFormData,
+  ComparisonFeature,
+  TargetAudienceCard,
+  Testimonial,
+  FAQItem,
+  ModuleItem,
+  EnrollmentFormField
+} from '@/types/course';
+import { generateSlug, getDefaultFormData } from '@/utils/courseHelpers';
+import { AVAILABLE_ICONS, MODULE_ICONS, PAYMENT_METHODS } from '@/constants/courseConstants';
 
 const AdminCourseEditor = () => {
   const { id } = useParams();
@@ -280,7 +88,7 @@ const AdminCourseEditor = () => {
         setInstructors(profiles || []);
       }
     } catch (error) {
-      console.error('Error fetching instructors:', error);
+      toast.error('Failed to load instructors');
     }
   }, []);
 
@@ -288,15 +96,7 @@ const AdminCourseEditor = () => {
     fetchInstructors();
   }, [fetchInstructors]);
 
-  // Generate slug from title
-  const generateSlug = useCallback((title: string) => {
-    return title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim();
-  }, []);
+
 
   const fetchCourse = useCallback(async () => {
     try {
@@ -380,7 +180,6 @@ const AdminCourseEditor = () => {
         });
       }
     } catch (error) {
-      console.error('Error fetching course:', error);
       toast.error('Failed to load course data');
       navigate('/admin/courses');
     } finally {
@@ -485,7 +284,6 @@ const AdminCourseEditor = () => {
         navigate('/admin/courses');
       }
     } catch (error: unknown) {
-      console.error('Error saving course:', error);
       const message = error instanceof Error ? error.message : 'Failed to save course';
       toast.error(message);
     } finally {
@@ -935,7 +733,7 @@ const AdminCourseEditor = () => {
                       onValueChange={(value) => {
                         const actualValue = value === '_none' ? '' : value;
                         setFormData(prev => ({ ...prev, instructor_id: actualValue }));
-                        
+
                         if (actualValue) {
                           const instructor = instructors.find(i => i.id === actualValue);
                           if (instructor) {

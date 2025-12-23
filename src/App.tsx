@@ -4,10 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import LoadingFallback from "@/components/common/LoadingFallback";
+import { initMetaPixel, trackPageView } from "@/lib/analytics";
 
 // Eagerly load critical components
 import Index from "./pages/Index";
@@ -64,6 +65,24 @@ const queryClient = new QueryClient({
   },
 });
 
+// Component to handle Meta Pixel initialization and page tracking
+const MetaPixelProvider = ({ children }: { children: React.ReactNode }) => {
+  useEffect(() => {
+    // Initialize Meta Pixel on app load
+    const pixelId = import.meta.env.VITE_META_PIXEL_ID;
+    if (pixelId) {
+      initMetaPixel(pixelId);
+    }
+  }, []);
+
+  // Track page views on route changes
+  useEffect(() => {
+    trackPageView();
+  }, [window.location.pathname]);
+
+  return <>{children}</>;
+};
+
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
@@ -72,206 +91,208 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <AuthProvider>
-            <Suspense fallback={<LoadingFallback variant="page" />}>
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/:slug" element={<CourseDetail />} />
-                <Route path="/portfolio" element={<Portfolio />} />
-                <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:slug" element={<BlogPost />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/career" element={<Career />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/verify-certificate" element={<CertificateVerify />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
+            <MetaPixelProvider>
+              <Suspense fallback={<LoadingFallback variant="page" />}>
+                <Routes>
+                  {/* Public Routes */}
+                  <Route path="/" element={<Index />} />
+                  <Route path="/courses" element={<Courses />} />
+                  <Route path="/courses/:slug" element={<CourseDetail />} />
+                  <Route path="/portfolio" element={<Portfolio />} />
+                  <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/career" element={<Career />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/verify-certificate" element={<CertificateVerify />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/terms" element={<Terms />} />
 
-                {/* Protected Routes */}
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/profile/settings"
-                  element={
-                    <ProtectedRoute>
-                      <ProfileSettings />
-                    </ProtectedRoute>
-                  }
-                />                <Route
-                  path="/my-certificates"
-                  element={
-                    <ProtectedRoute>
-                      <MyCertificates />
-                    </ProtectedRoute>
-                  }
-                />
+                  {/* Protected Routes */}
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/profile/settings"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileSettings />
+                      </ProtectedRoute>
+                    }
+                  />                <Route
+                    path="/my-certificates"
+                    element={
+                      <ProtectedRoute>
+                        <MyCertificates />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* Instructor Routes */}
-                <Route
-                  path="/instructor"
-                  element={
-                    <ProtectedRoute>
-                      <InstructorLayout />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route index element={<InstructorDashboard />} />
-                  <Route path="courses" element={<InstructorCourses />} />
+                  {/* Instructor Routes */}
+                  <Route
+                    path="/instructor"
+                    element={
+                      <ProtectedRoute>
+                        <InstructorLayout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route index element={<InstructorDashboard />} />
+                    <Route path="courses" element={<InstructorCourses />} />
 
-                  <Route path="courses/:id/edit" element={<InstructorCourseEditor />} />
-                </Route>
+                    <Route path="courses/:id/edit" element={<InstructorCourseEditor />} />
+                  </Route>
 
-                {/* Admin Routes */}
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/enrollments"
-                  element={
-                    <ProtectedRoute>
-                      <AdminEnrollments />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/courses"
-                  element={
-                    <ProtectedRoute>
-                      <AdminCourses />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/courses/new"
-                  element={
-                    <ProtectedRoute>
-                      <AdminCourseEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/courses/:id/edit"
-                  element={
-                    <ProtectedRoute>
-                      <AdminCourseEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/courses/:id/lessons"
-                  element={
-                    <ProtectedRoute>
-                      <AdminLessonEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/certificates"
-                  element={
-                    <ProtectedRoute>
-                      <AdminCertificates />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/users"
-                  element={
-                    <ProtectedRoute>
-                      <AdminUsers />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/contacts"
-                  element={
-                    <ProtectedRoute>
-                      <AdminContacts />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/portfolio"
-                  element={
-                    <ProtectedRoute>
-                      <AdminPortfolio />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/portfolio/new"
-                  element={
-                    <ProtectedRoute>
-                      <AdminPortfolioEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/portfolio/:id/edit"
-                  element={
-                    <ProtectedRoute>
-                      <AdminPortfolioEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/portfolio/categories"
-                  element={
-                    <ProtectedRoute>
-                      <AdminPortfolioCategories />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/blog"
-                  element={
-                    <ProtectedRoute>
-                      <AdminBlog />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/blog/new"
-                  element={
-                    <ProtectedRoute>
-                      <AdminBlogEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/blog/:id/edit"
-                  element={
-                    <ProtectedRoute>
-                      <AdminBlogEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/admin/blog/categories"
-                  element={
-                    <ProtectedRoute>
-                      <AdminBlogCategories />
-                    </ProtectedRoute>
-                  }
-                />
+                  {/* Admin Routes */}
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/enrollments"
+                    element={
+                      <ProtectedRoute>
+                        <AdminEnrollments />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/courses"
+                    element={
+                      <ProtectedRoute>
+                        <AdminCourses />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/courses/new"
+                    element={
+                      <ProtectedRoute>
+                        <AdminCourseEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/courses/:id/edit"
+                    element={
+                      <ProtectedRoute>
+                        <AdminCourseEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/courses/:id/lessons"
+                    element={
+                      <ProtectedRoute>
+                        <AdminLessonEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/certificates"
+                    element={
+                      <ProtectedRoute>
+                        <AdminCertificates />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/users"
+                    element={
+                      <ProtectedRoute>
+                        <AdminUsers />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/contacts"
+                    element={
+                      <ProtectedRoute>
+                        <AdminContacts />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/portfolio"
+                    element={
+                      <ProtectedRoute>
+                        <AdminPortfolio />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/portfolio/new"
+                    element={
+                      <ProtectedRoute>
+                        <AdminPortfolioEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/portfolio/:id/edit"
+                    element={
+                      <ProtectedRoute>
+                        <AdminPortfolioEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/portfolio/categories"
+                    element={
+                      <ProtectedRoute>
+                        <AdminPortfolioCategories />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/blog"
+                    element={
+                      <ProtectedRoute>
+                        <AdminBlog />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/blog/new"
+                    element={
+                      <ProtectedRoute>
+                        <AdminBlogEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/blog/:id/edit"
+                    element={
+                      <ProtectedRoute>
+                        <AdminBlogEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/blog/categories"
+                    element={
+                      <ProtectedRoute>
+                        <AdminBlogCategories />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </MetaPixelProvider>
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>
