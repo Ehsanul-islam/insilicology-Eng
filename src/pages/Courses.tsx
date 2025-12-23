@@ -72,7 +72,7 @@ const Courses = () => {
         tags={['online courses', 'web development', 'data science', 'professional training']}
       />
       <Navbar />
-      
+
       <main className="flex-1 pt-24 pb-16">
         <div className="container-custom">
           {/* Header */}
@@ -82,11 +82,11 @@ const Courses = () => {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Explore <span className="gradient-text">All Courses</span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              {totalCount > 0 
+              {totalCount > 0
                 ? `Choose from ${totalCount} courses to advance your career`
                 : 'Discover courses to advance your career'
               }
@@ -256,9 +256,9 @@ const Courses = () => {
                 {Array.from({ length: totalPages }, (_, i) => i + 1)
                   .filter(page => {
                     // Show first, last, current, and adjacent pages
-                    return page === 1 || 
-                           page === totalPages || 
-                           Math.abs(page - pagination.page) <= 1;
+                    return page === 1 ||
+                      page === totalPages ||
+                      Math.abs(page - pagination.page) <= 1;
                   })
                   .map((page, index, arr) => {
                     // Add ellipsis
