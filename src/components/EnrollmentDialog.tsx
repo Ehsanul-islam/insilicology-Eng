@@ -523,8 +523,8 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step === s
                         ? 'bg-primary text-primary-foreground'
                         : ['form', 'payment', 'upload', 'review'].indexOf(step) > i
-                        'bg-primary/20 text-primary'
-                  'bg-muted text-muted-foreground'
+                        ? 'bg-primary/20 text-primary'
+                        : 'bg-muted text-muted-foreground'
                     }`}
                   >
                   {['form', 'payment', 'upload', 'review'].indexOf(step) > i ? (
