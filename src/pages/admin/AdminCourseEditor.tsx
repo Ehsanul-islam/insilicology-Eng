@@ -84,6 +84,7 @@ interface CourseFormData {
   module_count: string;
 
   // Instructor
+  instructor_id: string;
   instructor_name: string;
   instructor_title: string;
   instructor_bio: string;
@@ -225,6 +226,7 @@ const getDefaultFormData = (): CourseFormData => ({
   start_date: undefined,
   duration_text: '',
   module_count: '',
+  instructor_id: '',
   instructor_name: '',
   instructor_title: '',
   instructor_bio: '',
@@ -254,7 +256,37 @@ const AdminCourseEditor = () => {
   const [loading, setLoading] = useState(isEditing);
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState('basic');
+  const [instructors, setInstructors] = useState<Array<{ id: string; full_name: string; email: string }>>([]);
   const [formData, setFormData] = useState<CourseFormData>(getDefaultFormData());
+
+  const fetchInstructors = useCallback(async () => {
+    try {
+      const { data: roles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id')
+        .eq('role', 'instructor');
+
+      if (rolesError) throw rolesError;
+
+      if (roles && roles.length > 0) {
+        const instructorIds = roles.map(r => r.user_id);
+        const { data: profiles, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, full_name, email')
+          .in('id', instructorIds)
+          .order('full_name');
+
+        if (profilesError) throw profilesError;
+        setInstructors(profiles || []);
+      }
+    } catch (error) {
+      console.error('Error fetching instructors:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchInstructors();
+  }, [fetchInstructors]);
 
   // Generate slug from title
   const generateSlug = useCallback((title: string) => {
@@ -294,6 +326,7 @@ const AdminCourseEditor = () => {
           start_date: data.start_date ? new Date(data.start_date) : undefined,
           duration_text: data.duration_text || '',
           module_count: data.module_count?.toString() || '',
+          instructor_id: data.instructor_id || '',
           instructor_name: data.instructor_name || '',
           instructor_title: data.instructor_title || '',
           instructor_bio: data.instructor_bio || '',
@@ -399,6 +432,7 @@ const AdminCourseEditor = () => {
         start_date: formData.start_date ? format(formData.start_date, 'yyyy-MM-dd') : null,
         duration_text: formData.duration_text.trim() || null,
         module_count: formData.module_count ? parseInt(formData.module_count) : null,
+        instructor_id: formData.instructor_id || null,
         instructor_name: formData.instructor_name.trim() || null,
         instructor_title: formData.instructor_title.trim() || null,
         instructor_bio: formData.instructor_bio.trim() || null,
@@ -890,9 +924,48 @@ const AdminCourseEditor = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Instructor Information</CardTitle>
-                <CardDescription>Details about the course instructor</CardDescription>
+                <CardDescription>Assign an instructor and provide their details</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                <div className="space-y-4 border-b pb-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="instructor_id">Assign Instructor (User)</Label>
+                    <Select
+                      value={formData.instructor_id || '_none'}
+                      onValueChange={(value) => {
+                        const actualValue = value === '_none' ? '' : value;
+                        setFormData(prev => ({ ...prev, instructor_id: actualValue }));
+                        
+                        if (actualValue) {
+                          const instructor = instructors.find(i => i.id === actualValue);
+                          if (instructor) {
+                            setFormData(prev => ({
+                              ...prev,
+                              instructor_id: actualValue,
+                              instructor_name: instructor.full_name || prev.instructor_name
+                            }));
+                          }
+                        }
+                      }}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select an instructor..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="_none">None (Unassigned)</SelectItem>
+                        {instructors.map((instructor) => (
+                          <SelectItem key={instructor.id} value={instructor.id}>
+                            {instructor.full_name || instructor.email}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <p className="text-xs text-muted-foreground">
+                      Select a user with the 'instructor' role to assign this course to them.
+                    </p>
+                  </div>
+                </div>
+
                 <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <div>
