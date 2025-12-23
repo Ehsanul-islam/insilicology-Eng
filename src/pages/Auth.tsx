@@ -35,6 +35,11 @@ type SignInFormData = z.infer<typeof signInSchema>;
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
+  const [isLoading, setIsLoading] = useState(false);
+  const [emailConfirmationError, setEmailConfirmationError] = useState<string | null>(null);
+  const [resendingEmail, setResendingEmail] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const { signUp, signIn, user, resendConfirmationEmail } = useAuth();
   const navigate = useNavigate();
 
