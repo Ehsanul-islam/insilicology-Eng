@@ -35,14 +35,10 @@ type SignInFormData = z.infer<typeof signInSchema>;
 
 const Auth = () => {
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
-  const [emailConfirmationError, setEmailConfirmationError] = useState<string | null>(null);
-  const [resendingEmail, setResendingEmail] = useState(false);
   const { signUp, signIn, user, resendConfirmationEmail } = useAuth();
   const navigate = useNavigate();
 
+  // useForm RESTORED
   const signUpForm = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -61,18 +57,11 @@ const Auth = () => {
     },
   });
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
-    }
-  }, [user, navigate]);
-
   const handleSignUp = async (data: SignUpFormData) => {
     setIsLoading(true);
     const { error } = await signUp(data.email, data.password, data.fullName);
     setIsLoading(false);
-    
+
     if (!error) {
       navigate('/dashboard');
     }
@@ -83,7 +72,7 @@ const Auth = () => {
     setEmailConfirmationError(null);
     const { error } = await signIn(data.email, data.password, data.rememberMe);
     setIsLoading(false);
-    
+
     if (error) {
       // Check if error is related to email confirmation
       const errorMessage = error.message.toLowerCase();
@@ -97,11 +86,11 @@ const Auth = () => {
 
   const handleResendConfirmation = async () => {
     if (!emailConfirmationError) return;
-    
+
     setResendingEmail(true);
     const { error } = await resendConfirmationEmail(emailConfirmationError);
     setResendingEmail(false);
-    
+
     if (!error) {
       setEmailConfirmationError(null);
     }
@@ -114,14 +103,14 @@ const Auth = () => {
         description="Access your LearnCraft account to continue your learning journey"
         url="/auth"
       />
-      
+
       {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-secondary to-accent-light dark:from-background dark:via-secondary dark:to-accent-light/5 -z-10" />
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10 -z-10" />
-      
+
       {/* Back to Home Button */}
-      <Link 
-        to="/" 
+      <Link
+        to="/"
         className="absolute top-6 left-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
       >
         <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
