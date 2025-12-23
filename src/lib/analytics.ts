@@ -6,7 +6,7 @@
  */
 
 // Meta Pixel ID - Replace with your actual Pixel ID
-const META_PIXEL_ID = process.env.VITE_META_PIXEL_ID || '';
+const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || '';
 
 // Type definitions for Meta Pixel events
 interface MetaPixelEventData {
