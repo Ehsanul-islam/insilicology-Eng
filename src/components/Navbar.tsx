@@ -186,13 +186,25 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile actions: Login button + menu (mobile only) */}
+          <div className="md:hidden flex items-center gap-2">
+            {!user && (
+              <Button
+                size="sm"
+                className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-4 shadow-sm transition-all"
+                asChild
+              >
+                <Link to="/auth">Login / Sign Up</Link>
+              </Button>
+            )}
+
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
@@ -238,41 +250,32 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Auth */}
-            <div className="pt-4 space-y-2 border-t border-gray-200">
-              {user ? (
-                <>
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link to="/dashboard">Dashboard</Link>
-                  </Button>
-                  {isAdmin && (
-                    <Button variant="outline" className="w-full" asChild>
-                      <Link to="/admin" className="flex items-center gap-2">
-                        <Shield className="w-4 h-4" />
-                        Admin
-                      </Link>
-                    </Button>
-                  )}
-                  {isInstructor && (
-                    <Button variant="outline" className="w-full" asChild>
-                      <Link to="/instructor" className="flex items-center gap-2">
-                        <GraduationCap className="w-4 h-4" />
-                        Instructor
-                      </Link>
-                    </Button>
-                  )}
-                  <Button variant="outline" className="w-full" onClick={signOut}>
-                    Sign Out
-                  </Button>
-                </>
-              ) : (
-                <Button
-                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold"
-                  asChild
-                >
-                  <Link to="/auth">Login / Sign Up</Link>
+            {user && (
+              <div className="pt-4 space-y-2 border-t border-gray-200">
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to="/dashboard">Dashboard</Link>
                 </Button>
-              )}
-            </div>
+                {isAdmin && (
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link to="/admin" className="flex items-center gap-2">
+                      <Shield className="w-4 h-4" />
+                      Admin
+                    </Link>
+                  </Button>
+                )}
+                {isInstructor && (
+                  <Button variant="outline" className="w-full" asChild>
+                    <Link to="/instructor" className="flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4" />
+                      Instructor
+                    </Link>
+                  </Button>
+                )}
+                <Button variant="outline" className="w-full" onClick={signOut}>
+                  Sign Out
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </div>
