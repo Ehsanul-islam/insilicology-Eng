@@ -117,7 +117,7 @@ const Career = () => {
 
       <main className="pt-16">
         {/* Hero Section - Growth & Opportunity Theme */}
-        <section className="relative bg-[#1a0a0f] text-white pt-16 pb-8 overflow-hidden border-b border-white/5">
+        <section className="relative bg-[#1a0a0f] text-white pt-6 pb-8 overflow-hidden border-b border-white/5">
           {/* Velvet Noise Texture Overlay */}
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
             style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />

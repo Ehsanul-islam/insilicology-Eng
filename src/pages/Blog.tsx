@@ -69,7 +69,7 @@ const Blog = () => {
 
       <main className="pt-16">
         {/* Hero Section - Knowledge & Insights Theme */}
-        <section className="relative bg-[#0f0a1e] text-white pt-16 pb-8 overflow-hidden border-b border-white/5">
+        <section className="relative bg-[#0f0a1e] text-white pt-2 pb-8 overflow-hidden border-b border-white/5">
           {/* Velvet Noise Texture Overlay */}
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
             style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
