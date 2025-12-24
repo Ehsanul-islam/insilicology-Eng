@@ -132,10 +132,10 @@ const PortfolioInsights = () => {
                 ease: "easeOut"
             }
         })
-    };
+    } as any;
 
     return (
-        <section ref={sectionRef} className="py-20 bg-gradient-to-b from-background via-secondary/20 to-background font-siliguri overflow-hidden relative">
+        <section ref={sectionRef} className="py-12 bg-gradient-to-b from-background via-secondary/20 to-background font-siliguri overflow-hidden relative">
             {/* Background elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40">
                 <motion.div
@@ -149,9 +149,9 @@ const PortfolioInsights = () => {
                 />
             </div>
 
-            <div className="container-custom relative z-10">
+            <div className="container-custom max-w-6xl mx-auto relative z-10">
                 {/* Header */}
-                <div className="text-center mb-16">
+                <div className="text-center mb-10">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -165,8 +165,8 @@ const PortfolioInsights = () => {
                                 </p>
                             </div>
                         </div>
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Work at a Glance</h2>
-                        <p className="text-muted-foreground max-w-2xl mx-auto">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-3">Our Work at a Glance</h2>
+                        <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
                             Data-driven excellence across technologies, industries, and continents
                         </p>
                     </motion.div>
@@ -185,7 +185,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -8, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-blue-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[280px] flex flex-col border-t-4 border-t-blue-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -196,7 +196,7 @@ const PortfolioInsights = () => {
                                     </div>
                                     Project Portfolio
                                 </CardTitle>
-                                <div className="text-2xl font-black bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                                <div className="text-xl font-black bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                                     150+ Projects
                                 </div>
                             </CardHeader>
@@ -206,11 +206,11 @@ const PortfolioInsights = () => {
                                         <Pie
                                             data={categoryData}
                                             cx="50%"
-                                            cy="50%"
+                                            cy="45%"
                                             labelLine={false}
                                             label={renderCustomizedLabel}
-                                            outerRadius={80}
-                                            innerRadius={50}
+                                            outerRadius={55}
+                                            innerRadius={35}
                                             fill="#8884d8"
                                             dataKey="value"
                                             animationBegin={0}
@@ -243,7 +243,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -8, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-purple-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[280px] flex flex-col border-t-4 border-t-purple-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -255,11 +255,11 @@ const PortfolioInsights = () => {
                                         </div>
                                         Tech Stack
                                     </CardTitle>
-                                    <div className="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full">
-                                        <span className="text-xs font-bold text-purple-600">Top 5</span>
+                                    <div className="px-2 py-0.5 bg-purple-500/10 border border-purple-500/20 rounded-full">
+                                        <span className="text-[10px] font-bold text-purple-600">Top 5</span>
                                     </div>
                                 </div>
-                                <div className="text-2xl font-black bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
+                                <div className="text-xl font-black bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
                                     20+ Technologies
                                 </div>
                             </CardHeader>
@@ -268,7 +268,7 @@ const PortfolioInsights = () => {
                                     <BarChart data={techData} layout="vertical" margin={{ left: -20 }}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
                                         <XAxis type="number" hide />
-                                        <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#6b7280' }} width={80} />
+                                        <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: '#6b7280' }} width={70} />
                                         <Tooltip content={<CustomTooltip />} />
                                         <Bar dataKey="value" radius={[0, 4, 4, 0]} animationDuration={1500} animationBegin={200}>
                                             {techData.map((entry, index) => (
@@ -292,7 +292,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -8, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-cyan-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[280px] flex flex-col border-t-4 border-t-cyan-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -304,11 +304,11 @@ const PortfolioInsights = () => {
                                         </div>
                                         Delivery Rate
                                     </CardTitle>
-                                    <div className="px-2 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
-                                        <span className="text-xs font-bold text-cyan-600">↑ 125%</span>
+                                    <div className="px-2 py-0.5 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
+                                        <span className="text-[10px] font-bold text-cyan-600">↑ 125%</span>
                                     </div>
                                 </div>
-                                <div className="text-2xl font-black bg-gradient-to-r from-cyan-600 to-cyan-800 bg-clip-text text-transparent">
+                                <div className="text-xl font-black bg-gradient-to-r from-cyan-600 to-cyan-800 bg-clip-text text-transparent">
                                     18/month
                                 </div>
                             </CardHeader>
@@ -364,7 +364,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -8, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-green-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[280px] flex flex-col border-t-4 border-t-green-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -382,26 +382,26 @@ const PortfolioInsights = () => {
                                 </div>
                             </CardHeader>
                             <CardContent className="flex-1 w-full min-h-0 relative z-10 flex flex-col items-center justify-center">
-                                <div className="relative w-48 h-48">
+                                <div className="relative w-40 h-40">
                                     <svg className="w-full h-full transform -rotate-90">
                                         <circle
-                                            cx="96"
-                                            cy="96"
-                                            r="80"
+                                            cx="80"
+                                            cy="80"
+                                            r="50"
                                             stroke="#e5e7eb"
                                             strokeWidth="12"
                                             fill="none"
                                         />
                                         <motion.circle
-                                            cx="96"
-                                            cy="96"
-                                            r="80"
+                                            cx="80"
+                                            cy="80"
+                                            r="50"
                                             stroke="url(#gradientGreen)"
-                                            strokeWidth="12"
+                                            strokeWidth="10"
                                             fill="none"
                                             strokeLinecap="round"
-                                            initial={{ strokeDasharray: "0 502" }}
-                                            animate={startCounting ? { strokeDasharray: "480 502" } : {}}
+                                            initial={{ strokeDasharray: "0 314" }}
+                                            animate={startCounting ? { strokeDasharray: "300 314" } : {}}
                                             transition={{ duration: 2, ease: "easeOut" }}
                                         />
                                         <defs>
@@ -413,7 +413,7 @@ const PortfolioInsights = () => {
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <motion.div
-                                            className="text-4xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent"
+                                            className="text-3xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent"
                                             initial={{ scale: 0 }}
                                             animate={startCounting ? { scale: 1 } : {}}
                                             transition={{ duration: 0.5, delay: 1 }}
@@ -440,7 +440,7 @@ const PortfolioInsights = () => {
                         variants={cardVariants}
                         whileHover={{ y: -8, scale: 1.01 }}
                     >
-                        <Card className="h-[340px] border-t-4 border-t-indigo-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[280px] border-t-4 border-t-indigo-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -452,17 +452,17 @@ const PortfolioInsights = () => {
                                         </div>
                                         Global Reach
                                     </CardTitle>
-                                    <div className="text-2xl font-black bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
+                                    <div className="text-xl font-black bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
                                         25+ Countries
                                     </div>
                                 </div>
                             </CardHeader>
-                            <CardContent className="relative z-10 h-48">
+                            <CardContent className="relative z-10 h-40">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={regionalData} layout="vertical">
                                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
                                         <XAxis type="number" hide />
-                                        <YAxis type="category" dataKey="region" tick={{ fontSize: 12, fill: '#6b7280' }} width={120} />
+                                        <YAxis type="category" dataKey="region" tick={{ fontSize: 11, fill: '#6b7280' }} width={90} />
                                         <Tooltip content={<CustomTooltip />} />
                                         <Bar dataKey="value" radius={[0, 8, 8, 0]} animationDuration={1500} animationBegin={600}>
                                             {regionalData.map((entry, index) => (
@@ -485,7 +485,7 @@ const PortfolioInsights = () => {
                         variants={cardVariants}
                         whileHover={{ y: -8, scale: 1.01 }}
                     >
-                        <Card className="h-[340px] border-t-4 border-t-amber-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[280px] border-t-4 border-t-amber-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -505,12 +505,12 @@ const PortfolioInsights = () => {
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={startCounting ? { opacity: 1, scale: 1 } : {}}
                                             transition={{ delay: 0.8 + index * 0.1, duration: 0.4 }}
-                                            className="flex flex-col items-center justify-center p-3 bg-gradient-to-br from-background to-secondary/30 rounded-xl border border-border hover:shadow-md transition-shadow"
+                                            className="flex flex-col items-center justify-center p-2 bg-gradient-to-br from-background to-secondary/30 rounded-xl border border-border hover:shadow-md transition-shadow"
                                         >
-                                            <div className={`p-1.5 ${metric.bg} rounded-lg mb-1.5`}>
-                                                <metric.icon className={`w-4 h-4 ${metric.color}`} />
+                                            <div className={`p-1 ${metric.bg} rounded-lg mb-1`}>
+                                                <metric.icon className={`w-3.5 h-3.5 ${metric.color}`} />
                                             </div>
-                                            <div className={`text-xl font-black bg-gradient-to-r ${metric.color.replace('text-', 'from-')} ${metric.color.replace('text-', 'to-').replace('600', '800')} bg-clip-text text-transparent`}>
+                                            <div className={`text-lg font-black bg-gradient-to-r ${metric.color.replace('text-', 'from-')} ${metric.color.replace('text-', 'to-').replace('600', '800')} bg-clip-text text-transparent`}>
                                                 {metric.count !== null ? `${metric.count}${metric.value.includes('K') ? 'K' : metric.value.includes('%') ? '%' : ''}${metric.value.includes('+') ? '+' : ''}` : metric.value}
                                             </div>
                                             <div className="text-[10px] text-muted-foreground text-center mt-0.5 leading-tight">{metric.label}</div>

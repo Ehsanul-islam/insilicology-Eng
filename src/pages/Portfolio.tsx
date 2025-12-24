@@ -61,32 +61,40 @@ const Portfolio = () => {
 
       <main className="pt-16">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">
-          <div className="container-custom">
+        <section className="vibe-section-light border-b border-border/40 relative overflow-hidden">
+          {/* Subtle background decoration */}
+          <div className="absolute inset-0 bg-grid-pattern opacity-50" />
+
+          <div className="container-custom py-12 md:py-16 relative z-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl mx-auto text-center"
+              transition={{ duration: 0.4 }}
+              className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12"
             >
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                Our Portfolio
-              </h1>
-              <p className="text-xl text-white/90 mb-8">
-                Discover the innovative projects we've built for clients worldwide. From startups to enterprises, we deliver excellence.
-              </p>
-              <div className="flex flex-wrap gap-4 justify-center">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
-                  <div className="text-3xl font-bold">150+</div>
-                  <div className="text-sm text-white/80">Projects Delivered</div>
+              {/* Left Content */}
+              <div className="text-center md:text-left md:max-w-2xl">
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
+                  Our Portfolio
+                </h1>
+                <p className="text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto md:mx-0">
+                  Discover the innovative projects we've built for clients worldwide. From startups to enterprises, we deliver excellence everywhere.
+                </p>
+              </div>
+
+              {/* Right Stats - Compact Grid */}
+              <div className="grid grid-cols-3 gap-4 md:gap-8 w-full md:w-auto">
+                <div className="flex flex-col items-center md:items-start p-4 bg-card/50 backdrop-blur-sm rounded-xl border border-border shadow-sm hover:shadow-md transition-all">
+                  <div className="text-2xl md:text-3xl font-bold text-primary">150+</div>
+                  <div className="text-xs md:text-sm font-medium text-muted-foreground mt-1">Projects</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
-                  <div className="text-3xl font-bold">50+</div>
-                  <div className="text-sm text-white/80">Happy Clients</div>
+                <div className="flex flex-col items-center md:items-start p-4 bg-card/50 backdrop-blur-sm rounded-xl border border-border shadow-sm hover:shadow-md transition-all">
+                  <div className="text-2xl md:text-3xl font-bold text-primary">50+</div>
+                  <div className="text-xs md:text-sm font-medium text-muted-foreground mt-1">Clients</div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-6 py-3">
-                  <div className="text-3xl font-bold">25+</div>
-                  <div className="text-sm text-white/80">Countries</div>
+                <div className="flex flex-col items-center md:items-start p-4 bg-card/50 backdrop-blur-sm rounded-xl border border-border shadow-sm hover:shadow-md transition-all">
+                  <div className="text-2xl md:text-3xl font-bold text-primary">25+</div>
+                  <div className="text-xs md:text-sm font-medium text-muted-foreground mt-1">Countries</div>
                 </div>
               </div>
             </motion.div>
