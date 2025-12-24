@@ -66,7 +66,7 @@ const UpcomingPrograms = () => {
             className="block"
           >
             <CardContent className="p-0">
-              <div className="relative w-full h-[280px] overflow-hidden">
+              <div className="relative w-full h-[238px] overflow-hidden">
                 <img
                   src={program.image_url}
                   alt={program.title}
@@ -119,9 +119,9 @@ const UpcomingPrograms = () => {
     return (
       <div className="w-full max-w-[520px] mx-auto">
         <Card className="overflow-hidden">
-          <Skeleton className="w-full h-[280px]" />
+          <Skeleton className="w-full h-[238px]" />
           <CardContent className="p-4">
-            <Skeleton className="h-6 w-3/4 mb-2" />
+            <Skeleton className="h-5 w-3/4 mb-1.5" />
             <Skeleton className="h-4 w-1/2" />
           </CardContent>
         </Card>
@@ -130,7 +130,7 @@ const UpcomingPrograms = () => {
   }
 
   return (
-    <div className="w-full max-w-[520px] mx-auto relative">
+    <div className="w-full max-w-[442px] mx-auto relative">
       <Carousel
         opts={{
           align: 'start',
@@ -150,7 +150,7 @@ const UpcomingPrograms = () => {
                     className="block"
                   >
                     <CardContent className="p-0">
-                      <div className="relative w-full h-[280px] overflow-hidden">
+                      <div className="relative w-full h-[238px] overflow-hidden">
                         <img
                           src={program.image_url}
                           alt={program.title}

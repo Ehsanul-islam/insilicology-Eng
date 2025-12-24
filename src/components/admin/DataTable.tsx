@@ -27,9 +27,11 @@ import { Search, MoreHorizontal, Download, Trash2, CheckCircle, XCircle } from '
 import { Skeleton } from '@/components/ui/skeleton';
 
 export interface Column<T> {
-  key: string;
+  key?: string;
+  accessorKey?: string;
   header: string;
   render?: (item: T) => React.ReactNode;
+  cell?: (props: { row: { original: T } }) => React.ReactNode;
   sortable?: boolean;
 }
 
@@ -196,7 +198,7 @@ export function DataTable<T extends { id?: string }>({
                 </TableHead>
               )}
               {columns.map((column) => (
-                <TableHead key={column.key}>{column.header}</TableHead>
+                <TableHead key={column.key || column.accessorKey}>{column.header}</TableHead>
               ))}
               {rowActions && <TableHead className="w-12">Actions</TableHead>}
             </TableRow>
@@ -224,13 +226,18 @@ export function DataTable<T extends { id?: string }>({
                       />
                     </TableCell>
                   )}
-                  {columns.map((column) => (
-                    <TableCell key={column.key}>
-                      {column.render
-                        ? column.render(item)
-                        : String((item as Record<string, unknown>)[column.key] ?? '')}
-                    </TableCell>
-                  ))}
+                  {columns.map((column) => {
+                    const columnKey = column.key || column.accessorKey;
+                    return (
+                      <TableCell key={columnKey}>
+                        {column.cell
+                          ? column.cell({ row: { original: item } })
+                          : column.render
+                            ? column.render(item)
+                            : String((item as Record<string, unknown>)[columnKey!] ?? '')}
+                      </TableCell>
+                    );
+                  })}
                   {rowActions && onRowAction && (
                     <TableCell>
                       <DropdownMenu>
