@@ -96,13 +96,13 @@ const PortfolioInsights = () => {
     ];
 
     const RADIAN = Math.PI / 180;
-    
+
     // Calculate orange segment position based on data
     const calculateOrangePosition = (cx: number, cy: number, outerRadius: number) => {
         const totalValue = categoryData.reduce((sum, item) => sum + item.value, 0);
         let cumulativeAngle = -90; // Pie charts typically start from top
         let orangeMidAngle = -90;
-        
+
         categoryData.forEach((item) => {
             const itemPercent = item.value / totalValue;
             const itemAngle = itemPercent * 360;
@@ -111,20 +111,20 @@ const PortfolioInsights = () => {
             }
             cumulativeAngle += itemAngle;
         });
-        
+
         const radius = outerRadius + 12;
         return {
             x: cx + radius * Math.cos(-orangeMidAngle * RADIAN),
             y: cy + radius * Math.sin(-orangeMidAngle * RADIAN)
         };
     };
-    
+
     const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, payload, startAngle, endAngle }: any) => {
         const isBlue = payload.color === '#3b82f6';
         const isOrange = payload.color === '#f59e0b';
-        
+
         let x, y;
-        
+
         if (isOrange) {
             // Store orange label position for blue label to use
             const radius = outerRadius + 12;
@@ -134,7 +134,7 @@ const PortfolioInsights = () => {
         } else if (isBlue) {
             // For blue segment, position relative to orange "12%" label
             const orangePos = orangeLabelPos.current || calculateOrangePosition(cx, cy, outerRadius);
-            
+
             // Position blue label: 1.5cm above and 0.3cm left from orange
             // 1cm ≈ 37.8 pixels at 96 DPI
             const offsetY = -56.7; // 1.5cm up (negative Y)
@@ -152,15 +152,15 @@ const PortfolioInsights = () => {
         const textColor = payload.color === '#3b82f6' ? '#1e40af' : payload.color;
 
         return (
-            <text 
-                x={x} 
-                y={y} 
-                fill={textColor} 
-                textAnchor={x > cx ? 'start' : 'end'} 
-                dominantBaseline="central" 
+            <text
+                x={x}
+                y={y}
+                fill={textColor}
+                textAnchor={x > cx ? 'start' : 'end'}
+                dominantBaseline="central"
                 filter="url(#textShadow)"
-                style={{ 
-                    fontSize: '13px', 
+                style={{
+                    fontSize: '13px',
                     fontWeight: 'bold'
                 }}
             >
@@ -267,7 +267,7 @@ const PortfolioInsights = () => {
                                     <PieChart>
                                         <defs>
                                             <filter id="textShadow">
-                                                <feDropShadow dx="1" dy="1" stdDeviation="2" floodColor="white" floodOpacity="0.9"/>
+                                                <feDropShadow dx="1" dy="1" stdDeviation="2" floodColor="white" floodOpacity="0.9" />
                                             </filter>
                                         </defs>
                                         <Pie

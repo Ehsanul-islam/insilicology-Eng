@@ -66,15 +66,10 @@ export const AdminSidebar = () => {
 
     return (
       <SidebarMenuItem>
-        <SidebarMenuButton asChild>
+        <SidebarMenuButton asChild isActive={active}>
           <Link
             to={item.url}
-            className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
-              active
-                ? 'bg-primary text-primary-foreground'
-                : 'hover:bg-muted text-muted-foreground hover:text-foreground'
-            )}
+            className="flex items-center gap-3"
           >
             <Icon className="w-5 h-5 shrink-0" />
             {!collapsed && <span>{item.title}</span>}
