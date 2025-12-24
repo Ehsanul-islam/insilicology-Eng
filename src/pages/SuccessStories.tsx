@@ -48,22 +48,64 @@ const SuccessStories = () => {
             <Navbar />
 
             <main className="pt-16">
-                <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">
-                    <div className="container-custom text-center">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                            className="max-w-4xl mx-auto"
-                        >
-                            <Badge variant="outline" className="text-white border-white mb-4">Student Success</Badge>
-                            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                                Real People. Real Results.
-                            </h1>
-                            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-                                See how thousands of learners are changing their lives with LearnCraft.
-                            </p>
-                        </motion.div>
+                {/* Hero Section - Success & Achievement Theme */}
+                <section className="relative bg-[#1a0a1f] text-white pt-2 pb-8 overflow-hidden border-b border-white/5">
+                    {/* Velvet Noise Texture Overlay */}
+                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
+                        style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
+
+                    {/* Ambient Glows: Purple & Indigo */}
+                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                        <div className="absolute -top-[50%] -left-[10%] w-[80%] h-[100%] bg-purple-600/15 blur-[130px] rounded-full animate-pulse" />
+                        <div className="absolute top-[20%] -right-[20%] w-[60%] h-[90%] bg-indigo-600/20 blur-[130px] rounded-full animate-pulse" style={{ animationDelay: '2.5s' }} />
+                    </div>
+
+                    <div className="container-custom relative z-10">
+                        <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between">
+                            {/* Left Column: Content */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                className="max-w-2xl"
+                            >
+                                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-purple-500/5 border border-purple-500/20 text-[9px] font-bold text-purple-200/80 mb-3 backdrop-blur-md">
+                                    <span className="relative flex h-1.5 w-1.5">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-purple-500"></span>
+                                    </span>
+                                    STUDENT SUCCESS
+                                </div>
+
+                                <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
+                                    Real People. <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-200 via-indigo-400 to-purple-200 bg-[length:200%_auto] animate-gradient-x">Real Results.</span>
+                                </h1>
+
+                                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
+                                    See how thousands of learners are changing their lives with LearnCraft.
+                                </p>
+                            </motion.div>
+
+                            {/* Right Column: Compact Horizontal Stats */}
+                            <div className="flex flex-wrap gap-2 md:gap-3">
+                                {[
+                                    { label: 'Success Stories', value: '1000+' },
+                                    { label: 'Career Changes', value: '500+' },
+                                    { label: 'Avg. Salary Increase', value: '40%' },
+                                ].map((stat, i) => (
+                                    <motion.div
+                                        key={stat.label}
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.2 + (i * 0.1) }}
+                                        className="flex flex-col items-center justify-center min-w-[90px] md:min-w-[110px] p-2 md:p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all hover:scale-105 group backdrop-blur-sm"
+                                    >
+                                        <span className="text-lg md:text-xl font-bold text-white group-hover:text-purple-400 transition-colors tracking-tight">{stat.value}</span>
+                                        <span className="text-[8px] md:text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-0.5">{stat.label}</span>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </section>
 
