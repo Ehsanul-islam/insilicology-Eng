@@ -26,6 +26,7 @@ const Career = lazy(() => import("./pages/Career"));
 const Auth = lazy(() => import("./pages/Auth"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const CertificateVerify = lazy(() => import("./pages/CertificateVerify"));
+const SupabaseTest = lazy(() => import("./pages/SupabaseTest"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
 const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
@@ -117,6 +118,7 @@ const App = () => (
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/verify-certificate" element={<CertificateVerify />} />
+                  <Route path="/supabase-test" element={<SupabaseTest />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/cookies" element={<CookiePolicy />} />
