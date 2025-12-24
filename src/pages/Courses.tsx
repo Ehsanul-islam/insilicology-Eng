@@ -68,30 +68,77 @@ const Courses = () => {
         title="All Courses - Learn Web Development, Data Science, Design & More"
         description="Browse our complete catalog of expert-led online courses. Master web development, data science, UI/UX design, digital marketing, cloud computing and more."
         url="/courses"
-        type="website"
         tags={['online courses', 'web development', 'data science', 'professional training']}
       />
       <Navbar />
 
-      <main className="flex-1 pt-24 pb-16">
-        <div className="container-custom">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Explore <span className="gradient-text">All Courses</span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              {totalCount > 0
-                ? `Choose from ${totalCount} courses to advance your career`
-                : 'Discover courses to advance your career'
-              }
-            </p>
-          </motion.div>
+      <main className="flex-1">
+        {/* Horizontal Split Ultra-Compact Premium Hero Section */}
+        <section className="relative bg-[#0A0C10] text-white py-8 overflow-hidden border-b border-white/5">
+          {/* Ambient Background Glows */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-[40%] -left-[10%] w-[60%] h-[80%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse" />
+            <div className="absolute top-[0%] -right-[20%] w-[50%] h-[80%] bg-cyan-600/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
+          </div>
+
+          <div className="container-custom relative z-10">
+            <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between">
+              {/* Left Column: Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="max-w-2xl"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.1, duration: 0.4 }}
+                  className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold text-purple-300 mb-3 backdrop-blur-md"
+                >
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-purple-500"></span>
+                  </span>
+                  ELITE PLATFORM
+                </motion.div>
+
+                <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
+                  Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A855F7] via-[#22D3EE] to-[#A855F7] bg-[length:200%_auto] animate-gradient-x">All Courses</span>
+                </h1>
+
+                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
+                  {totalCount > 0
+                    ? `Master in-demand skills with ${totalCount} expert-curated courses for modern professionals.`
+                    : 'Master in-demand skills with expert-curated courses for modern professionals.'
+                  }
+                </p>
+              </motion.div>
+
+              {/* Right Column: Compact Horizontal Stats */}
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                {[
+                  { label: 'Courses', value: totalCount || '150+' },
+                  { label: 'Success', value: '98%' },
+                  { label: 'Hours', value: '1.2k+' },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + (i * 0.1) }}
+                    className="flex flex-col items-center justify-center min-w-[90px] md:min-w-[110px] p-2 md:p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.06] transition-all hover:scale-105 group backdrop-blur-sm"
+                  >
+                    <span className="text-lg md:text-xl font-bold text-white group-hover:text-purple-400 transition-colors tracking-tight">{stat.value}</span>
+                    <span className="text-[8px] md:text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-0.5">{stat.label}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="container-custom py-8">
 
           {/* Filters */}
           <motion.div
