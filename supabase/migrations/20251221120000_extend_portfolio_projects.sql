@@ -17,6 +17,15 @@ CREATE TABLE IF NOT EXISTS portfolio_categories (
   updated_at timestamptz DEFAULT now()
 );
 
+-- Safely add columns if the table already exists but lacks them
+DO $$
+BEGIN
+    ALTER TABLE portfolio_categories ADD COLUMN IF NOT EXISTS icon text;
+    ALTER TABLE portfolio_categories ADD COLUMN IF NOT EXISTS display_order integer DEFAULT 0;
+EXCEPTION
+    WHEN others THEN null;
+END $$;
+
 -- Insert default categories
 INSERT INTO portfolio_categories (name, slug, icon, display_order) VALUES
   ('Web Development', 'web-development', '🌐', 1),

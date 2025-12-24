@@ -789,14 +789,46 @@ export type Database = {
           },
         ]
       }
+      portfolio_categories: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       portfolio_projects: {
         Row: {
+          category: string | null
           client_name: string | null
           country: string | null
           created_at: string | null
           description: string | null
           duration_text: string | null
           featured: boolean | null
+          gallery_images: Json | null
           hero_image_url: string | null
           id: string
           results: Json | null
@@ -804,17 +836,22 @@ export type Database = {
           slug: string
           status: Database["public"]["Enums"]["project_status"] | null
           summary: string | null
+          team_size: string | null
           technologies: Json | null
+          challenges: Json | null
+          solutions: Json | null
           title: string
           updated_at: string | null
         }
         Insert: {
+          category?: string | null
           client_name?: string | null
           country?: string | null
           created_at?: string | null
           description?: string | null
           duration_text?: string | null
           featured?: boolean | null
+          gallery_images?: Json | null
           hero_image_url?: string | null
           id?: string
           results?: Json | null
@@ -822,17 +859,22 @@ export type Database = {
           slug: string
           status?: Database["public"]["Enums"]["project_status"] | null
           summary?: string | null
+          team_size?: string | null
           technologies?: Json | null
+          challenges?: Json | null
+          solutions?: Json | null
           title: string
           updated_at?: string | null
         }
         Update: {
+          category?: string | null
           client_name?: string | null
           country?: string | null
           created_at?: string | null
           description?: string | null
           duration_text?: string | null
           featured?: boolean | null
+          gallery_images?: Json | null
           hero_image_url?: string | null
           id?: string
           results?: Json | null
@@ -840,8 +882,11 @@ export type Database = {
           slug: string
           status?: Database["public"]["Enums"]["project_status"] | null
           summary?: string | null
+          team_size?: string | null
           technologies?: Json | null
-          title: string
+          challenges?: Json | null
+          solutions?: Json | null
+          title?: string
           updated_at?: string | null
         }
         Relationships: []

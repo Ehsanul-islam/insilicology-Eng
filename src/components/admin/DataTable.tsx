@@ -46,6 +46,7 @@ interface DataTableProps<T> {
   filterValue?: string;
   onRowAction?: (action: string, item: T) => void;
   rowActions?: { label: string; value: string; icon?: React.ReactNode; variant?: 'default' | 'destructive' }[];
+  actions?: (item: T) => { label: string; icon?: any; onClick: () => void; destructive?: boolean }[];
   bulkActions?: { label: string; value: string; icon?: React.ReactNode }[];
   onBulkAction?: (action: string, selectedIds: string[]) => void;
   idKey?: keyof T;
@@ -63,6 +64,7 @@ export function DataTable<T extends { id?: string }>({
   filterValue,
   onRowAction,
   rowActions,
+  actions,
   bulkActions,
   onBulkAction,
   idKey = 'id' as keyof T,
@@ -200,7 +202,7 @@ export function DataTable<T extends { id?: string }>({
               {columns.map((column) => (
                 <TableHead key={column.key || column.accessorKey}>{column.header}</TableHead>
               ))}
-              {rowActions && <TableHead className="w-12">Actions</TableHead>}
+              {(rowActions || actions) && <TableHead className="w-12">Actions</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -238,7 +240,7 @@ export function DataTable<T extends { id?: string }>({
                       </TableCell>
                     );
                   })}
-                  {rowActions && onRowAction && (
+                  {(rowActions || actions) && (
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -247,16 +249,27 @@ export function DataTable<T extends { id?: string }>({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          {rowActions.map((action) => (
-                            <DropdownMenuItem
-                              key={action.value}
-                              onClick={() => onRowAction(action.value, item)}
-                              className={action.variant === 'destructive' ? 'text-destructive' : ''}
-                            >
-                              {action.icon}
-                              <span className="ml-2">{action.label}</span>
-                            </DropdownMenuItem>
-                          ))}
+                          {actions
+                            ? actions(item).map((action, idx) => (
+                              <DropdownMenuItem
+                                key={idx}
+                                onClick={action.onClick}
+                                className={action.destructive ? 'text-destructive' : ''}
+                              >
+                                {action.icon && <action.icon className="w-4 h-4 mr-2" />}
+                                {action.label}
+                              </DropdownMenuItem>
+                            ))
+                            : rowActions?.map((action) => (
+                              <DropdownMenuItem
+                                key={action.value}
+                                onClick={() => onRowAction?.(action.value, item)}
+                                className={action.variant === 'destructive' ? 'text-destructive' : ''}
+                              >
+                                {action.icon}
+                                <span className="ml-2">{action.label}</span>
+                              </DropdownMenuItem>
+                            ))}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

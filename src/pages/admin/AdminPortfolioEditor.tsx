@@ -113,7 +113,7 @@ const AdminPortfolioEditor = () => {
 
   const handleTitleChange = async (title: string) => {
     setFormData((prev) => ({ ...prev, title }));
-    
+
     // Auto-generate slug only for new portfolios
     if (!isEditing && title) {
       const newSlug = generateSlug(title);
@@ -149,7 +149,7 @@ const AdminPortfolioEditor = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setSaving(true);
@@ -192,8 +192,13 @@ const AdminPortfolioEditor = () => {
       }
 
       navigate('/admin/portfolio');
-    } catch (error) {
-      toast.error(isEditing ? 'Failed to update portfolio' : 'Failed to create portfolio');
+    } catch (error: any) {
+      console.error('Portfolio save error:', error);
+      toast.error(
+        isEditing
+          ? `Failed to update portfolio: ${error.message || 'Unknown error'}`
+          : `Failed to create portfolio: ${error.message || 'Unknown error'}`
+      );
     } finally {
       setSaving(false);
     }

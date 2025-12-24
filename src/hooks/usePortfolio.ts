@@ -235,9 +235,21 @@ export const usePortfolio = () => {
      * Returns empty array to prevent errors in components that call this function
      */
     const fetchCategories = async () => {
-        // Portfolio system doesn't have categories table yet
-        // This is a stub to prevent errors in Portfolio.tsx
-        return [];
+        try {
+            const { data, error } = await supabase
+                .from('portfolio_categories')
+                .select('*')
+                .order('display_order', { ascending: true });
+
+            if (error) {
+                console.error('Error fetching categories:', error);
+                return [];
+            }
+            return data || [];
+        } catch (err) {
+            console.error('Error in fetchCategories:', err);
+            return [];
+        }
     };
 
     return {

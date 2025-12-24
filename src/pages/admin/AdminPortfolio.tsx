@@ -135,40 +135,32 @@ const AdminPortfolio = () => {
     {
       header: 'Title',
       accessorKey: 'title',
-      cell: (portfolio) => (
-        <div>
-          <div className="font-medium flex items-center gap-2">
-            {portfolio.title}
-            {portfolio.featured && <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
-          </div>
-          <div className="text-sm text-muted-foreground">{portfolio.slug}</div>
+      cell: ({ row: { original: portfolio } }) => (
+        <div className="font-medium flex items-center gap-2">
+          {portfolio.title}
+          {portfolio.featured && <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
         </div>
       ),
     },
     {
       header: 'Client',
       accessorKey: 'client_name',
-      cell: (portfolio) => (
-        <div>
-          <div>{portfolio.client_name || '-'}</div>
-          <div className="text-sm text-muted-foreground">{portfolio.country || '-'}</div>
-        </div>
-      ),
+      cell: ({ row: { original: portfolio } }) => portfolio.client_name || '-',
     },
     {
       header: 'Category',
       accessorKey: 'category',
-      cell: (portfolio) => portfolio.category || '-',
+      cell: ({ row: { original: portfolio } }) => portfolio.category || '-',
     },
     {
       header: 'Status',
       accessorKey: 'status',
-      cell: (portfolio) => getStatusBadge(portfolio.status || 'draft'),
+      cell: ({ row: { original: portfolio } }) => getStatusBadge(portfolio.status || 'draft'),
     },
     {
       header: 'Created',
       accessorKey: 'created_at',
-      cell: (portfolio) =>
+      cell: ({ row: { original: portfolio } }) =>
         portfolio.created_at
           ? new Date(portfolio.created_at).toLocaleDateString()
           : '-',
@@ -193,21 +185,21 @@ const AdminPortfolio = () => {
     },
     ...(portfolio.status === 'draft'
       ? [
-          {
-            label: 'Publish',
-            icon: Send,
-            onClick: () => handleAction('publish', portfolio),
-          },
-        ]
+        {
+          label: 'Publish',
+          icon: Send,
+          onClick: () => handleAction('publish', portfolio),
+        },
+      ]
       : []),
     ...(portfolio.status === 'published'
       ? [
-          {
-            label: 'Archive',
-            icon: Archive,
-            onClick: () => handleAction('archive', portfolio),
-          },
-        ]
+        {
+          label: 'Archive',
+          icon: Archive,
+          onClick: () => handleAction('archive', portfolio),
+        },
+      ]
       : []),
     {
       label: 'Delete',
