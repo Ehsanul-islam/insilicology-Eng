@@ -74,7 +74,7 @@ const Courses = () => {
 
       <main className="flex-1">
         {/* Horizontal Split Ultra-Compact Premium Hero Section */}
-        <section className="relative bg-[#0A0C10] text-white py-8 overflow-hidden border-b border-white/5">
+        <section className="relative bg-[#0A0C10] text-white pt-24 pb-8 overflow-hidden border-b border-white/5">
           {/* Ambient Background Glows */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             <div className="absolute -top-[40%] -left-[10%] w-[60%] h-[80%] bg-purple-600/10 blur-[120px] rounded-full animate-pulse" />
