@@ -99,10 +99,13 @@ export const useUpcomingPrograms = () => {
         .select()
         .single();
 
-      if (createError) throw createError;
+      if (createError) {
+        console.error('Supabase error creating program:', createError);
+        throw new Error(createError.message || 'Database error occurred');
+      }
       return data;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to create program';
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred during program creation';
       setError(errorMessage);
       console.error('Error creating program:', err);
       throw err;

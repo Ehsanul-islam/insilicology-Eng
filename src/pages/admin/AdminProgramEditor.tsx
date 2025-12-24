@@ -98,7 +98,7 @@ const AdminProgramEditor = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setSaving(true);
@@ -112,6 +112,8 @@ const AdminProgramEditor = () => {
         display_order: formData.display_order,
       };
 
+      console.log('Attempting to save program:', programData);
+
       if (isEditing && id) {
         await updateProgram(id, programData);
         toast.success('Program updated successfully');
@@ -122,7 +124,9 @@ const AdminProgramEditor = () => {
 
       navigate('/admin/programs');
     } catch (error) {
-      toast.error(isEditing ? 'Failed to update program' : 'Failed to create program');
+      console.error('Error in handleSubmit:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(`${isEditing ? 'Failed to update program' : 'Failed to create program'}: ${errorMessage}`);
     } finally {
       setSaving(false);
     }
@@ -159,7 +163,7 @@ const AdminProgramEditor = () => {
                 variant="outline"
                 onClick={() => {
                   setFormData((prev) => ({ ...prev, status: 'draft' }));
-                  handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+                  handleSubmit({ preventDefault: () => { } } as React.FormEvent);
                 }}
                 disabled={saving}
               >
@@ -208,12 +212,22 @@ const AdminProgramEditor = () => {
                         <img
                           src={formData.image_url}
                           alt="Preview"
-                          className="w-full max-w-md h-48 object-cover rounded-lg border"
+                          className="w-full h-auto max-h-64 object-contain rounded-lg border bg-muted/30"
                         />
                       </div>
                     )}
                   </div>
+                </CardContent>
+              </Card>
+            </div>
 
+            {/* Sidebar */}
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Schedule & Link</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="start_date">
                       Start Date <span className="text-destructive">*</span>
@@ -262,16 +276,13 @@ const AdminProgramEditor = () => {
                       placeholder="/courses/example or https://example.com"
                       required
                     />
-                    <p className="text-xs text-muted-foreground">
-                      Internal route (e.g., /courses/xyz) or external URL (e.g., https://example.com)
+                    <p className="text-[10px] text-muted-foreground leading-tight">
+                      Internal route (e.g., /courses/xyz) or external URL.
                     </p>
                   </div>
                 </CardContent>
               </Card>
-            </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Settings</CardTitle>
@@ -285,7 +296,7 @@ const AdminProgramEditor = () => {
                         setFormData((prev) => ({ ...prev, status: value }))
                       }
                     >
-                      <SelectTrigger id="status" className="w-[140px]">
+                      <SelectTrigger id="status" className="w-[120px]">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -297,7 +308,7 @@ const AdminProgramEditor = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="display_order">Display Order</Label>
+                    <Label htmlFor="display_order">Order</Label>
                     <Input
                       id="display_order"
                       type="number"
@@ -307,9 +318,6 @@ const AdminProgramEditor = () => {
                       }
                       min="0"
                     />
-                    <p className="text-xs text-muted-foreground">
-                      Lower numbers appear first. Use 0 for default ordering.
-                    </p>
                   </div>
                 </CardContent>
               </Card>

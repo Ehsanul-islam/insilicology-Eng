@@ -11,6 +11,7 @@ interface SEOProps {
   publishedTime?: string;
   modifiedTime?: string;
   tags?: string[];
+  robots?: string;
   course?: {
     id: string;
     title: string;
@@ -49,6 +50,7 @@ const SEOHead = ({
   publishedTime,
   modifiedTime,
   tags = [],
+  robots,
   course,
   article,
   faq,
@@ -56,7 +58,7 @@ const SEOHead = ({
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://learncraft.lovable.app';
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
   const fullImageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
-  
+
   // Format title with site name
   const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
@@ -208,6 +210,7 @@ const SEOHead = ({
       <title>{fullTitle}</title>
       <meta name="title" content={fullTitle} />
       <meta name="description" content={description} />
+      {robots && <meta name="robots" content={robots} />}
       {author && <meta name="author" content={author} />}
       {tags.length > 0 && <meta name="keywords" content={tags.join(', ')} />}
 
