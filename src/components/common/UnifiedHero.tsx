@@ -96,12 +96,12 @@ const UnifiedHero = memo(({
                 />
 
                 <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                    <div className="grid lg:grid-cols-10 gap-8 lg:gap-12 items-center">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
-                            className="space-y-6"
+                            className="space-y-6 lg:col-span-6"
                         >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
@@ -219,7 +219,7 @@ const UnifiedHero = memo(({
                     </motion.div>
 
                     {/* Right Column - Upcoming Programs */}
-                    <div className="w-full lg:pl-4 flex items-center justify-center min-h-[400px]">
+                    <div className="w-full lg:col-span-4 flex items-center justify-center min-h-[400px]">
                         <UpcomingPrograms />
                     </div>
                 </div>
