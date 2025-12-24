@@ -131,7 +131,7 @@ export const useDashboardData = () => {
 
       // Calculate stats
       const completedCount = enrollments?.filter((e: any) => e.status === 'completed').length || 0;
-      
+
       setStats({
         enrolledCourses: enrollments?.length || 0,
         completedCourses: completedCount,
@@ -144,7 +144,7 @@ export const useDashboardData = () => {
 
       // Generate recent activity from enrollments and certificates
       const activities: RecentActivity[] = [];
-      
+
       // Add recent completions
       const completedEnrollments = enrollments?.filter((e: any) => e.status === 'completed').slice(0, 2) || [];
       completedEnrollments.forEach((e: any) => {
@@ -176,9 +176,18 @@ export const useDashboardData = () => {
 
       setRecentActivity(activities.slice(0, 4));
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching dashboard data:', error);
-      toast.error('Failed to load dashboard data');
+
+      // Only show error if it's a real error, not just empty data
+      // Check if it's a permission/policy error
+      if (error?.code === 'PGRST301' || error?.message?.includes('permission denied') || error?.message?.includes('policy')) {
+        toast.error('Unable to access dashboard data. Please check your permissions.');
+      } else if (error?.message && !error?.message?.includes('null')) {
+        // Only show error if there's a meaningful error message
+        toast.error('Failed to load dashboard data');
+      }
+      // If no error or it's just empty data, silently continue with empty state
     } finally {
       setLoading(false);
     }

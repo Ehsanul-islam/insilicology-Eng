@@ -41,6 +41,9 @@ import {
   CreditCard,
   ExternalLink,
   Lightbulb,
+  Upload,
+  Loader2,
+  X,
 } from 'lucide-react';
 
 // Import shared types, utilities, and constants
@@ -66,6 +69,8 @@ const AdminCourseEditor = () => {
   const [activeTab, setActiveTab] = useState('basic');
   const [instructors, setInstructors] = useState<Array<{ id: string; full_name: string; email: string }>>([]);
   const [formData, setFormData] = useState<CourseFormData>(getDefaultFormData());
+  const [uploadingPoster, setUploadingPoster] = useState(false);
+  const [uploadingInstructorPhoto, setUploadingInstructorPhoto] = useState(false);
 
   const fetchInstructors = useCallback(async () => {
     try {
@@ -318,6 +323,65 @@ const AdminCourseEditor = () => {
     }));
   };
 
+  // Handle image upload to Supabase Storage
+  const handleImageUpload = async (
+    file: File,
+    fieldName: 'poster_url' | 'instructor_photo'
+  ) => {
+    // Validate file type
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      toast.error('Please upload a valid image file (JPG, PNG, GIF, or WebP)');
+      return;
+    }
+
+    // Validate file size (2MB max)
+    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+    if (file.size > maxSize) {
+      toast.error('Image size must be less than 2MB');
+      return;
+    }
+
+    const setUploading = fieldName === 'poster_url' ? setUploadingPoster : setUploadingInstructorPhoto;
+    setUploading(true);
+
+    try {
+      // Generate unique filename
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('course-posters')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('course-posters')
+        .getPublicUrl(filePath);
+
+      // Update form data
+      setFormData(prev => ({
+        ...prev,
+        [fieldName]: publicUrl,
+      }));
+
+      toast.success(fieldName === 'poster_url' ? 'Poster image uploaded!' : 'Instructor photo uploaded!');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to upload image';
+      toast.error(message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+
   if (loading) {
     return (
       <AdminLayout title={isEditing ? 'Edit Course' : 'New Course'}>
@@ -490,15 +554,63 @@ const AdminCourseEditor = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label htmlFor="poster_url">Poster Image URL</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="poster_url"
-                          type="url"
-                          value={formData.poster_url}
-                          onChange={(e) => setFormData(prev => ({ ...prev, poster_url: e.target.value }))}
-                          placeholder="https://example.com/image.jpg"
-                        />
+                      <Label htmlFor="poster_url">Poster Image</Label>
+                      <div className="space-y-3">
+                        <div className="flex gap-2">
+                          <Input
+                            id="poster_url"
+                            type="url"
+                            value={formData.poster_url}
+                            onChange={(e) => setFormData(prev => ({ ...prev, poster_url: e.target.value }))}
+                            placeholder="Or enter URL manually"
+                            className="flex-1"
+                          />
+                          <input
+                            type="file"
+                            id="poster-upload"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                handleImageUpload(file, 'poster_url');
+                              }
+                              e.target.value = ''; // Reset input
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => document.getElementById('poster-upload')?.click()}
+                            disabled={uploadingPoster}
+                          >
+                            {uploadingPoster ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-4 h-4 mr-2" />
+                                Upload
+                              </>
+                            )}
+                          </Button>
+                          {formData.poster_url && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setFormData(prev => ({ ...prev, poster_url: '' }))}
+                              title="Remove image"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          JPG, PNG or GIF. Max size 2MB.
+                        </p>
                       </div>
                       {formData.poster_url && (
                         <div className="mt-3 relative aspect-video w-full max-w-md rounded-lg overflow-hidden border">
@@ -797,29 +909,79 @@ const AdminCourseEditor = () => {
                   </div>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="instructor_photo">Photo URL</Label>
-                      <Input
-                        id="instructor_photo"
-                        type="url"
-                        value={formData.instructor_photo}
-                        onChange={(e) => setFormData(prev => ({ ...prev, instructor_photo: e.target.value }))}
-                        placeholder="https://example.com/photo.jpg"
-                      />
-                    </div>
-                    {formData.instructor_photo && (
-                      <div className="flex justify-center">
-                        <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-muted">
-                          <img
-                            src={formData.instructor_photo}
-                            alt="Instructor photo preview"
-                            className="object-cover w-full h-full"
-                            onError={(e) => {
-                              (e.target as HTMLImageElement).src = '/placeholder.svg';
+                      <Label htmlFor="instructor_photo">Photo</Label>
+                      <div className="space-y-3">
+                        <div className="flex gap-2">
+                          <Input
+                            id="instructor_photo"
+                            type="url"
+                            value={formData.instructor_photo}
+                            onChange={(e) => setFormData(prev => ({ ...prev, instructor_photo: e.target.value }))}
+                            placeholder="Or enter URL manually"
+                            className="flex-1"
+                          />
+                          <input
+                            type="file"
+                            id="instructor-photo-upload"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                handleImageUpload(file, 'instructor_photo');
+                              }
+                              e.target.value = ''; // Reset input
                             }}
                           />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => document.getElementById('instructor-photo-upload')?.click()}
+                            disabled={uploadingInstructorPhoto}
+                          >
+                            {uploadingInstructorPhoto ? (
+                              <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="w-4 h-4 mr-2" />
+                                Upload
+                              </>
+                            )}
+                          </Button>
+                          {formData.instructor_photo && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setFormData(prev => ({ ...prev, instructor_photo: '' }))}
+                              title="Remove photo"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          )}
                         </div>
+                        <p className="text-xs text-muted-foreground">
+                          JPG, PNG or GIF. Max size 2MB.
+                        </p>
                       </div>
-                    )}
+                      {formData.instructor_photo && (
+                        <div className="flex justify-center mt-3">
+                          <div className="relative w-40 h-40 rounded-full overflow-hidden border-4 border-muted">
+                            <img
+                              src={formData.instructor_photo}
+                              alt="Instructor photo preview"
+                              className="object-cover w-full h-full"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = '/placeholder.svg';
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </CardContent>
