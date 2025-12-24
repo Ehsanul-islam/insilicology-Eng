@@ -213,11 +213,7 @@ const PortfolioInsights = () => {
 
             <div className="container-custom relative z-10">
                 {/* Header */}
-<<<<<<< HEAD
-                <div className="text-center mb-16">
-=======
                 <div className="text-center mb-8">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -231,13 +227,8 @@ const PortfolioInsights = () => {
                                 </p>
                             </div>
                         </div>
-<<<<<<< HEAD
-                        <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Work at a Glance</h2>
-                        <p className="text-muted-foreground max-w-2xl mx-auto">
-=======
                         <h2 className="text-xl md:text-2xl font-bold mb-2.5">Our Work at a Glance</h2>
                         <p className="text-muted-foreground max-w-2xl mx-auto text-xs">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                             Data-driven excellence across technologies, industries, and continents
                         </p>
                     </motion.div>
@@ -256,11 +247,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -6, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-<<<<<<< HEAD
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-blue-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 relative overflow-hidden group">
-=======
                         <Card className="h-[224px] flex flex-col border-t-[3px] border-t-blue-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-500 relative overflow-hidden group">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -271,11 +258,7 @@ const PortfolioInsights = () => {
                                     </div>
                                     Project Portfolio
                                 </CardTitle>
-<<<<<<< HEAD
-                                <div className="text-2xl font-black bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-=======
                                 <div className="text-base font-black bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent -mt-1">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                     150+ Projects
                                 </div>
                             </CardHeader>
@@ -290,19 +273,11 @@ const PortfolioInsights = () => {
                                         <Pie
                                             data={categoryData}
                                             cx="50%"
-<<<<<<< HEAD
-                                            cy="50%"
-                                            labelLine={false}
-                                            label={renderCustomizedLabel}
-                                            outerRadius={80}
-                                            innerRadius={50}
-=======
                                             cy="40%"
                                             labelLine={false}
                                             label={renderCustomizedLabel}
                                             outerRadius={44}
                                             innerRadius={28}
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                             fill="#8884d8"
                                             dataKey="value"
                                             animationBegin={0}
@@ -335,11 +310,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -6, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-<<<<<<< HEAD
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-purple-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 relative overflow-hidden group">
-=======
                         <Card className="h-[224px] flex flex-col border-t-[3px] border-t-purple-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 relative overflow-hidden group">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -351,19 +322,11 @@ const PortfolioInsights = () => {
                                         </div>
                                         Tech Stack
                                     </CardTitle>
-<<<<<<< HEAD
-                                    <div className="px-2 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full">
-                                        <span className="text-xs font-bold text-purple-600">Top 5</span>
-                                    </div>
-                                </div>
-                                <div className="text-2xl font-black bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
-=======
                                     <div className="px-1.5 py-0.5 bg-purple-500/10 border border-purple-500/20 rounded-full">
                                         <span className="text-[8px] font-bold text-purple-600">Top 5</span>
                                     </div>
                                 </div>
                                 <div className="text-base font-black bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                     20+ Technologies
                                 </div>
                             </CardHeader>
@@ -372,11 +335,7 @@ const PortfolioInsights = () => {
                                     <BarChart data={techData} layout="vertical" margin={{ left: -16 }}>
                                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
                                         <XAxis type="number" hide />
-<<<<<<< HEAD
-                                        <YAxis type="category" dataKey="name" tick={{ fontSize: 11, fill: '#6b7280' }} width={80} />
-=======
                                         <YAxis type="category" dataKey="name" tick={{ fontSize: 8, fill: '#6b7280' }} width={56} />
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                         <Tooltip content={<CustomTooltip />} />
                                         <Bar dataKey="value" radius={[0, 3, 3, 0]} animationDuration={1500} animationBegin={200}>
                                             {techData.map((entry, index) => (
@@ -400,11 +359,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -6, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-<<<<<<< HEAD
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-cyan-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 relative overflow-hidden group">
-=======
                         <Card className="h-[224px] flex flex-col border-t-[3px] border-t-cyan-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 relative overflow-hidden group">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -416,19 +371,11 @@ const PortfolioInsights = () => {
                                         </div>
                                         Delivery Rate
                                     </CardTitle>
-<<<<<<< HEAD
-                                    <div className="px-2 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
-                                        <span className="text-xs font-bold text-cyan-600">↑ 125%</span>
-                                    </div>
-                                </div>
-                                <div className="text-2xl font-black bg-gradient-to-r from-cyan-600 to-cyan-800 bg-clip-text text-transparent">
-=======
                                     <div className="px-1.5 py-0.5 bg-cyan-500/10 border border-cyan-500/20 rounded-full">
                                         <span className="text-[8px] font-bold text-cyan-600">↑ 125%</span>
                                     </div>
                                 </div>
                                 <div className="text-base font-black bg-gradient-to-r from-cyan-600 to-cyan-800 bg-clip-text text-transparent">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                     18/month
                                 </div>
                             </CardHeader>
@@ -484,11 +431,7 @@ const PortfolioInsights = () => {
                         whileHover={{ y: -6, scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                     >
-<<<<<<< HEAD
-                        <Card className="h-[340px] flex flex-col border-t-4 border-t-green-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-500 relative overflow-hidden group">
-=======
                         <Card className="h-[224px] flex flex-col border-t-[3px] border-t-green-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-500 relative overflow-hidden group">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -506,37 +449,17 @@ const PortfolioInsights = () => {
                                 </div>
                             </CardHeader>
                             <CardContent className="flex-1 w-full min-h-0 relative z-10 flex flex-col items-center justify-center">
-<<<<<<< HEAD
-                                <div className="relative w-48 h-48">
-                                    <svg className="w-full h-full transform -rotate-90">
-                                        <circle
-                                            cx="96"
-                                            cy="96"
-                                            r="80"
-=======
                                 <div className="relative w-32 h-32">
                                     <svg className="w-full h-full transform -rotate-90">
                                         <circle
                                             cx="64"
                                             cy="64"
                                             r="40"
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                             stroke="#e5e7eb"
                                             strokeWidth="9.6"
                                             fill="none"
                                         />
                                         <motion.circle
-<<<<<<< HEAD
-                                            cx="96"
-                                            cy="96"
-                                            r="80"
-                                            stroke="url(#gradientGreen)"
-                                            strokeWidth="12"
-                                            fill="none"
-                                            strokeLinecap="round"
-                                            initial={{ strokeDasharray: "0 502" }}
-                                            animate={startCounting ? { strokeDasharray: "480 502" } : {}}
-=======
                                             cx="64"
                                             cy="64"
                                             r="40"
@@ -546,7 +469,6 @@ const PortfolioInsights = () => {
                                             strokeLinecap="round"
                                             initial={{ strokeDasharray: "0 251" }}
                                             animate={startCounting ? { strokeDasharray: "240 251" } : {}}
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                             transition={{ duration: 2, ease: "easeOut" }}
                                         />
                                         <defs>
@@ -558,11 +480,7 @@ const PortfolioInsights = () => {
                                     </svg>
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <motion.div
-<<<<<<< HEAD
-                                            className="text-4xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent"
-=======
                                             className="text-2xl font-black bg-gradient-to-r from-green-600 to-green-800 bg-clip-text text-transparent"
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                             initial={{ scale: 0 }}
                                             animate={startCounting ? { scale: 1 } : {}}
                                             transition={{ duration: 0.5, delay: 1 }}
@@ -589,11 +507,7 @@ const PortfolioInsights = () => {
                         variants={cardVariants}
                         whileHover={{ y: -6, scale: 1.01 }}
                     >
-<<<<<<< HEAD
-                        <Card className="h-[340px] border-t-4 border-t-indigo-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden group">
-=======
                         <Card className="h-[224px] border-t-[3px] border-t-indigo-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden group">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -605,29 +519,17 @@ const PortfolioInsights = () => {
                                         </div>
                                         Global Reach
                                     </CardTitle>
-<<<<<<< HEAD
-                                    <div className="text-2xl font-black bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
-=======
                                     <div className="text-base font-black bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                         25+ Countries
                                     </div>
                                 </div>
                             </CardHeader>
-<<<<<<< HEAD
-                            <CardContent className="relative z-10 h-48">
-=======
                             <CardContent className="relative z-10 h-32">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={regionalData} layout="vertical">
                                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
                                         <XAxis type="number" hide />
-<<<<<<< HEAD
-                                        <YAxis type="category" dataKey="region" tick={{ fontSize: 12, fill: '#6b7280' }} width={120} />
-=======
                                         <YAxis type="category" dataKey="region" tick={{ fontSize: 9, fill: '#6b7280' }} width={72} />
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                         <Tooltip content={<CustomTooltip />} />
                                         <Bar dataKey="value" radius={[0, 6, 6, 0]} animationDuration={1500} animationBegin={600}>
                                             {regionalData.map((entry, index) => (
@@ -650,11 +552,7 @@ const PortfolioInsights = () => {
                         variants={cardVariants}
                         whileHover={{ y: -6, scale: 1.01 }}
                     >
-<<<<<<< HEAD
-                        <Card className="h-[340px] border-t-4 border-t-amber-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 relative overflow-hidden group">
-=======
                         <Card className="h-[224px] border-t-[3px] border-t-amber-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 relative overflow-hidden group">
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -674,21 +572,12 @@ const PortfolioInsights = () => {
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             animate={startCounting ? { opacity: 1, scale: 1 } : {}}
                                             transition={{ delay: 0.8 + index * 0.1, duration: 0.4 }}
-<<<<<<< HEAD
-                                            className="flex flex-col items-center justify-center p-3 bg-gradient-to-br from-background to-secondary/30 rounded-xl border border-border hover:shadow-md transition-shadow"
-                                        >
-                                            <div className={`p-1.5 ${metric.bg} rounded-lg mb-1.5`}>
-                                                <metric.icon className={`w-4 h-4 ${metric.color}`} />
-                                            </div>
-                                            <div className={`text-xl font-black bg-gradient-to-r ${metric.color.replace('text-', 'from-')} ${metric.color.replace('text-', 'to-').replace('600', '800')} bg-clip-text text-transparent`}>
-=======
                                             className="flex flex-col items-center justify-center p-1.5 bg-gradient-to-br from-background to-secondary/30 rounded-xl border border-border hover:shadow-md transition-shadow"
                                         >
                                             <div className={`p-0.5 ${metric.bg} rounded-lg mb-0.5`}>
                                                 <metric.icon className={`w-3 h-3 ${metric.color}`} />
                                             </div>
                                             <div className={`text-base font-black bg-gradient-to-r ${metric.color.replace('text-', 'from-')} ${metric.color.replace('text-', 'to-').replace('600', '800')} bg-clip-text text-transparent`}>
->>>>>>> 1c75e6acde535eb87f3afce854c23ddec35ddb3c
                                                 {metric.count !== null ? `${metric.count}${metric.value.includes('K') ? 'K' : metric.value.includes('%') ? '%' : ''}${metric.value.includes('+') ? '+' : ''}` : metric.value}
                                             </div>
                                             <div className="text-[8px] text-muted-foreground text-center mt-0.5 leading-tight">{metric.label}</div>
