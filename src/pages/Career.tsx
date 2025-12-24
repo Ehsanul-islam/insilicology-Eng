@@ -114,29 +114,71 @@ const Career = () => {
         tags={['careers', 'jobs', 'hiring', 'work with us', 'team']}
       />
       <Navbar />
-      
+
       <main className="pt-16">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">
-          <div className="container-custom">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl mx-auto text-center"
-            >
-              <Briefcase className="w-16 h-16 mx-auto mb-6" />
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                Build the Future of Learning
-              </h1>
-              <p className="text-xl text-white/90 mb-8">
-                Join our mission to make quality education accessible to everyone, everywhere.
-              </p>
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground">
-                View Open Positions
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </motion.div>
+        {/* Hero Section - Growth & Opportunity Theme */}
+        <section className="relative bg-[#1a0a0f] text-white pt-16 pb-8 overflow-hidden border-b border-white/5">
+          {/* Velvet Noise Texture Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
+            style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
+
+          {/* Ambient Glows: Rose & Orange */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-[50%] -left-[10%] w-[80%] h-[100%] bg-rose-600/15 blur-[130px] rounded-full animate-pulse" />
+            <div className="absolute top-[20%] -right-[20%] w-[60%] h-[90%] bg-orange-600/20 blur-[130px] rounded-full animate-pulse" style={{ animationDelay: '2.5s' }} />
+          </div>
+
+          <div className="container-custom relative z-10">
+            <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between">
+              {/* Left Column: Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="max-w-2xl"
+              >
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-rose-500/5 border border-rose-500/20 text-[9px] font-bold text-rose-200/80 mb-3 backdrop-blur-md">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span>
+                  </span>
+                  JOIN OUR TEAM
+                </div>
+
+                <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
+                  Build the <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-200 via-orange-400 to-rose-200 bg-[length:200%_auto] animate-gradient-x">Future</span>
+                </h1>
+
+                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium mb-6">
+                  Join our mission to make quality education accessible to everyone, everywhere.
+                </p>
+
+                <Button size="lg" className="bg-rose-500 hover:bg-rose-600 text-white">
+                  View Open Positions
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </motion.div>
+
+              {/* Right Column: Compact Horizontal Stats */}
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                {[
+                  { label: 'Open Positions', value: openPositions.length || '6+' },
+                  { label: 'Team Members', value: '50+' },
+                  { label: 'Locations', value: '3+' },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + (i * 0.1) }}
+                    className="flex flex-col items-center justify-center min-w-[90px] md:min-w-[110px] p-2 md:p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all hover:scale-105 group backdrop-blur-sm"
+                  >
+                    <span className="text-lg md:text-xl font-bold text-white group-hover:text-rose-400 transition-colors tracking-tight">{stat.value}</span>
+                    <span className="text-[8px] md:text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-0.5">{stat.label}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 

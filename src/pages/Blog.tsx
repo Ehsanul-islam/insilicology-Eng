@@ -16,7 +16,7 @@ const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'all');
   const { fetchPublishedBlogPosts, fetchCategories, calculateReadTime } = useBlog();
-  
+
   const [posts, setPosts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,13 +45,13 @@ const Blog = () => {
     const matchesSearch = !searchQuery ||
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt?.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const category = post.blog_categories as any;
-    const matchesCategory = selectedCategory === 'all' || 
+    const matchesCategory = selectedCategory === 'all' ||
       (selectedCategory === 'featured' && post.featured) ||
       category?.id === selectedCategory ||
       category?.slug === selectedCategory;
-    
+
     return matchesSearch && matchesCategory;
   });
   const featuredPosts = posts.filter(p => p.featured);
@@ -66,36 +66,78 @@ const Blog = () => {
         tags={['blog', 'tech blog', 'programming tutorials', 'career advice', 'technology news']}
       />
       <Navbar />
-      
+
       <main className="pt-16">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">
-          <div className="container-custom">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl mx-auto text-center"
-            >
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                Our Blog
-              </h1>
-              <p className="text-xl text-white/90 mb-8">
-                Insights, tutorials, and stories from the world of technology and professional development.
-              </p>
-              
-              {/* Search Bar */}
-              <div className="relative max-w-2xl mx-auto">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder="Search articles..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 h-14 bg-white text-foreground border-0 text-lg"
-                />
+        {/* Hero Section - Knowledge & Insights Theme */}
+        <section className="relative bg-[#0f0a1e] text-white pt-16 pb-8 overflow-hidden border-b border-white/5">
+          {/* Velvet Noise Texture Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
+            style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
+
+          {/* Ambient Glows: Electric Blue & Purple */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-[50%] -left-[10%] w-[80%] h-[100%] bg-blue-600/15 blur-[130px] rounded-full animate-pulse" />
+            <div className="absolute top-[20%] -right-[20%] w-[60%] h-[90%] bg-purple-600/20 blur-[130px] rounded-full animate-pulse" style={{ animationDelay: '2.5s' }} />
+          </div>
+
+          <div className="container-custom relative z-10">
+            <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between">
+              {/* Left Column: Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="max-w-2xl"
+              >
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-500/5 border border-blue-500/20 text-[9px] font-bold text-blue-200/80 mb-3 backdrop-blur-md">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+                  </span>
+                  KNOWLEDGE HUB
+                </div>
+
+                <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
+                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-400 to-blue-200 bg-[length:200%_auto] animate-gradient-x">Blog</span>
+                </h1>
+
+                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium mb-6">
+                  Insights, tutorials, and stories from the world of technology and professional development.
+                </p>
+
+                {/* Search Bar */}
+                <div className="relative max-w-md">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <Input
+                    type="search"
+                    placeholder="Search articles..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 h-12 bg-white text-foreground border-0"
+                  />
+                </div>
+              </motion.div>
+
+              {/* Right Column: Compact Horizontal Stats */}
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                {[
+                  { label: 'Articles', value: posts.length || '50+' },
+                  { label: 'Categories', value: categories.length || '12+' },
+                  { label: 'Contributors', value: '15+' },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + (i * 0.1) }}
+                    className="flex flex-col items-center justify-center min-w-[90px] md:min-w-[110px] p-2 md:p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all hover:scale-105 group backdrop-blur-sm"
+                  >
+                    <span className="text-lg md:text-xl font-bold text-white group-hover:text-blue-400 transition-colors tracking-tight">{stat.value}</span>
+                    <span className="text-[8px] md:text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-0.5">{stat.label}</span>
+                  </motion.div>
+                ))}
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -150,8 +192,8 @@ const Blog = () => {
                       <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         {post.featured_image ? (
                           <div className="aspect-video relative overflow-hidden">
-                            <img 
-                              src={post.featured_image} 
+                            <img
+                              src={post.featured_image}
                               alt={post.title}
                               className="w-full h-full object-cover"
                             />
@@ -180,9 +222,9 @@ const Blog = () => {
                           <div className="flex items-center justify-between pt-4 border-t border-border">
                             <div className="flex items-center gap-3">
                               {(post.profiles as any)?.avatar_url ? (
-                                <img 
-                                  src={(post.profiles as any).avatar_url} 
-                                  alt={(post.profiles as any).full_name || 'Author'} 
+                                <img
+                                  src={(post.profiles as any).avatar_url}
+                                  alt={(post.profiles as any).full_name || 'Author'}
                                   className="w-8 h-8 rounded-full"
                                 />
                               ) : (
@@ -226,7 +268,7 @@ const Blog = () => {
               <h2 className="text-3xl font-bold mb-8">
                 {searchQuery ? `Search Results for "${searchQuery}"` : 'Latest Articles'}
               </h2>
-              
+
               {loading ? (
                 <div className="text-center py-12">
                   <div className="text-muted-foreground">Loading posts...</div>
@@ -244,8 +286,8 @@ const Blog = () => {
                         <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                           {post.featured_image ? (
                             <div className="aspect-video relative overflow-hidden">
-                              <img 
-                                src={post.featured_image} 
+                              <img
+                                src={post.featured_image}
                                 alt={post.title}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               />
@@ -272,9 +314,9 @@ const Blog = () => {
                             <div className="flex items-center justify-between pt-3 border-t border-border">
                               <div className="flex items-center gap-2">
                                 {(post.profiles as any)?.avatar_url ? (
-                                  <img 
-                                    src={(post.profiles as any).avatar_url} 
-                                    alt={(post.profiles as any).full_name || 'Author'} 
+                                  <img
+                                    src={(post.profiles as any).avatar_url}
+                                    alt={(post.profiles as any).full_name || 'Author'}
                                     className="w-6 h-6 rounded-full"
                                   />
                                 ) : (

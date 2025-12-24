@@ -99,23 +99,64 @@ const Contact = () => {
       <Navbar />
 
       <main className="pt-16">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">
-          <div className="container-custom">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-3xl mx-auto text-center"
-            >
-              <MessageSquare className="w-16 h-16 mx-auto mb-6" />
-              <h1 className="text-5xl md:text-6xl font-bold mb-6">
-                Get in Touch
-              </h1>
-              <p className="text-xl text-white/90">
-                Have a question or want to work together? We'd love to hear from you.
-              </p>
-            </motion.div>
+        {/* Hero Section - Communication & Connection Theme */}
+        <section className="relative bg-[#0a1f1f] text-white pt-16 pb-8 overflow-hidden border-b border-white/5">
+          {/* Velvet Noise Texture Overlay */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay"
+            style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
+
+          {/* Ambient Glows: Emerald & Cyan */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-[50%] -left-[10%] w-[80%] h-[100%] bg-emerald-600/15 blur-[130px] rounded-full animate-pulse" />
+            <div className="absolute top-[20%] -right-[20%] w-[60%] h-[90%] bg-cyan-600/20 blur-[130px] rounded-full animate-pulse" style={{ animationDelay: '2.5s' }} />
+          </div>
+
+          <div className="container-custom relative z-10">
+            <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between">
+              {/* Left Column: Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="max-w-2xl"
+              >
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-emerald-500/5 border border-emerald-500/20 text-[9px] font-bold text-emerald-200/80 mb-3 backdrop-blur-md">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                  </span>
+                  CONNECT WITH US
+                </div>
+
+                <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
+                  Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-cyan-400 to-emerald-200 bg-[length:200%_auto] animate-gradient-x">Touch</span>
+                </h1>
+
+                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
+                  Have a question or want to work together? We'd love to hear from you.
+                </p>
+              </motion.div>
+
+              {/* Right Column: Compact Horizontal Stats */}
+              <div className="flex flex-wrap gap-2 md:gap-3">
+                {[
+                  { label: 'Response Time', value: '24h' },
+                  { label: 'Support Channels', value: '4+' },
+                  { label: 'Countries', value: '25+' },
+                ].map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 + (i * 0.1) }}
+                    className="flex flex-col items-center justify-center min-w-[90px] md:min-w-[110px] p-2 md:p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all hover:scale-105 group backdrop-blur-sm"
+                  >
+                    <span className="text-lg md:text-xl font-bold text-white group-hover:text-emerald-400 transition-colors tracking-tight">{stat.value}</span>
+                    <span className="text-[8px] md:text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-0.5">{stat.label}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
