@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Play, PlayCircle, Users, BookOpen, Star, Award, Check, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import UpcomingPrograms from '@/components/UpcomingPrograms';
 
 type HeroVariant = 'default' | 'skilltori' | 'bio' | 'vibe';
 
@@ -95,12 +96,13 @@ const UnifiedHero = memo(({
                 />
 
                 <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="space-y-6"
-                    >
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            className="space-y-6"
+                        >
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
@@ -215,6 +217,12 @@ const UnifiedHero = memo(({
                             })}
                         </div>
                     </motion.div>
+
+                    {/* Right Column - Upcoming Programs */}
+                    <div className="w-full lg:pl-4 flex items-center justify-center min-h-[400px]">
+                        <UpcomingPrograms />
+                    </div>
+                </div>
                 </div>
             </section>
         );

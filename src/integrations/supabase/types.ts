@@ -973,6 +973,42 @@ export type Database = {
         }
         Relationships: []
       }
+      upcoming_programs: {
+        Row: {
+          created_at: string | null
+          display_order: number | null
+          id: string
+          image_url: string
+          registration_link: string
+          start_date: string
+          status: Database["public"]["Enums"]["program_status"]
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_url: string
+          registration_link: string
+          start_date: string
+          status?: Database["public"]["Enums"]["program_status"]
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          image_url?: string
+          registration_link?: string
+          start_date?: string
+          status?: Database["public"]["Enums"]["program_status"]
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1000,6 +1036,7 @@ export type Database = {
       difficulty_level: "beginner" | "intermediate" | "advanced"
       enrollment_status: "pending" | "active" | "completed" | "cancelled"
       payment_status: "pending" | "paid" | "failed" | "refunded"
+      program_status: "draft" | "published" | "archived"
       project_status: "draft" | "published" | "archived"
     }
     CompositeTypes: {

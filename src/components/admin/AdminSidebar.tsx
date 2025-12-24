@@ -11,6 +11,7 @@ import {
   Settings,
   ChevronLeft,
   GraduationCap,
+  Calendar,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -38,6 +39,7 @@ const mainNavItems = [
 const contentNavItems = [
   { title: 'Blog Posts', url: '/admin/blog', icon: FileText },
   { title: 'Portfolio', url: '/admin/portfolio', icon: Briefcase },
+  { title: 'Upcoming Programs', url: '/admin/programs', icon: Calendar },
 ];
 
 const otherNavItems = [

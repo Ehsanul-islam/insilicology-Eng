@@ -59,6 +59,8 @@ const AdminPortfolioCategories = lazy(() => import("./pages/admin/AdminPortfolio
 const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
 const AdminBlogEditor = lazy(() => import("./pages/admin/AdminBlogEditor"));
 const AdminBlogCategories = lazy(() => import("./pages/admin/AdminBlogCategories"));
+const AdminPrograms = lazy(() => import("./pages/admin/AdminPrograms"));
+const AdminProgramEditor = lazy(() => import("./pages/admin/AdminProgramEditor"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -299,6 +301,30 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <AdminBlogCategories />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/programs"
+                    element={
+                      <ProtectedRoute>
+                        <AdminPrograms />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/programs/new"
+                    element={
+                      <ProtectedRoute>
+                        <AdminProgramEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/programs/:id/edit"
+                    element={
+                      <ProtectedRoute>
+                        <AdminProgramEditor />
                       </ProtectedRoute>
                     }
                   />
