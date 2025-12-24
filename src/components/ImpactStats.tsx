@@ -412,7 +412,7 @@ const ImpactStats = () => {
                       fill="none"
                       strokeLinecap="round"
                       initial={{ strokeDasharray: "0 352" }}
-                      animate={startCounting ? { strokeDasharray: "317 352" } : {}}
+                      animate={startCounting ? { strokeDasharray: "334 352" } : {}}
                       transition={{ duration: 2, ease: "easeOut" }}
                     />
                     <defs>
