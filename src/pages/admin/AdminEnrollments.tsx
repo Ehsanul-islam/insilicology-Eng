@@ -257,15 +257,16 @@ const AdminEnrollments = () => {
               {selectedEnrollment.payment_proof_url && (
                 <div>
                   <p className="text-sm text-muted-foreground mb-2">Payment Proof</p>
-                  <Button variant="outline" size="sm" asChild>
-                    <a
-                      href={selectedEnrollment.payment_proof_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Payment Proof
-                    </a>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      console.log('Payment proof URL:', selectedEnrollment.payment_proof_url);
+                      window.open(selectedEnrollment.payment_proof_url, '_blank');
+                    }}
+                  >
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    View Payment Proof
                   </Button>
                 </div>
               )}
