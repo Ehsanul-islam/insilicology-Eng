@@ -125,7 +125,7 @@ const AdminBlogEditor = () => {
 
   const handleTitleChange = async (title: string) => {
     setFormData((prev) => ({ ...prev, title }));
-    
+
     // Auto-generate slug only for new posts
     if (!isEditing && title) {
       const newSlug = generateSlug(title);
@@ -173,7 +173,7 @@ const AdminBlogEditor = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setSaving(true);
@@ -199,8 +199,8 @@ const AdminBlogEditor = () => {
         meta_description: formData.meta_description || null,
         published: formData.published,
         featured: formData.featured,
-        published_at: formData.published && !formData.published_at 
-          ? new Date().toISOString() 
+        published_at: formData.published && !formData.published_at
+          ? new Date().toISOString()
           : formData.published_at || null,
       };
 
@@ -213,8 +213,10 @@ const AdminBlogEditor = () => {
       }
 
       navigate('/admin/blog');
-    } catch (error) {
-      toast.error(isEditing ? 'Failed to update blog post' : 'Failed to create blog post');
+    } catch (error: any) {
+      console.error('Blog post error:', error);
+      const errorMessage = error?.message || (isEditing ? 'Failed to update blog post' : 'Failed to create blog post');
+      toast.error(`Failed to create blog post: ${errorMessage}`);
     } finally {
       setSaving(false);
     }
@@ -251,7 +253,7 @@ const AdminBlogEditor = () => {
                 variant="outline"
                 onClick={() => {
                   setFormData((prev) => ({ ...prev, published: false }));
-                  handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+                  handleSubmit({ preventDefault: () => { } } as React.FormEvent);
                 }}
                 disabled={saving}
               >
@@ -469,8 +471,8 @@ const AdminBlogEditor = () => {
                       id="published"
                       checked={formData.published}
                       onCheckedChange={(checked) =>
-                        setFormData((prev) => ({ 
-                          ...prev, 
+                        setFormData((prev) => ({
+                          ...prev,
                           published: checked,
                           published_at: checked && !prev.published_at ? new Date().toISOString() : prev.published_at
                         }))

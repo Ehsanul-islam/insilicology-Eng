@@ -138,20 +138,17 @@ const AdminBlog = () => {
     {
       header: 'Title',
       accessorKey: 'title',
-      cell: (post) => (
-        <div>
-          <div className="font-medium flex items-center gap-2">
-            {post.title}
-            {post.featured && <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
-          </div>
-          <div className="text-sm text-muted-foreground">{post.slug}</div>
+      cell: ({ row: { original: post } }) => (
+        <div className="font-medium flex items-center gap-2">
+          {post.title}
+          {post.featured && <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />}
         </div>
       ),
     },
     {
       header: 'Author',
       accessorKey: 'profiles',
-      cell: (post) => {
+      cell: ({ row: { original: post } }) => {
         const author = post.profiles as any;
         return author?.full_name || 'Unknown';
       },
@@ -159,7 +156,7 @@ const AdminBlog = () => {
     {
       header: 'Category',
       accessorKey: 'blog_categories',
-      cell: (post) => {
+      cell: ({ row: { original: post } }) => {
         const category = post.blog_categories as any;
         return category?.name || '-';
       },
@@ -167,12 +164,12 @@ const AdminBlog = () => {
     {
       header: 'Status',
       accessorKey: 'published',
-      cell: (post) => getStatusBadge(post.published),
+      cell: ({ row: { original: post } }) => getStatusBadge(post.published),
     },
     {
       header: 'Created',
       accessorKey: 'created_at',
-      cell: (post) =>
+      cell: ({ row: { original: post } }) =>
         post.created_at
           ? new Date(post.created_at).toLocaleDateString()
           : '-',
@@ -197,19 +194,19 @@ const AdminBlog = () => {
     },
     ...(post.published
       ? [
-          {
-            label: 'Unpublish',
-            icon: Send,
-            onClick: () => handleAction('unpublish', post),
-          },
-        ]
+        {
+          label: 'Unpublish',
+          icon: Send,
+          onClick: () => handleAction('unpublish', post),
+        },
+      ]
       : [
-          {
-            label: 'Publish',
-            icon: Send,
-            onClick: () => handleAction('publish', post),
-          },
-        ]),
+        {
+          label: 'Publish',
+          icon: Send,
+          onClick: () => handleAction('publish', post),
+        },
+      ]),
     {
       label: 'Delete',
       icon: Trash2,
