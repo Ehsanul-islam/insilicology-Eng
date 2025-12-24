@@ -163,7 +163,7 @@ const UnifiedHero = memo(({
                                 <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
                                     <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
                                 </div>
-                                <span className="text-sm font-semibold text-gray-700">Industry & Freelancing</span>
+                                <span className="text-sm font-semibold text-gray-700">Career & Freelancing</span>
                             </div>
                         </div>
 

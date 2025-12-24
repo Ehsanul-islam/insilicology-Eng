@@ -7,12 +7,12 @@ const Footer = () => {
       { name: 'About Us', href: '/about' },
       { name: 'Careers', href: '/careers' },
       { name: 'Blog', href: '/blog' },
-      { name: 'Press', href: '/press' },
+      { name: 'Help Center', href: '/help' },
     ],
     Resources: [
       { name: 'Courses', href: '/courses' },
       { name: 'Success Stories', href: '/stories' },
-      { name: 'Help Center', href: '/help' },
+      { name: 'Verify Certificate', href: '/verify-certificate' },
       { name: 'Contact', href: '/contact' },
     ],
     Legal: [

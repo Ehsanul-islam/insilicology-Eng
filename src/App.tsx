@@ -28,6 +28,12 @@ const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const CertificateVerify = lazy(() => import("./pages/CertificateVerify"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Terms = lazy(() => import("./pages/Terms"));
+const CookiePolicy = lazy(() => import("./pages/CookiePolicy"));
+const RefundPolicy = lazy(() => import("./pages/RefundPolicy"));
+// Future pages placeholders
+const About = lazy(() => import("./pages/About"));
+const SuccessStories = lazy(() => import("./pages/SuccessStories"));
+const HelpCenter = lazy(() => import("./pages/HelpCenter"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const MyCertificates = lazy(() => import("./pages/MyCertificates"));
@@ -103,12 +109,21 @@ const App = () => (
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
                   <Route path="/contact" element={<Contact />} />
+                  <Route path="/careers" element={<Career />} />
+                  {/* Redirect /career to /careers (Optional) or just alias it */}
                   <Route path="/career" element={<Career />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/verify-certificate" element={<CertificateVerify />} />
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />
+                  <Route path="/cookies" element={<CookiePolicy />} />
+                  <Route path="/refunds" element={<RefundPolicy />} />
+
+                  {/* Future Routes */}
+                  <Route path="/about" element={<About />} />
+                  <Route path="/stories" element={<SuccessStories />} />
+                  <Route path="/help" element={<HelpCenter />} />
 
                   {/* Protected Routes */}
                   <Route

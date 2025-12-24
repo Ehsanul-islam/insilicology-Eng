@@ -63,7 +63,6 @@ const Navbar = () => {
     { name: 'Blog', href: '/blog' },
     { name: 'Contact', href: '/contact' },
     { name: 'Career', href: '/career' },
-    { name: 'Verify Certificate', href: '/verify' },
   ];
 
   return (

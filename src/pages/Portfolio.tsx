@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Building2, MapPin } from 'lucide-react';
 import { usePortfolio } from '@/hooks/usePortfolio';
+import PortfolioInsights from '@/components/PortfolioInsights';
 
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -43,8 +44,8 @@ const Portfolio = () => {
     ...categories.map(cat => ({ slug: cat.slug, name: cat.name })),
   ];
 
-  const filteredProjects = selectedCategory === 'all' 
-    ? projects 
+  const filteredProjects = selectedCategory === 'all'
+    ? projects
     : projects.filter(p => p.category === selectedCategory);
 
   return (
@@ -57,7 +58,7 @@ const Portfolio = () => {
         tags={['portfolio', 'case studies', 'web development projects', 'mobile apps', 'data science']}
       />
       <Navbar />
-      
+
       <main className="pt-16">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">
@@ -91,6 +92,9 @@ const Portfolio = () => {
             </motion.div>
           </div>
         </section>
+
+        {/* Portfolio Insights Section */}
+        <PortfolioInsights />
 
         {/* Filter Section */}
         <section className="py-8 border-b border-border">
