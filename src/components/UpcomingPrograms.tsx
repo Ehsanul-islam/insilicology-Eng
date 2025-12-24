@@ -39,20 +39,13 @@ const UpcomingPrograms = () => {
     console.error('Upcoming Programs Error:', error);
   }
 
-  // Don't render if no programs (but log for debugging)
+  // Don't render if no programs (silently hide)
   if (!loading && programs.length === 0) {
     console.log('No upcoming programs found. Make sure:');
     console.log('1. Database migration has been run');
     console.log('2. Seed data has been inserted');
     console.log('3. Programs are set to "published" status');
-    // Return a placeholder for debugging (remove in production)
-    return (
-      <div className="w-full max-w-[520px] mx-auto p-4 border-2 border-dashed border-gray-300 rounded-lg">
-        <p className="text-sm text-gray-500 text-center">
-          No upcoming programs found. Check console for details.
-        </p>
-      </div>
-    );
+    return null; // Hide from users, only log to console
   }
 
   // Check if link is external
