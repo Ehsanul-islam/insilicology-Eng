@@ -51,10 +51,7 @@ const Features = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section className="py-16 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
-
+    <section className="py-16 bg-white">
       <div className="container-custom relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

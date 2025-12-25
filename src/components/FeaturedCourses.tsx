@@ -34,24 +34,7 @@ const FeaturedCourses = () => {
   }, []);
 
   return (
-    <section className="pt-8 pb-20 bg-white relative overflow-hidden">
-      {/* Breathing Motion - Ambient Glow Pulse Effect (Left, Right, Bottom) */}
-      <motion.div
-        className="absolute inset-0 pointer-events-none z-0"
-        animate={{
-          boxShadow: [
-            "inset 20px 0 80px -10px rgba(208, 255, 20, 0.02), inset -20px 0 80px -10px rgba(208, 255, 20, 0.02), inset 0 -20px 80px -10px rgba(208, 255, 20, 0.02)",
-            "inset 50px 0 120px -10px rgba(208, 255, 20, 0.12), inset -50px 0 120px -10px rgba(208, 255, 20, 0.12), inset 0 -50px 120px -10px rgba(208, 255, 20, 0.12)"
-          ]
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "easeInOut"
-        }}
-      />
-
+    <section className="pt-8 pb-20 bg-white">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

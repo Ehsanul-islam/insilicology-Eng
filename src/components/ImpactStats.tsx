@@ -104,14 +104,7 @@ const ImpactStats = () => {
   ];
 
   return (
-    <section className="relative py-12 overflow-hidden bg-gradient-to-b from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-background dark:to-gray-900">
-      {/* Animated Background Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <FloatingOrb delay={0} color="bg-orange-500" size="w-96 h-96 -top-48 -left-48" />
-        <FloatingOrb delay={5} color="bg-purple-500" size="w-80 h-80 top-1/2 -right-40" />
-        <FloatingOrb delay={10} color="bg-blue-500" size="w-72 h-72 -bottom-36 left-1/3" />
-      </div>
-
+    <section className="py-20 bg-white">
       <div className="container-custom relative z-10">
         {/* Header Section */}
         <motion.div
