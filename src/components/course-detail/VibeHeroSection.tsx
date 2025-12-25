@@ -24,7 +24,7 @@ interface VibeHeroSectionProps {
 const useTextScramble = (text: string, duration: number = 1500) => {
   const [displayText, setDisplayText] = useState(text);
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-  
+
   const scramble = useCallback(() => {
     let iteration = 0;
     const originalText = text;
@@ -70,7 +70,7 @@ const VibeHeroSection = ({
   upcoming,
 }: VibeHeroSectionProps) => {
   const scrambledTitle = useTextScramble(title, 3000);
-  
+
   // Extract YouTube video ID from URL
   const getYouTubeId = (url: string) => {
     const match = url.match(
@@ -86,34 +86,34 @@ const VibeHeroSection = ({
   };
 
   return (
-    <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden vibe-hero-bg">
+    <section className="relative min-h-[600px] lg:min-h-[700px] overflow-hidden vibe-hero-bg">
       {/* Animated Grid Pattern */}
       <div className="absolute inset-0 vibe-grid-dark opacity-40" />
-      
+
       {/* Gradient Orbs */}
-      <motion.div 
+      <motion.div
         className="absolute top-20 left-10 w-72 h-72 bg-pink-500/20 rounded-full blur-[100px]"
-        animate={{ 
+        animate={{
           x: [0, 30, 0],
           y: [0, -20, 0],
         }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div 
+      <motion.div
         className="absolute bottom-20 right-10 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px]"
-        animate={{ 
+        animate={{
           x: [0, -40, 0],
           y: [0, 30, 0],
         }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
-      <motion.div 
+      <motion.div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px]"
         animate={{ scale: [1, 1.1, 1] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       />
-      
-      <div className="container-custom relative z-10 py-16 lg:py-24 flex flex-col min-h-[90vh] lg:min-h-screen">
+
+      <div className="container-custom relative z-10 py-12 lg:py-20">
         {/* Main Content Grid */}
         <div className="flex-1 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Content Side */}
@@ -138,7 +138,7 @@ const VibeHeroSection = ({
             )}
 
             {/* Animated Headline with Scramble Effect */}
-            <motion.h1 
+            <motion.h1
               className="text-3xl md:text-4xl lg:text-[48px] font-bold mb-5 leading-tight tracking-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -188,14 +188,14 @@ const VibeHeroSection = ({
                     <span className="text-white/50 text-sm">Students</span>
                   </div>
                 )}
-                
+
                 {stats.community && (
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
                     <MessageCircle className="w-4 h-4 text-purple-400" />
                     <span className="text-white font-semibold">{stats.community}</span>
                   </div>
                 )}
-                
+
                 {stats.support && (
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
                     <Headphones className="w-4 h-4 text-indigo-400" />
@@ -217,7 +217,7 @@ const VibeHeroSection = ({
             <div className="relative group">
               {/* Glow Effect */}
               <div className="absolute -inset-4 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-indigo-500/30 rounded-3xl blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-              
+
               {/* Video Frame */}
               <div className="relative rounded-2xl overflow-hidden vibe-glass">
                 <div className="relative aspect-video bg-slate-900/80 rounded-2xl overflow-hidden">

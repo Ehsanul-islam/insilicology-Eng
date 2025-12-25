@@ -53,7 +53,7 @@ const UnifiedHero = memo(({
         ];
 
         return (
-            <section className="relative min-h-screen flex items-center py-20 overflow-hidden bg-[#F9FAFB]">
+            <section className="relative min-h-[700px] flex items-center py-16 overflow-hidden bg-[#F9FAFB]">
                 {/* Background Blobs with Animation */}
                 <div className="absolute inset-0 overflow-hidden">
                     <motion.div
@@ -103,126 +103,126 @@ const UnifiedHero = memo(({
                             transition={{ duration: 0.6 }}
                             className="space-y-6 lg:col-span-6"
                         >
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200 shadow-sm"
-                        >
-                            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-                            <span className="text-sm font-medium text-gray-700">
-                                {getGreeting()}
-                            </span>
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.2 }}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full border border-gray-200 shadow-sm"
+                            >
+                                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+                                <span className="text-sm font-medium text-gray-700">
+                                    {getGreeting()}
+                                </span>
+                            </motion.div>
+
+                            <div>
+                                <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900">
+                                    <div className="flex flex-wrap items-baseline gap-3">
+                                        <span>Your Partner in</span>
+                                        <span className="relative inline-block min-w-[200px]">
+                                            {/* Invisible spacer ensures perfect baseline alignment */}
+                                            <span className="opacity-0 select-none pointer-events-none" aria-hidden="true">
+                                                {animatedWords[currentWordIndex]}
+                                            </span>
+                                            <AnimatePresence mode="wait">
+                                                <motion.span
+                                                    key={currentWordIndex}
+                                                    initial={{ y: 30, opacity: 0 }}
+                                                    animate={{ y: 0, opacity: 1 }}
+                                                    exit={{ y: -30, opacity: 0 }}
+                                                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                                                    className="absolute left-0 top-0 text-[#7C3AED]"
+                                                >
+                                                    {animatedWords[currentWordIndex]}
+                                                </motion.span>
+                                            </AnimatePresence>
+                                        </span>
+                                    </div>
+                                    <div className="mt-2 text-4xl md:text-5xl font-bold leading-tight text-gray-900">
+                                        Insilicology
+                                    </div>
+                                </h1>
+                            </div>
+
+                            <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl">
+                                {subtitle || "We don't just teach skills — we build research-ready scientists."}
+                            </p>
+
+                            <div className="flex flex-wrap gap-3 pt-2">
+                                <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
+                                    <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
+                                        <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                    </div>
+                                    <span className="text-sm font-semibold text-gray-700">Thesis</span>
+                                </div>
+                                <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
+                                    <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
+                                        <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                    </div>
+                                    <span className="text-sm font-semibold text-gray-700">Publications</span>
+                                </div>
+                                <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
+                                    <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
+                                        <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                    </div>
+                                    <span className="text-sm font-semibold text-gray-700">Career & Freelancing</span>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-4 pt-2">
+                                <Button
+                                    size="lg"
+                                    asChild
+                                    className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold px-8 rounded-lg shadow-lg hover:shadow-xl transition-all"
+                                >
+                                    <Link to={ctaPrimary?.href || '/courses'}>
+                                        {ctaPrimary?.text || 'Explore Courses'}
+                                    </Link>
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    asChild
+                                    className="bg-white/80 backdrop-blur-sm border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED]/10 font-semibold px-8 rounded-lg shadow-md hover:shadow-lg transition-all"
+                                >
+                                    <Link to={ctaSecondary?.href || '/auth'}>
+                                        {ctaSecondary?.text || 'Get Started'}
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            {/* Stats Section */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6">
+                                {heroStats.map((stat, index) => {
+                                    const Icon = stat.icon;
+                                    return (
+                                        <motion.div
+                                            key={stat.label}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.6 + index * 0.1 }}
+                                            className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border-2 border-yellow-400 flex items-center justify-center">
+                                                    <Icon className="w-5 h-5 text-yellow-500" strokeWidth={2} />
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] text-gray-500 font-medium">{stat.label}</span>
+                                                    <span className="text-lg font-bold text-gray-900">{stat.value}</span>
+                                                </div>
+                                            </div>
+                                        </motion.div>
+                                    );
+                                })}
+                            </div>
                         </motion.div>
 
-                        <div>
-                            <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900">
-                                <div className="flex flex-wrap items-baseline gap-3">
-                                    <span>Your Partner in</span>
-                                    <span className="relative inline-block min-w-[200px]">
-                                        {/* Invisible spacer ensures perfect baseline alignment */}
-                                        <span className="opacity-0 select-none pointer-events-none" aria-hidden="true">
-                                            {animatedWords[currentWordIndex]}
-                                        </span>
-                                        <AnimatePresence mode="wait">
-                                            <motion.span
-                                                key={currentWordIndex}
-                                                initial={{ y: 30, opacity: 0 }}
-                                                animate={{ y: 0, opacity: 1 }}
-                                                exit={{ y: -30, opacity: 0 }}
-                                                transition={{ duration: 0.4, ease: "easeInOut" }}
-                                                className="absolute left-0 top-0 text-[#7C3AED]"
-                                            >
-                                                {animatedWords[currentWordIndex]}
-                                            </motion.span>
-                                        </AnimatePresence>
-                                    </span>
-                                </div>
-                                <div className="mt-2 text-4xl md:text-5xl font-bold leading-tight text-gray-900">
-                                    Insilicology
-                                </div>
-                            </h1>
+                        {/* Right Column - Upcoming Programs */}
+                        <div className="w-full lg:col-span-4 flex items-center justify-center min-h-[400px]">
+                            <UpcomingPrograms />
                         </div>
-
-                        <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl">
-                            {subtitle || "We don't just teach skills — we build research-ready scientists."}
-                        </p>
-
-                        <div className="flex flex-wrap gap-3 pt-2">
-                            <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
-                                <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
-                                    <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
-                                </div>
-                                <span className="text-sm font-semibold text-gray-700">Thesis</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
-                                <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
-                                    <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
-                                </div>
-                                <span className="text-sm font-semibold text-gray-700">Publications</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
-                                <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
-                                    <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
-                                </div>
-                                <span className="text-sm font-semibold text-gray-700">Career & Freelancing</span>
-                            </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-4 pt-2">
-                            <Button
-                                size="lg"
-                                asChild
-                                className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold px-8 rounded-lg shadow-lg hover:shadow-xl transition-all"
-                            >
-                                <Link to={ctaPrimary?.href || '/courses'}>
-                                    {ctaPrimary?.text || 'Explore Courses'}
-                                </Link>
-                            </Button>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                asChild
-                                className="bg-white/80 backdrop-blur-sm border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED]/10 font-semibold px-8 rounded-lg shadow-md hover:shadow-lg transition-all"
-                            >
-                                <Link to={ctaSecondary?.href || '/auth'}>
-                                    {ctaSecondary?.text || 'Get Started'}
-                                </Link>
-                            </Button>
-                        </div>
-
-                        {/* Stats Section */}
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6">
-                            {heroStats.map((stat, index) => {
-                                const Icon = stat.icon;
-                                return (
-                                    <motion.div
-                                        key={stat.label}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.6 + index * 0.1 }}
-                                        className="bg-white rounded-xl p-3 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-white border-2 border-yellow-400 flex items-center justify-center">
-                                                <Icon className="w-5 h-5 text-yellow-500" strokeWidth={2} />
-                                            </div>
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] text-gray-500 font-medium">{stat.label}</span>
-                                                <span className="text-lg font-bold text-gray-900">{stat.value}</span>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
-                        </div>
-                    </motion.div>
-
-                    {/* Right Column - Upcoming Programs */}
-                    <div className="w-full lg:col-span-4 flex items-center justify-center min-h-[400px]">
-                        <UpcomingPrograms />
                     </div>
-                </div>
                 </div>
             </section>
         );
@@ -325,10 +325,10 @@ const UnifiedHero = memo(({
 
     // Default variant
     return (
-        <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100">
+        <section className="relative min-h-[700px] overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100">
             <div className="absolute inset-0 bg-grid-pattern opacity-50" />
 
-            <div className="container-custom relative z-10 flex min-h-screen items-center py-20 pt-28">
+            <div className="container-custom relative z-10 flex items-center py-16 pt-24">
                 <div className="grid w-full gap-12 lg:grid-cols-2 lg:gap-16 items-center">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
