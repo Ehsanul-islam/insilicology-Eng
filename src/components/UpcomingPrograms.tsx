@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useUpcomingPrograms } from '@/hooks/useUpcomingPrograms';
 import { format } from 'date-fns';
@@ -8,6 +8,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from '@/components/ui/carousel';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -16,10 +17,24 @@ const UpcomingPrograms = () => {
   const { fetchUpcomingPrograms, error } = useUpcomingPrograms();
   const [programs, setPrograms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [api, setApi] = useState<CarouselApi>();
 
   useEffect(() => {
     loadPrograms();
   }, []);
+
+  // Auto-play carousel
+  useEffect(() => {
+    if (!api || programs.length <= 1) {
+      return;
+    }
+
+    const intervalId = setInterval(() => {
+      api.scrollNext();
+    }, 4000); // Change slide every 4 seconds
+
+    return () => clearInterval(intervalId);
+  }, [api, programs.length]);
 
   const loadPrograms = async () => {
     setLoading(true);
@@ -66,7 +81,7 @@ const UpcomingPrograms = () => {
             className="block"
           >
             <CardContent className="p-0">
-              <div className="relative w-full h-[320px] overflow-hidden">
+              <div className="relative w-full h-[249px] overflow-hidden">
                 <img
                   src={program.image_url}
                   alt={program.title}
@@ -82,10 +97,10 @@ const UpcomingPrograms = () => {
                     </span>
                   </div>
                   <div className="flex flex-col">
-                    <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                    <h3 className="font-bold text-[0.75rem] text-white leading-tight line-clamp-1">
                       {program.title}
                     </h3>
-                    <p className="text-xs text-gray-300 font-medium">
+                    <p className="text-[0.625rem] text-gray-300 font-medium">
                       {format(new Date(program.start_date), 'MMM d, yyyy')}
                     </p>
                   </div>
@@ -96,7 +111,7 @@ const UpcomingPrograms = () => {
         ) : (
           <Link to={program.registration_link} className="block">
             <CardContent className="p-0">
-              <div className="relative w-full h-[320px] overflow-hidden">
+              <div className="relative w-full h-[249px] overflow-hidden">
                 <img
                   src={program.image_url}
                   alt={program.title}
@@ -112,10 +127,10 @@ const UpcomingPrograms = () => {
                     </span>
                   </div>
                   <div className="flex flex-col">
-                    <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                    <h3 className="font-bold text-[0.75rem] text-white leading-tight line-clamp-1">
                       {program.title}
                     </h3>
-                    <p className="text-xs text-gray-300 font-medium">
+                    <p className="text-[0.625rem] text-gray-300 font-medium">
                       {format(new Date(program.start_date), 'MMM d, yyyy')}
                     </p>
                   </div>
@@ -139,7 +154,7 @@ const UpcomingPrograms = () => {
     return (
       <div className="w-full max-w-[520px] mx-auto">
         <Card className="overflow-hidden">
-          <Skeleton className="w-full h-[238px]" />
+          <Skeleton className="w-full h-[249px]" />
           <CardContent className="p-4">
             <Skeleton className="h-5 w-3/4 mb-1.5" />
             <Skeleton className="h-4 w-1/2" />
@@ -152,6 +167,7 @@ const UpcomingPrograms = () => {
   return (
     <div className="w-full max-w-[442px] mx-auto relative">
       <Carousel
+        setApi={setApi}
         opts={{
           align: 'start',
           loop: true,
@@ -170,7 +186,7 @@ const UpcomingPrograms = () => {
                     className="block"
                   >
                     <CardContent className="p-0">
-                      <div className="relative w-full h-[320px] overflow-hidden">
+                      <div className="relative w-full h-[249px] overflow-hidden">
                         <img
                           src={program.image_url}
                           alt={program.title}
@@ -186,10 +202,10 @@ const UpcomingPrograms = () => {
                             </span>
                           </div>
                           <div className="flex flex-col">
-                            <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                            <h3 className="font-bold text-[0.75rem] text-white leading-tight line-clamp-1">
                               {program.title}
                             </h3>
-                            <p className="text-xs text-gray-300 font-medium">
+                            <p className="text-[0.625rem] text-gray-300 font-medium">
                               {format(new Date(program.start_date), 'MMM d, yyyy')}
                             </p>
                           </div>
@@ -200,7 +216,7 @@ const UpcomingPrograms = () => {
                 ) : (
                   <Link to={program.registration_link} className="block">
                     <CardContent className="p-0">
-                      <div className="relative w-full h-[320px] overflow-hidden">
+                      <div className="relative w-full h-[249px] overflow-hidden">
                         <img
                           src={program.image_url}
                           alt={program.title}
@@ -216,10 +232,10 @@ const UpcomingPrograms = () => {
                             </span>
                           </div>
                           <div className="flex flex-col">
-                            <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                            <h3 className="font-bold text-[0.75rem] text-white leading-tight line-clamp-1">
                               {program.title}
                             </h3>
-                            <p className="text-xs text-gray-300 font-medium">
+                            <p className="text-[0.625rem] text-gray-300 font-medium">
                               {format(new Date(program.start_date), 'MMM d, yyyy')}
                             </p>
                           </div>
