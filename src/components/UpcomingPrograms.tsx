@@ -57,7 +57,7 @@ const UpcomingPrograms = () => {
   if (!loading && programs.length === 1) {
     const program = programs[0];
     const ProgramCard = ({ program }: { program: any }) => (
-      <Card className="cursor-pointer overflow-hidden hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg border-0">
+      <Card className="group cursor-pointer overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-0.5 border-0">
         {isExternalLink(program.registration_link) ? (
           <a
             href={program.registration_link}
@@ -66,40 +66,60 @@ const UpcomingPrograms = () => {
             className="block"
           >
             <CardContent className="p-0">
-              <div className="relative w-full h-[238px] overflow-hidden">
+              <div className="relative w-full h-[320px] overflow-hidden">
                 <img
                   src={program.image_url}
                   alt={program.title}
                   className="w-full h-full object-cover"
                 />
-              </div>
-              <div className="p-4 bg-white">
-                <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-                  {program.title}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {format(new Date(program.start_date), 'MMM d, yyyy')}
-                </p>
+                {/* Floating glassmorphism badge - bottom right */}
+                <div className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-3 rounded-full backdrop-blur-md bg-gray-900/70 border border-white/20 shadow-xl transition-all duration-300 group-hover:bg-gray-900/80">
+                  {/* Green pulsing dot with ping ripple */}
+                  <div className="relative flex-shrink-0">
+                    <span className="flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 animate-pulse"></span>
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                      {program.title}
+                    </h3>
+                    <p className="text-xs text-gray-300 font-medium">
+                      {format(new Date(program.start_date), 'MMM d, yyyy')}
+                    </p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </a>
         ) : (
           <Link to={program.registration_link} className="block">
             <CardContent className="p-0">
-              <div className="relative w-full h-[280px] overflow-hidden">
+              <div className="relative w-full h-[320px] overflow-hidden">
                 <img
                   src={program.image_url}
                   alt={program.title}
                   className="w-full h-full object-cover"
                 />
-              </div>
-              <div className="p-4 bg-white">
-                <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-                  {program.title}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {format(new Date(program.start_date), 'MMM d, yyyy')}
-                </p>
+                {/* Floating glassmorphism badge - bottom right */}
+                <div className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-3 rounded-full backdrop-blur-md bg-gray-900/70 border border-white/20 shadow-xl transition-all duration-300 group-hover:bg-gray-900/80">
+                  {/* Green pulsing dot with ping ripple */}
+                  <div className="relative flex-shrink-0">
+                    <span className="flex h-2.5 w-2.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 animate-pulse"></span>
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                      {program.title}
+                    </h3>
+                    <p className="text-xs text-gray-300 font-medium">
+                      {format(new Date(program.start_date), 'MMM d, yyyy')}
+                    </p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Link>
@@ -141,7 +161,7 @@ const UpcomingPrograms = () => {
         <CarouselContent>
           {programs.map((program) => {
             const ProgramCard = () => (
-              <Card className="cursor-pointer overflow-hidden hover:scale-105 transition-all duration-300 shadow-md hover:shadow-lg border-0">
+              <Card className="group cursor-pointer overflow-hidden transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 hover:-translate-y-0.5 border-0">
                 {isExternalLink(program.registration_link) ? (
                   <a
                     href={program.registration_link}
@@ -150,40 +170,60 @@ const UpcomingPrograms = () => {
                     className="block"
                   >
                     <CardContent className="p-0">
-                      <div className="relative w-full h-[238px] overflow-hidden">
+                      <div className="relative w-full h-[320px] overflow-hidden">
                         <img
                           src={program.image_url}
                           alt={program.title}
                           className="w-full h-full object-cover"
                         />
-                      </div>
-                      <div className="p-4 bg-white">
-                        <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-                          {program.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {format(new Date(program.start_date), 'MMM d, yyyy')}
-                        </p>
+                        {/* Floating glassmorphism badge - bottom right */}
+                        <div className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-3 rounded-full backdrop-blur-md bg-gray-900/70 border border-white/20 shadow-xl transition-all duration-300 group-hover:bg-gray-900/80">
+                          {/* Green pulsing dot with ping ripple */}
+                          <div className="relative flex-shrink-0">
+                            <span className="flex h-2.5 w-2.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 animate-pulse"></span>
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                              {program.title}
+                            </h3>
+                            <p className="text-xs text-gray-300 font-medium">
+                              {format(new Date(program.start_date), 'MMM d, yyyy')}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </a>
                 ) : (
                   <Link to={program.registration_link} className="block">
                     <CardContent className="p-0">
-                      <div className="relative w-full h-[280px] overflow-hidden">
+                      <div className="relative w-full h-[320px] overflow-hidden">
                         <img
                           src={program.image_url}
                           alt={program.title}
                           className="w-full h-full object-cover"
                         />
-                      </div>
-                      <div className="p-4 bg-white">
-                        <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-                          {program.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {format(new Date(program.start_date), 'MMM d, yyyy')}
-                        </p>
+                        {/* Floating glassmorphism badge - bottom right */}
+                        <div className="absolute bottom-4 right-4 flex items-center gap-2 px-4 py-3 rounded-full backdrop-blur-md bg-gray-900/70 border border-white/20 shadow-xl transition-all duration-300 group-hover:bg-gray-900/80">
+                          {/* Green pulsing dot with ping ripple */}
+                          <div className="relative flex-shrink-0">
+                            <span className="flex h-2.5 w-2.5">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 animate-pulse"></span>
+                            </span>
+                          </div>
+                          <div className="flex flex-col">
+                            <h3 className="font-bold text-sm text-white leading-tight line-clamp-1">
+                              {program.title}
+                            </h3>
+                            <p className="text-xs text-gray-300 font-medium">
+                              {format(new Date(program.start_date), 'MMM d, yyyy')}
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </CardContent>
                   </Link>
