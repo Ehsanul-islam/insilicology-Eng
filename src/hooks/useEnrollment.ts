@@ -30,7 +30,7 @@ export const useEnrollment = (courseId: string) => {
 
   const checkExistingEnrollment = async () => {
     if (!user) return null;
-    
+
     const { data, error } = await supabase
       .from('enrollments')
       .select('id, status, payment_status, rejection_reason')
@@ -87,10 +87,37 @@ export const useEnrollment = (courseId: string) => {
         } else if (existing.status === 'active') {
           toast.info('You are already enrolled in this course');
         }
+        setLoading(false);
         return false;
       }
 
-      // Create enrollment
+      // If there's a cancelled enrollment, update it instead of creating new
+      if (existing && existing.status === 'cancelled') {
+        const { error } = await supabase
+          .from('enrollments')
+          .update({
+            status: 'pending',
+            payment_status: 'pending',
+            payment_method: data.paymentMethod,
+            payment_proof_url: data.paymentProofUrl,
+            custom_form_data: data.customFormData,
+            rejection_reason: null,
+          })
+          .eq('id', existing.id);
+
+        if (error) {
+          console.error('Enrollment update error:', error);
+          const errorMessage = error?.message || 'Failed to submit enrollment';
+          toast.error(`Failed to submit enrollment: ${errorMessage}`);
+          return false;
+        }
+
+        toast.success('Enrollment submitted! We will review and confirm shortly.');
+        await checkExistingEnrollment();
+        return true;
+      }
+
+      // Create new enrollment
       const { data: enrollment, error } = await supabase
         .from('enrollments')
         .insert({
@@ -107,7 +134,14 @@ export const useEnrollment = (courseId: string) => {
 
       if (error) {
         console.error('Enrollment error:', error);
-        toast.error('Failed to submit enrollment');
+
+        // Handle duplicate key error specifically
+        if (error.message.includes('duplicate key') || error.code === '23505') {
+          toast.error('You are already enrolled in this course');
+        } else {
+          const errorMessage = error?.message || 'Failed to submit enrollment';
+          toast.error(`Failed to submit enrollment: ${errorMessage}`);
+        }
         return false;
       }
 

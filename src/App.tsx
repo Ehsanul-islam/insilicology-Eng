@@ -38,6 +38,7 @@ const HelpCenter = lazy(() => import("./pages/HelpCenter"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const MyCertificates = lazy(() => import("./pages/MyCertificates"));
+const LearnPage = lazy(() => import("./pages/LearnPage"));
 
 // Lazy load instructor pages
 const InstructorLayout = lazy(() => import("./components/layouts/InstructorLayout"));
@@ -150,6 +151,14 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <MyCertificates />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/learn/:slug"
+                    element={
+                      <ProtectedRoute>
+                        <LearnPage />
                       </ProtectedRoute>
                     }
                   />

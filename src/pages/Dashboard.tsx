@@ -193,7 +193,7 @@ const Dashboard = () => {
                             {course.progress === 100 ? 'Completed!' : 'In Progress'}
                           </p>
                           <Button size="sm" asChild>
-                            <Link to={`/courses/${course.slug}`}>
+                            <Link to={`/learn/${course.slug}`}>
                               {course.progress === 100 ? 'Review' : 'Continue'}
                             </Link>
                           </Button>

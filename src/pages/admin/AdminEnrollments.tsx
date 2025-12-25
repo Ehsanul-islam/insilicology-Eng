@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { CheckCircle, XCircle, Eye, Trash2, ExternalLink } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
+import { supabase } from '@/integrations/supabase/client';
 
 const AdminEnrollments = () => {
   const [searchParams] = useSearchParams();
@@ -30,6 +31,7 @@ const AdminEnrollments = () => {
   const [selectedEnrollment, setSelectedEnrollment] = useState<EnrollmentWithDetails | null>(null);
   const [actionDialog, setActionDialog] = useState<'view' | 'approve' | 'reject' | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
+  const [deleteEnrollmentDialog, setDeleteEnrollmentDialog] = useState(false);
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
@@ -52,6 +54,8 @@ const AdminEnrollments = () => {
     } else if (action === 'reject') {
       setActionDialog('reject');
       setRejectionReason('');
+    } else if (action === 'delete') {
+      setDeleteEnrollmentDialog(true);
     }
   };
 
@@ -63,8 +67,10 @@ const AdminEnrollments = () => {
       toast.success('Enrollment approved successfully');
       setActionDialog(null);
       loadEnrollments();
-    } catch (error) {
-      toast.error('Failed to approve enrollment');
+    } catch (error: any) {
+      console.error('Enrollment approval error:', error);
+      const errorMessage = error?.message || 'Failed to approve enrollment';
+      toast.error(`Failed to approve enrollment: ${errorMessage}`);
     } finally {
       setProcessing(false);
     }
@@ -84,6 +90,29 @@ const AdminEnrollments = () => {
       loadEnrollments();
     } catch (error) {
       toast.error('Failed to reject enrollment');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!selectedEnrollment) return;
+    setProcessing(true);
+    try {
+      const { error } = await supabase
+        .from('enrollments')
+        .delete()
+        .eq('id', selectedEnrollment.id);
+
+      if (error) throw error;
+
+      toast.success('Enrollment deleted successfully');
+      setDeleteEnrollmentDialog(false);
+      loadEnrollments();
+    } catch (error: any) {
+      console.error('Delete enrollment error:', error);
+      const errorMessage = error?.message || 'Failed to delete enrollment';
+      toast.error(`Failed to delete enrollment: ${errorMessage}`);
     } finally {
       setProcessing(false);
     }
@@ -207,6 +236,7 @@ const AdminEnrollments = () => {
           { label: 'View Details', value: 'view', icon: <Eye className="w-4 h-4" /> },
           { label: 'Approve', value: 'approve', icon: <CheckCircle className="w-4 h-4" /> },
           { label: 'Reject', value: 'reject', icon: <XCircle className="w-4 h-4" />, variant: 'destructive' },
+          { label: 'Delete', value: 'delete', icon: <Trash2 className="w-4 h-4" />, variant: 'destructive' },
         ]}
         bulkActions={[
           { label: 'Approve Selected', value: 'approve', icon: <CheckCircle className="w-4 h-4 mr-2" /> },
@@ -349,6 +379,26 @@ const AdminEnrollments = () => {
             </Button>
             <Button variant="destructive" onClick={handleReject} disabled={processing}>
               {processing ? 'Rejecting...' : 'Reject Enrollment'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Enrollment Confirmation Dialog */}
+      <Dialog open={deleteEnrollmentDialog} onOpenChange={setDeleteEnrollmentDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Enrollment</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete the enrollment for "{selectedEnrollment?.user_name}" in "{selectedEnrollment?.course_title}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteEnrollmentDialog(false)} disabled={processing}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDelete} disabled={processing}>
+              {processing ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

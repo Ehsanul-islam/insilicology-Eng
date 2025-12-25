@@ -39,6 +39,7 @@ interface Lesson {
   title: string;
   description: string;
   content: string;
+  video_url: string;
   lesson_order: number;
   is_active: boolean;
 }
@@ -105,6 +106,7 @@ const AdminLessonEditor = () => {
     title: '',
     description: '',
     content: '',
+    video_url: '',
     lesson_order: lessons.length,
     is_active: true,
   });
@@ -125,6 +127,7 @@ const AdminLessonEditor = () => {
         title: editingLesson.title.trim(),
         description: editingLesson.description.trim() || null,
         content: editingLesson.content.trim() || null,
+        video_url: editingLesson.video_url.trim() || null,
         lesson_order: editingLesson.lesson_order,
         is_active: editingLesson.is_active,
       };
@@ -218,7 +221,7 @@ const AdminLessonEditor = () => {
 
       if (error) throw error;
 
-      setLessons(lessons.map(l => 
+      setLessons(lessons.map(l =>
         l.id === lesson.id ? { ...l, is_active: !l.is_active } : l
       ));
       toast.success(lesson.is_active ? 'Lesson hidden' : 'Lesson visible');
@@ -359,9 +362,8 @@ const AdminLessonEditor = () => {
                 {lessons.map((lesson, index) => (
                   <div
                     key={lesson.id}
-                    className={`flex items-center gap-4 p-4 border rounded-lg transition-colors ${
-                      lesson.is_active ? 'bg-card hover:bg-muted/30' : 'bg-muted/50 opacity-60'
-                    }`}
+                    className={`flex items-center gap-4 p-4 border rounded-lg transition-colors ${lesson.is_active ? 'bg-card hover:bg-muted/30' : 'bg-muted/50 opacity-60'
+                      }`}
                   >
                     {/* Reorder Buttons */}
                     <div className="flex flex-col gap-1">
@@ -489,6 +491,21 @@ const AdminLessonEditor = () => {
                     }
                     placeholder="e.g., Learn the basics of n8n automation"
                   />
+                </div>
+
+                <div>
+                  <Label htmlFor="lesson-video">Video URL (YouTube)</Label>
+                  <Input
+                    id="lesson-video"
+                    value={editingLesson.video_url}
+                    onChange={(e) =>
+                      setEditingLesson({ ...editingLesson, video_url: e.target.value })
+                    }
+                    placeholder="https://www.youtube.com/watch?v=..."
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Paste a YouTube video URL for this lesson
+                  </p>
                 </div>
 
                 <div>

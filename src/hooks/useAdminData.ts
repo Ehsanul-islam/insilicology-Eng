@@ -182,11 +182,14 @@ export const useAdminData = () => {
       reviewed_by: user?.id,
     };
 
+    // Update payment status based on enrollment status
     if (status === 'active') {
-      updateData.payment_status = 'verified';
-    } else if (status === 'cancelled' && rejectionReason) {
-      updateData.rejection_reason = rejectionReason;
-      updateData.payment_status = 'rejected';
+      updateData.payment_status = 'paid';
+    } else if (status === 'cancelled') {
+      if (rejectionReason) {
+        updateData.rejection_reason = rejectionReason;
+      }
+      updateData.payment_status = 'failed';
     }
 
     const { error } = await supabase
