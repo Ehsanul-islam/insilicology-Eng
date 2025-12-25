@@ -144,7 +144,7 @@ const UnifiedHero = memo(({
                                 </h1>
                             </div>
 
-                            <p className="text-base md:text-lg text-gray-600 leading-relaxed max-w-2xl">
+                            <p className="text-[0.875rem] md:text-base text-gray-600 leading-relaxed max-w-2xl">
                                 {subtitle || "We don't just teach skills — we build research-ready scientists."}
                             </p>
 
