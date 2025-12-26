@@ -319,10 +319,10 @@ const VibeHeroSection = memo(({
                 {priceRegular && priceOffer ? (
                   <div className="flex items-baseline gap-3">
                     <span className="text-gray-400 line-through text-sm font-medium">
-                      ৳{priceRegular.toLocaleString()}
+                      ${priceRegular.toLocaleString()}
                     </span>
                     <span className="text-red-600 text-2xl font-bold">
-                      ৳{priceOffer.toLocaleString()}
+                      ${priceOffer.toLocaleString()}
                     </span>
                   </div>
                 ) : null}
