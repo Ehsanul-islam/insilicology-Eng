@@ -209,10 +209,10 @@ const VibeHeroSection = ({
                 transition={{ delay: 0.8 }}
                 className="absolute -right-3 -bottom-3 lg:-right-6 lg:-bottom-5"
               >
-                <div className="px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
+                <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 shadow-xl">
                   <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                    <span className="text-white text-xs font-medium">Premium Contents</span>
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-emerald-700 text-xs font-semibold">Premium Contents</span>
                   </div>
                 </div>
               </motion.div>
