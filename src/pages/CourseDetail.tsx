@@ -30,6 +30,9 @@ interface Stats {
   students?: number;
   community?: string;
   support?: string;
+  time?: string;
+  capacity?: string;
+  batch?: string;
 }
 
 interface ComparisonFeature {
@@ -160,11 +163,11 @@ const CourseDetail = () => {
   const valueBreakdown = (course.value_breakdown as ValueBreakdownItem[] | null) || [];
   const testimonials = (course.testimonials as Testimonial[] | null) || [];
   const faqs = (course.faq as FAQItem[] | null) || [];
-  const whatsIncluded = Array.isArray(course.whats_included) 
-    ? (course.whats_included as string[]) 
+  const whatsIncluded = Array.isArray(course.whats_included)
+    ? (course.whats_included as string[])
     : [];
-  const topics = Array.isArray(course.topics) 
-    ? (course.topics as string[]) 
+  const topics = Array.isArray(course.topics)
+    ? (course.topics as string[])
     : [];
   const modules = (course.modules as ModuleItem[] | null) || [];
 
@@ -203,11 +206,20 @@ const CourseDetail = () => {
           onEnrollClick={handleEnroll}
           isEnrolled={isEnrolled}
           upcoming={course.upcoming || false}
+          startDate={course.start_date ? new Date(course.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : undefined}
+          endDate={course.end_date ? new Date(course.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : undefined}
+          courseTime={stats?.time || course.course_time || undefined}
+          participantCount={course.participant_count || undefined}
+          capacity={stats?.capacity || undefined}
+          batch={stats?.batch || undefined}
+          instructorName={course.instructor_name || undefined}
+          priceRegular={course.price_regular ? Number(course.price_regular) : undefined}
+          priceOffer={course.price_offer ? Number(course.price_offer) : undefined}
         />
 
         {/* Main Content Container */}
-        <div className="space-y-16 lg:space-y-24 py-16 lg:py-24">
-          
+        <div className="space-y-16 lg:space-y-24 pt-0 pb-16 lg:pb-24">
+
           {/* ═══════════════════════════════════════════════════════════════════
               SECTION 2: COURSE DESCRIPTION
               - Rich text content with Read More and secondary CTA

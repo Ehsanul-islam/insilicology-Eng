@@ -23,7 +23,7 @@ const CourseDescription = ({
   const { needsTruncation, displayText } = useMemo(() => {
     const trimmedDescription = description.trim();
     const needsTruncation = trimmedDescription.length > maxLength;
-    
+
     if (!needsTruncation || isExpanded) {
       return { needsTruncation, displayText: trimmedDescription };
     }
@@ -32,7 +32,7 @@ const CourseDescription = ({
     let breakpoint = maxLength;
     const periodIndex = trimmedDescription.lastIndexOf('.', maxLength);
     const spaceIndex = trimmedDescription.lastIndexOf(' ', maxLength);
-    
+
     if (periodIndex > maxLength * 0.7) {
       breakpoint = periodIndex + 1;
     } else if (spaceIndex > 0) {
@@ -84,7 +84,7 @@ const CourseDescription = ({
 
       // Handle single newlines as line breaks
       const lines = paragraph.split('\n');
-      
+
       return (
         <p key={pIndex} className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4 last:mb-0">
           {lines.map((line, lIndex) => (
@@ -135,14 +135,14 @@ const CourseDescription = ({
         className="relative bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden"
       >
         {/* Premium Gradient Header */}
-        <div className="relative bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 px-6 lg:px-8 py-6">
+        <div className="relative bg-gradient-to-r from-purple-600 via-violet-600 to-purple-700 px-6 lg:px-8 py-3">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4 flex-1 min-w-0">
               {/* Icon */}
-              <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
-                <Lightbulb className="w-6 h-6 lg:w-7 lg:h-7 text-yellow-300" />
+              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
+                <Lightbulb className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-300" />
               </div>
-              
+
               {/* Title */}
               <h2 className="text-xl lg:text-2xl font-bold text-white truncate">
                 {title}

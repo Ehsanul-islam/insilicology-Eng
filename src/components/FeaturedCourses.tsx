@@ -34,7 +34,7 @@ const FeaturedCourses = () => {
   }, []);
 
   return (
-    <section className="pt-8 pb-20 bg-white">
+    <section className="pt-8 pb-8 bg-white">
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -53,7 +53,7 @@ const UnifiedHero = memo(({
         ];
 
         return (
-            <section className="relative min-h-[700px] flex items-center py-16 overflow-hidden bg-[#F9FAFB]">
+            <section className="relative min-h-screen flex items-center py-16 overflow-hidden bg-[#F9FAFB]">
                 {/* Background Blobs with Animation */}
                 <div className="absolute inset-0 overflow-hidden">
                     <motion.div

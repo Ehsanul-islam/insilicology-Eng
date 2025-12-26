@@ -26,14 +26,14 @@ const CourseCard = ({ course }: CourseCardProps) => {
   };
 
   const hasDiscount = course.price_regular && course.price_offer && course.price_offer < course.price_regular;
-  const discountPercent = hasDiscount 
+  const discountPercent = hasDiscount
     ? Math.round(((Number(course.price_regular) - Number(course.price_offer)) / Number(course.price_regular)) * 100)
     : 0;
 
   const topics = Array.isArray(course.topics) ? course.topics as string[] : [];
 
   return (
-    <Card className="card-hover overflow-hidden group h-full flex flex-col">
+    <Card className="card-hover group h-full flex flex-col backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border border-white/20 shadow-xl">
       <CardHeader className="p-0">
         <div className="relative overflow-hidden aspect-video">
           <ImageSkeleton
@@ -44,55 +44,58 @@ const CourseCard = ({ course }: CourseCardProps) => {
             height={450}
             loading="lazy"
           />
-          
-          {/* Badges overlay */}
-          <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
-            {course.featured && (
-              <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white border-0 text-xs">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Featured
-              </Badge>
-            )}
-            {course.upcoming && (
-              <Badge className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white border-0 text-xs">
-                <Calendar className="w-3 h-3 mr-1" />
-                Upcoming
-              </Badge>
-            )}
-          </div>
-
-          <div className="absolute top-2 right-2 z-10 flex flex-col gap-1">
-            {course.difficulty && (
-              <Badge className={difficultyColors[course.difficulty] || difficultyColors.beginner}>
-                {course.difficulty.charAt(0).toUpperCase() + course.difficulty.slice(1)}
-              </Badge>
-            )}
-            {course.course_type && (
-              <Badge variant="secondary" className="bg-background/90 backdrop-blur-sm">
-                {courseTypeLabels[course.course_type] || course.course_type}
-              </Badge>
-            )}
-          </div>
-
-          {/* Discount badge */}
-          {hasDiscount && (
-            <div className="absolute bottom-2 left-2 z-10">
-              <Badge className="bg-destructive text-destructive-foreground text-xs">
-                {discountPercent}% OFF
-              </Badge>
-            </div>
-          )}
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 space-y-2 flex-1">
+      <CardContent className="pt-2 pb-4 px-4 space-y-1 flex-1">
+        {/* Badges Row - Live, Date, Certificate, Upcoming */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Live Badge - Only for live courses */}
+          {course.course_type === 'live' && (
+            <div className="flex items-center gap-1 text-red-600">
+              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+                <circle cx="12" cy="12" r="3" fill="white" />
+                <path d="M12 2 L12 6 M12 18 L12 22 M2 12 L6 12 M18 12 L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <span className="text-xs font-medium">Live</span>
+            </div>
+          )}
+
+          {/* Date Range Badge - Only for live courses with dates */}
+          {course.course_type === 'live' && course.start_date && (
+            <div className="flex items-center gap-1 text-muted-foreground">
+              <Clock className="w-3 h-3" />
+              <span className="text-xs font-medium">
+                {new Date(course.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                {course.end_date && ` - ${new Date(course.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`}
+              </span>
+            </div>
+          )}
+
+          {/* Certificate Badge */}
+          {course.certificate && (
+            <div className="flex items-center gap-1 text-amber-500">
+              <Award className="w-3 h-3" />
+              <span className="text-xs font-medium">Certificate</span>
+            </div>
+          )}
+
+          {/* Upcoming Badge - Only when admin marks as upcoming */}
+          {course.upcoming && (
+            <div className="flex items-center gap-1 text-green-600">
+              <Calendar className="w-3 h-3" />
+              <span className="text-xs font-medium">Upcoming</span>
+            </div>
+          )}
+        </div>
+
         <div>
           <Link to={`/courses/${course.slug}`}>
             <h3 className="text-lg font-bold mb-1 group-hover:text-primary transition-colors line-clamp-2">
               {course.title}
             </h3>
           </Link>
-          <p className="text-muted-foreground text-sm line-clamp-2">{course.description}</p>
         </div>
 
         {/* Topics */}
@@ -123,25 +126,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
               <span>{course.module_count} modules</span>
             </div>
           )}
-          {course.certificate && (
-            <div className="flex items-center gap-1 text-amber-500">
-              <Award className="w-3 h-3" />
-              <span className="text-xs">Certificate</span>
-            </div>
-          )}
         </div>
-
-        {course.start_date && (
-          <div className="pt-1 border-t border-border">
-            <p className="text-xs text-muted-foreground">
-              Starts: {new Date(course.start_date).toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric' 
-              })}
-            </p>
-          </div>
-        )}
       </CardContent>
 
       <CardFooter className="p-4 pt-0 flex items-center justify-between">
@@ -150,6 +135,9 @@ const CourseCard = ({ course }: CourseCardProps) => {
             <>
               <span className="text-xl font-bold text-primary">${Number(course.price_offer).toLocaleString()}</span>
               <span className="text-xs text-muted-foreground line-through">${Number(course.price_regular).toLocaleString()}</span>
+              <Badge className="bg-destructive text-destructive-foreground text-xs">
+                {discountPercent}% OFF
+              </Badge>
             </>
           ) : course.price_offer ? (
             <span className="text-xl font-bold">${Number(course.price_offer).toLocaleString()}</span>

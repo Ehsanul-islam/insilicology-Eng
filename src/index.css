@@ -20,7 +20,7 @@ All colors MUST be HSL.
     --primary: 210 100% 50%;
     --primary-foreground: 0 0% 100%;
     --primary-dark: 217 91% 20%;
-    
+
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
 
@@ -30,7 +30,7 @@ All colors MUST be HSL.
     --accent: 38 92% 50%;
     --accent-foreground: 0 0% 100%;
     --accent-light: 38 100% 97%;
-    
+
     /* Bioinformatics-themed colors */
     --bio-gold: 45 93% 58%;
     --bio-teal: 188 100% 42%;
@@ -46,21 +46,21 @@ All colors MUST be HSL.
     --ring: 210 100% 50%;
 
     --radius: 0.75rem;
-    
+
     --gradient-primary: linear-gradient(135deg, hsl(217 91% 20%) 0%, hsl(210 100% 50%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(30 100% 60%) 100%);
     --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(210 40% 98%) 100%);
     --gradient-bio: linear-gradient(135deg, hsl(188 100% 42%) 0%, hsl(45 93% 58%) 100%);
     --gradient-bio-subtle: linear-gradient(90deg, hsl(188 100% 42%) 0%, hsl(191 97% 77%) 50%, hsl(45 93% 58%) 100%);
-    
+
     --shadow-sm: 0 1px 2px 0 hsl(222 47% 11% / 0.05);
     --shadow-md: 0 4px 6px -1px hsl(222 47% 11% / 0.1), 0 2px 4px -2px hsl(222 47% 11% / 0.1);
     --shadow-lg: 0 10px 15px -3px hsl(222 47% 11% / 0.1), 0 4px 6px -4px hsl(222 47% 11% / 0.1);
     --shadow-xl: 0 20px 25px -5px hsl(222 47% 11% / 0.1), 0 8px 10px -6px hsl(222 47% 11% / 0.1);
-    
+
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    
+
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
@@ -110,7 +110,7 @@ All colors MUST be HSL.
     --border: 217 33% 17%;
     --input: 217 33% 17%;
     --ring: 210 100% 50%;
-    
+
     --gradient-primary: linear-gradient(135deg, hsl(217 91% 30%) 0%, hsl(210 100% 50%) 100%);
     --gradient-accent: linear-gradient(135deg, hsl(38 92% 50%) 0%, hsl(30 100% 60%) 100%);
     --gradient-subtle: linear-gradient(180deg, hsl(222 47% 11%) 0%, hsl(217 33% 17%) 100%);
@@ -133,8 +133,13 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-bold tracking-tight;
   }
 }
@@ -143,30 +148,30 @@ All colors MUST be HSL.
   .btn-primary {
     @apply bg-primary text-primary-foreground hover:opacity-90 transition-all duration-300 rounded-lg px-6 py-3 font-semibold shadow-md hover:shadow-lg;
   }
-  
+
   .btn-accent {
     @apply bg-accent text-accent-foreground hover:opacity-90 transition-all duration-300 rounded-lg px-6 py-3 font-semibold shadow-md hover:shadow-lg;
   }
-  
+
   .card-hover {
     @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
   }
-  
+
   .gradient-text {
     @apply bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent;
   }
-  
+
   .gradient-bio-text {
     background: linear-gradient(135deg, hsl(188 100% 42%) 0%, hsl(45 93% 58%) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   .section-off-white {
     background-color: hsl(var(--bio-off-white));
   }
@@ -174,89 +179,117 @@ All colors MUST be HSL.
 
 @layer utilities {
   .bg-grid-pattern {
-    background-image: 
+    background-image:
       linear-gradient(to right, rgba(107, 60, 255, 0.03) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(107, 60, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
   }
-  
+
   /* VibeAcademy-style utilities */
   .vibe-hero-bg {
     background: linear-gradient(135deg, #0a0f1a 0%, #1a1f3c 50%, #0f172a 100%);
   }
-  
+
   .vibe-gradient-text {
     background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .vibe-cta-gradient {
     background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
   }
-  
+
   .vibe-cta-gradient:hover {
     background: linear-gradient(135deg, #db2777 0%, #7c3aed 100%);
   }
-  
+
   .vibe-card-glow {
     box-shadow: 0 0 40px rgba(139, 92, 246, 0.15), 0 0 80px rgba(236, 72, 153, 0.1);
   }
-  
+
   .vibe-glass {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
-  
+
   .vibe-section-light {
     background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   }
-  
+
   /* Text scramble animation */
   @keyframes scramble {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.8;
+    }
   }
-  
+
   .text-scramble {
     animation: scramble 0.1s ease-in-out;
   }
-  
+
   /* Floating animation */
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
   }
-  
+
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
-  
+
   /* Pulse glow animation */
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
-    50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.6), 0 0 60px rgba(139, 92, 246, 0.4); }
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+    }
+
+    50% {
+      box-shadow: 0 0 40px rgba(236, 72, 153, 0.6), 0 0 60px rgba(139, 92, 246, 0.4);
+    }
   }
-  
+
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
   }
-  
+
   /* Scroll indicator bounce */
   @keyframes bounce-scroll {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(8px); }
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(8px);
+    }
   }
-  
+
   .animate-bounce-scroll {
     animation: bounce-scroll 1.5s ease-in-out infinite;
   }
-  
+
   /* Grid pattern for dark sections */
   .vibe-grid-dark {
-    background-image: 
+    background-image:
       linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
     background-size: 50px 50px;

@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Users, MessageCircle, Headphones, ChevronDown, Play } from 'lucide-react';
+import { Users, MessageCircle, Headphones, ChevronDown, Play, Calendar, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 interface Stats {
   students?: number;
@@ -18,6 +19,16 @@ interface VibeHeroSectionProps {
   onEnrollClick: () => void;
   isEnrolled?: boolean;
   upcoming?: boolean;
+  // New props for info sidebar
+  startDate?: string;
+  endDate?: string;
+  courseTime?: string;
+  participantCount?: number;
+  capacity?: string;
+  priceRegular?: number;
+  priceOffer?: number;
+  batch?: string;
+  instructorName?: string;
 }
 
 // Text scramble effect hook
@@ -68,6 +79,15 @@ const VibeHeroSection = ({
   onEnrollClick,
   isEnrolled,
   upcoming,
+  startDate,
+  endDate,
+  courseTime,
+  participantCount,
+  capacity,
+  priceRegular,
+  priceOffer,
+  batch,
+  instructorName,
 }: VibeHeroSectionProps) => {
   const scrambledTitle = useTextScramble(title, 3000);
 
@@ -81,142 +101,66 @@ const VibeHeroSection = ({
 
   const youtubeId = promoVideoUrl ? getYouTubeId(promoVideoUrl) : null;
 
+  // Calculate discount percentage
+  const discountPercent = priceRegular && priceOffer
+    ? Math.round(((priceRegular - priceOffer) / priceRegular) * 100)
+    : 0;
+
   const scrollToContent = () => {
     window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
   };
 
   return (
-    <section className="relative min-h-[600px] lg:min-h-[700px] overflow-hidden vibe-hero-bg">
-      {/* Animated Grid Pattern */}
-      <div className="absolute inset-0 vibe-grid-dark opacity-40" />
+    <section className="relative overflow-hidden bg-white">
+      {/* Animated Grid Pattern - Removed for white background */}
 
-      {/* Gradient Orbs */}
-      <motion.div
-        className="absolute top-20 left-10 w-72 h-72 bg-pink-500/20 rounded-full blur-[100px]"
-        animate={{
-          x: [0, 30, 0],
-          y: [0, -20, 0],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-20 right-10 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px]"
-        animate={{
-          x: [0, -40, 0],
-          y: [0, 30, 0],
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[150px]"
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      />
 
-      <div className="container-custom relative z-10 py-12 lg:py-20">
-        {/* Main Content Grid */}
-        <div className="flex-1 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Content Side */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center lg:text-left order-2 lg:order-1"
-          >
-            {/* Subtitle Badge */}
-            {subtitle && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 mb-6"
-              >
-                <span className="px-4 py-2 text-sm font-medium text-white/80 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
-                  {subtitle}
-                </span>
-              </motion.div>
+      {/* Gradient Orbs - Removed for white background */}
+
+      <div className="container-custom relative z-10 pt-4 pb-0 lg:pt-8 lg:pb-0">
+        {/* Title Section - Above Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="text-left mb-6"
+        >
+          {/* Title - Black & Bold */}
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight text-black mb-4">
+            {title}
+          </h1>
+
+          {/* Meta Row: Batch & Instructor */}
+          <div className="flex flex-wrap items-center gap-4 text-sm">
+            {batch && (
+              <Badge variant="secondary" className="bg-[#dcfce7] text-[#166534] hover:bg-[#dcfce7]/80 px-3 py-1 text-sm font-medium border-0">
+                <Clock className="w-3.5 h-3.5 mr-1.5" />
+                {batch}
+              </Badge>
             )}
 
-            {/* Animated Headline with Scramble Effect */}
-            <motion.h1
-              className="text-3xl md:text-4xl lg:text-[48px] font-bold mb-5 leading-tight tracking-tight"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-            >
-              <span className="text-white">{scrambledTitle}</span>
-            </motion.h1>
-
-            {/* Tagline */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-base md:text-lg text-white/60 mb-6 max-w-xl mx-auto lg:mx-0"
-            >
-              Transform your skills with our comprehensive learning program
-            </motion.p>
-
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="mb-10"
-            >
-              <Button
-                onClick={onEnrollClick}
-                size="lg"
-                className="vibe-cta-gradient text-white px-10 py-6 text-base font-semibold rounded-xl shadow-2xl shadow-pink-500/30 hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105 animate-pulse-glow"
-              >
-                {isEnrolled ? 'Continue Learning' : upcoming ? 'Pre-Register Now' : 'Enroll Now'}
-              </Button>
-            </motion.div>
-
-            {/* Stats Bar - Pill Style */}
-            {stats && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="flex flex-wrap justify-center lg:justify-start gap-4"
-              >
-                {stats.students && (
-                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
-                    <Users className="w-4 h-4 text-pink-400" />
-                    <span className="text-white font-semibold">{stats.students.toLocaleString()}+</span>
-                    <span className="text-white/50 text-sm">Students</span>
-                  </div>
-                )}
-
-                {stats.community && (
-                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
-                    <MessageCircle className="w-4 h-4 text-purple-400" />
-                    <span className="text-white font-semibold">{stats.community}</span>
-                  </div>
-                )}
-
-                {stats.support && (
-                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/5 backdrop-blur-sm border border-white/10">
-                    <Headphones className="w-4 h-4 text-indigo-400" />
-                    <span className="text-white font-semibold">{stats.support}</span>
-                  </div>
-                )}
-              </motion.div>
+            {instructorName && (
+              <div className="flex items-center text-gray-700 font-medium">
+                <span className="text-gray-500 mr-2">Speaker:</span>
+                {instructorName}
+              </div>
             )}
-          </motion.div>
+          </div>
+        </motion.div>
 
-          {/* Video/Poster Side */}
+        {/* 65/35 Grid Layout */}
+        <div className="grid lg:grid-cols-[65%_35%] gap-5">
+          {/* Left Column (65%) - Poster Card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, x: 50 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
+            initial={{ opacity: 0, scale: 0.72, x: -50 }}
+            animate={{ opacity: 1, scale: 0.8, x: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="relative order-1 lg:order-2"
+            className="relative origin-top-left"
           >
             {/* Video Container with Glow */}
             <div className="relative group">
               {/* Glow Effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-indigo-500/30 rounded-3xl blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+              <div className="absolute -inset-3 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-indigo-500/30 rounded-3xl blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
 
               {/* Video Frame */}
               <div className="relative rounded-2xl overflow-hidden vibe-glass">
@@ -240,9 +184,9 @@ const VibeHeroSection = ({
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
                         <motion.div
                           whileHover={{ scale: 1.1 }}
-                          className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center cursor-pointer"
+                          className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center cursor-pointer"
                         >
-                          <Play className="w-8 h-8 text-white ml-1" fill="white" />
+                          <Play className="w-6 h-6 text-white ml-1" fill="white" />
                         </motion.div>
                       </div>
                     </>
@@ -251,27 +195,116 @@ const VibeHeroSection = ({
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                        className="w-32 h-32 border-2 border-white/10 rounded-full"
+                        className="w-24 h-24 border-2 border-white/10 rounded-full"
                       />
                     </div>
                   )}
                 </div>
               </div>
 
-              {/* Floating Badge */}
+              {/* Premium Contents Badge */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8 }}
-                className="absolute -right-4 -bottom-4 lg:-right-8 lg:-bottom-6"
+                className="absolute -right-3 -bottom-3 lg:-right-6 lg:-bottom-5"
               >
-                <div className="px-4 py-2 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    <span className="text-white text-sm font-medium">Live Support</span>
+                <div className="px-3 py-1.5 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 shadow-xl">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                    <span className="text-white text-xs font-medium">Premium Contents</span>
                   </div>
                 </div>
               </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Right Column (35%) - Info Sidebar */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.72, x: 50 }}
+            animate={{ opacity: 1, scale: 0.8, x: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="relative origin-top-left"
+          >
+            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-xl h-full flex flex-col">
+              {/* Section Title */}
+              <h3 className="text-xl font-bold text-gray-900 mb-6">
+                Course Details
+              </h3>
+
+              {/* Info Items */}
+              <div className="space-y-5 flex-1">
+                {/* Start Date */}
+                {startDate && (
+                  <div className="flex gap-4">
+                    <Calendar className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">Start</p>
+                      <p className="text-sm text-gray-900 font-bold">{startDate}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* End Date */}
+                {endDate && (
+                  <div className="flex gap-4">
+                    <Calendar className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">End</p>
+                      <p className="text-sm text-gray-900 font-bold">{endDate}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Time */}
+                {courseTime && (
+                  <div className="flex gap-4">
+                    <Clock className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">Time</p>
+                      <p className="text-sm text-gray-900 font-bold">{courseTime}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Capacity */}
+                {(capacity || participantCount) && (
+                  <div className="flex gap-4">
+                    <Users className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">Capacity</p>
+                      <p className="text-sm text-gray-900 font-bold">
+                        {capacity || `${participantCount} Seats`}
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Divider */}
+              <hr className="border-gray-200 my-6" />
+
+              {/* Pricing Section */}
+              <div className="mb-6">
+                {priceRegular && priceOffer ? (
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-gray-400 line-through text-sm font-medium">
+                      ৳{priceRegular.toLocaleString()}
+                    </span>
+                    <span className="text-red-600 text-2xl font-bold">
+                      ৳{priceOffer.toLocaleString()}
+                    </span>
+                  </div>
+                ) : null}
+              </div>
+
+              {/* CTA Button */}
+              <Button
+                onClick={onEnrollClick}
+                className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black font-bold py-6 text-base rounded-md mt-auto transition-all"
+              >
+                {isEnrolled ? 'Continue Learning' : upcoming ? 'Pre-Register Now' : 'Enroll Now'}
+              </Button>
             </div>
           </motion.div>
         </div>
@@ -281,15 +314,15 @@ const VibeHeroSection = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
-          className="flex flex-col items-center gap-2 mt-8 cursor-pointer"
+          className="flex flex-col items-center gap-2 mt-4 mb-4 cursor-pointer relative z-20"
           onClick={scrollToContent}
         >
-          <span className="text-white/50 text-sm">Scroll to explore</span>
+          <span className="text-gray-400 text-sm">Scroll to explore</span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
-            <ChevronDown className="w-6 h-6 text-white/50" />
+            <ChevronDown className="w-6 h-6 text-gray-400" />
           </motion.div>
         </motion.div>
       </div>

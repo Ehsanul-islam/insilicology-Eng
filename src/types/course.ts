@@ -68,6 +68,7 @@ export interface CourseFormData {
   price_regular: string;
   price_offer: string;
   start_date: Date | undefined;
+  end_date: Date | undefined;
   duration_text: string;
   module_count: string;
 
@@ -93,6 +94,9 @@ export interface CourseFormData {
     students: string;
     community: string;
     support: string;
+    time?: string;
+    capacity?: string;
+    batch?: string;
   };
 
   // Marketing - FAQ

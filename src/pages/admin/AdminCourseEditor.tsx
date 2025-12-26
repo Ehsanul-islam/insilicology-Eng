@@ -129,6 +129,7 @@ const AdminCourseEditor = () => {
           price_regular: data.price_regular?.toString() || '',
           price_offer: data.price_offer?.toString() || '',
           start_date: data.start_date ? new Date(data.start_date) : undefined,
+          end_date: data.end_date ? new Date(data.end_date) : undefined,
           duration_text: data.duration_text || '',
           module_count: data.module_count?.toString() || '',
           instructor_id: data.instructor_id || '',
@@ -167,6 +168,9 @@ const AdminCourseEditor = () => {
             students: (data.stats as Record<string, string>)?.students || '',
             community: (data.stats as Record<string, string>)?.community || '',
             support: (data.stats as Record<string, string>)?.support || '',
+            time: (data.stats as Record<string, string>)?.time || '',
+            capacity: (data.stats as Record<string, string>)?.capacity || '',
+            batch: (data.stats as Record<string, string>)?.batch || '',
           },
           faq: Array.isArray(data.faq) && data.faq.length > 0
             ? data.faq as FAQItem[]
@@ -234,6 +238,7 @@ const AdminCourseEditor = () => {
         price_regular: formData.price_regular ? parseFloat(formData.price_regular) : null,
         price_offer: formData.price_offer ? parseFloat(formData.price_offer) : null,
         start_date: formData.start_date ? format(formData.start_date, 'yyyy-MM-dd') : null,
+        end_date: formData.end_date ? format(formData.end_date, 'yyyy-MM-dd') : null,
         duration_text: formData.duration_text.trim() || null,
         module_count: formData.module_count ? parseInt(formData.module_count) : null,
         instructor_id: formData.instructor_id || null,
@@ -262,6 +267,9 @@ const AdminCourseEditor = () => {
           students: formData.stats.students || null,
           community: formData.stats.community || null,
           support: formData.stats.support || null,
+          time: formData.stats.time || null,
+          capacity: formData.stats.capacity || null,
+          batch: formData.stats.batch || null,
         },
         faq: formData.faq.filter(f => f.question.trim() && f.answer.trim()),
         whats_included: formData.whats_included.filter(w => w.trim()),
@@ -549,6 +557,57 @@ const AdminCourseEditor = () => {
 
                 <Card>
                   <CardHeader>
+                    <CardTitle>Class Information</CardTitle>
+                    <CardDescription>Schedule, capacity and batch details</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <div>
+                        <Label htmlFor="stats.batch">Batch Name</Label>
+                        <Input
+                          id="stats.batch"
+                          value={formData.stats.batch || ''}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            stats: { ...prev.stats, batch: e.target.value }
+                          }))}
+                          placeholder="e.g., Batch 1: Male"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="stats.time">Class Time</Label>
+                        <Input
+                          id="stats.time"
+                          value={formData.stats.time || ''}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            stats: { ...prev.stats, time: e.target.value }
+                          }))}
+                          placeholder="e.g., 09:00 PM"
+                        />
+                        <div className="flex gap-2 mt-1">
+                          <Badge variant="outline" className="cursor-pointer" onClick={() => setFormData(prev => ({ ...prev, stats: { ...prev.stats, time: '09:00 PM' } }))}>09:00 PM</Badge>
+                          <Badge variant="outline" className="cursor-pointer" onClick={() => setFormData(prev => ({ ...prev, stats: { ...prev.stats, time: '08:00 PM' } }))}>08:00 PM</Badge>
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="stats.capacity">Capacity</Label>
+                        <Input
+                          id="stats.capacity"
+                          value={formData.stats.capacity || ''}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            stats: { ...prev.stats, capacity: e.target.value }
+                          }))}
+                          placeholder="e.g., 50 Students"
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
                     <CardTitle>Media</CardTitle>
                     <CardDescription>Course poster and promotional content</CardDescription>
                   </CardHeader>
@@ -817,6 +876,33 @@ const AdminCourseEditor = () => {
                             selected={formData.start_date}
                             onSelect={(date) =>
                               setFormData(prev => ({ ...prev, start_date: date }))
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </div>
+                    <div>
+                      <Label>End Date</Label>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            className={cn(
+                              'w-full justify-start text-left font-normal',
+                              !formData.end_date && 'text-muted-foreground'
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {formData.end_date ? format(formData.end_date, 'PPP') : 'Pick a date'}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={formData.end_date}
+                            onSelect={(date) =>
+                              setFormData(prev => ({ ...prev, end_date: date }))
                             }
                             initialFocus
                           />

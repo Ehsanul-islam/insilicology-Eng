@@ -104,7 +104,7 @@ const ImpactStats = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="pt-8 pb-20 bg-white">
       <div className="container-custom relative z-10">
         {/* Header Section */}
         <motion.div
