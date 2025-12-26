@@ -215,6 +215,8 @@ const CourseDetail = () => {
           instructorName={course.instructor_name || undefined}
           priceRegular={course.price_regular ? Number(course.price_regular) : undefined}
           priceOffer={course.price_offer ? Number(course.price_offer) : undefined}
+          duration={course.duration_text || undefined}
+          modulesCount={course.module_count || undefined}
         />
 
         {/* Main Content Container */}

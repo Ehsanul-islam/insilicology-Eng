@@ -108,8 +108,8 @@ export const useCourses = (filters: CourseFilters, pagination: PaginationState) 
     fetchCourses();
   }, [filters, pagination.page, pagination.pageSize]);
 
-  const totalPages = useMemo(() => 
-    Math.ceil(totalCount / pagination.pageSize), 
+  const totalPages = useMemo(() =>
+    Math.ceil(totalCount / pagination.pageSize),
     [totalCount, pagination.pageSize]
   );
 
@@ -119,7 +119,7 @@ export const useCourses = (filters: CourseFilters, pagination: PaginationState) 
 export const useCourseDetail = (slug: string | undefined) => {
   const [course, setCourse] = useState<Course | null>(null);
   const [lessons, setLessons] = useState<Tables<'lessons'>[]>([]);
-  const [reviews, setReviews] = useState<any[]>([]);
+
   const [resources, setResources] = useState<Tables<'course_resources'>[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -127,7 +127,7 @@ export const useCourseDetail = (slug: string | undefined) => {
 
   const fetchCourseDetail = async () => {
     if (!slug) return;
-    
+
     setLoading(true);
     setError(null);
 
@@ -152,18 +152,8 @@ export const useCourseDetail = (slug: string | undefined) => {
 
       setLessons(lessonsData || []);
 
-      // Fetch approved reviews with profile info
-      const { data: reviewsData } = await supabase
-        .from('course_reviews')
-        .select(`
-          *,
-          profiles:user_id (full_name, avatar_url)
-        `)
-        .eq('course_id', courseData.id)
-        .eq('is_approved', true)
-        .order('created_at', { ascending: false });
+      setLessons(lessonsData || []);
 
-      setReviews(reviewsData || []);
 
       // Check enrollment status
       const { data: { user } } = await supabase.auth.getUser();
@@ -205,7 +195,7 @@ export const useCourseDetail = (slug: string | undefined) => {
     fetchCourseDetail();
   };
 
-  return { course, lessons, reviews, resources, loading, error, isEnrolled, refetch };
+  return { course, lessons, resources, loading, error, isEnrolled, refetch };
 };
 
 export const useUniqueFilters = () => {

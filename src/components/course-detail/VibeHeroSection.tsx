@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
-import { Users, MessageCircle, Headphones, ChevronDown, Play, Calendar, Clock } from 'lucide-react';
+import { Users, MessageCircle, Headphones, ChevronDown, Play, Calendar, Clock, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -28,7 +28,10 @@ interface VibeHeroSectionProps {
   priceRegular?: number;
   priceOffer?: number;
   batch?: string;
+
   instructorName?: string;
+  duration?: string;
+  modulesCount?: number;
 }
 
 // Text scramble effect hook
@@ -70,7 +73,7 @@ const useTextScramble = (text: string, duration: number = 1500) => {
   return displayText;
 };
 
-const VibeHeroSection = ({
+const VibeHeroSection = memo(({
   title,
   subtitle,
   promoVideoUrl,
@@ -87,7 +90,10 @@ const VibeHeroSection = ({
   priceRegular,
   priceOffer,
   batch,
+
   instructorName,
+  duration,
+  modulesCount,
 }: VibeHeroSectionProps) => {
   const scrambledTitle = useTextScramble(title, 3000);
 
@@ -123,7 +129,7 @@ const VibeHeroSection = ({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-left mb-6"
+          className="text-left mb-2"
         >
           {/* Title - Black & Bold */}
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight text-black mb-4">
@@ -133,7 +139,7 @@ const VibeHeroSection = ({
           {/* Meta Row: Batch & Instructor */}
           <div className="flex flex-wrap items-center gap-4 text-sm">
             {batch && (
-              <Badge variant="secondary" className="bg-[#dcfce7] text-[#166534] hover:bg-[#dcfce7]/80 px-3 py-1 text-sm font-medium border-0">
+              <Badge variant="secondary" className="bg-[#dcfce7] text-[#166534] hover:bg-[#dcfce7]/80 px-2 py-0.5 text-xs font-medium border-0">
                 <Clock className="w-3.5 h-3.5 mr-1.5" />
                 {batch}
               </Badge>
@@ -148,8 +154,8 @@ const VibeHeroSection = ({
           </div>
         </motion.div>
 
-        {/* 65/35 Grid Layout */}
-        <div className="grid lg:grid-cols-[65%_35%] gap-5">
+        {/* 72/28 Grid Layout with minimal gap */}
+        <div className="grid lg:grid-cols-[72fr_28fr] gap-1">
           {/* Left Column (65%) - Poster Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.72, x: -50 }}
@@ -169,6 +175,7 @@ const VibeHeroSection = ({
                     <iframe
                       src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
                       title="Course promo video"
+                      loading="lazy"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                       className="absolute inset-0 w-full h-full"
@@ -178,6 +185,7 @@ const VibeHeroSection = ({
                       <img
                         src={posterUrl}
                         alt={title}
+                        loading="lazy"
                         className="absolute inset-0 w-full h-full object-cover"
                       />
                       {/* Play Overlay */}
@@ -233,10 +241,10 @@ const VibeHeroSection = ({
               </h3>
 
               {/* Info Items */}
-              <div className="space-y-5 flex-1">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-6 flex-1">
                 {/* Start Date */}
                 {startDate && (
-                  <div className="flex gap-4">
+                  <div className="flex gap-3">
                     <Calendar className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-xs text-gray-500 font-medium mb-0.5">Start</p>
@@ -247,7 +255,7 @@ const VibeHeroSection = ({
 
                 {/* End Date */}
                 {endDate && (
-                  <div className="flex gap-4">
+                  <div className="flex gap-3">
                     <Calendar className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-xs text-gray-500 font-medium mb-0.5">End</p>
@@ -258,7 +266,7 @@ const VibeHeroSection = ({
 
                 {/* Time */}
                 {courseTime && (
-                  <div className="flex gap-4">
+                  <div className="flex gap-3">
                     <Clock className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-xs text-gray-500 font-medium mb-0.5">Time</p>
@@ -269,13 +277,35 @@ const VibeHeroSection = ({
 
                 {/* Capacity */}
                 {(capacity || participantCount) && (
-                  <div className="flex gap-4">
+                  <div className="flex gap-3">
                     <Users className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="text-xs text-gray-500 font-medium mb-0.5">Capacity</p>
                       <p className="text-sm text-gray-900 font-bold">
                         {capacity || `${participantCount} Seats`}
                       </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Duration */}
+                {duration && (
+                  <div className="flex gap-3">
+                    <Clock className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">Duration</p>
+                      <p className="text-sm text-gray-900 font-bold">{duration}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Modules Count */}
+                {modulesCount && (
+                  <div className="flex gap-3">
+                    <BookOpen className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-xs text-gray-500 font-medium mb-0.5">Modules</p>
+                      <p className="text-sm text-gray-900 font-bold">{modulesCount} Modules</p>
                     </div>
                   </div>
                 )}
@@ -303,7 +333,7 @@ const VibeHeroSection = ({
                 onClick={onEnrollClick}
                 className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black font-bold py-6 text-base rounded-md mt-auto transition-all"
               >
-                {isEnrolled ? 'Continue Learning' : upcoming ? 'Pre-Register Now' : 'Enroll Now'}
+                {isEnrolled ? 'Continue Learning' : 'Enroll Now'}
               </Button>
             </div>
           </motion.div>
@@ -328,6 +358,8 @@ const VibeHeroSection = ({
       </div>
     </section>
   );
-};
+});
+
+VibeHeroSection.displayName = 'VibeHeroSection';
 
 export default VibeHeroSection;
