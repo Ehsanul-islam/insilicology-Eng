@@ -243,12 +243,18 @@ export type Database = {
           course_id: string | null
           course_name: string
           created_at: string | null
+          download_count: number | null
+          download_enabled: boolean | null
+          downloaded_at: string | null
+          enabled_at: string | null
+          enabled_by: string | null
           id: string
           is_active: boolean | null
           issue_date: string | null
           recipient_name: string
           updated_at: string | null
           user_id: string | null
+          verification_code: string | null
           verification_hash: string
         }
         Insert: {
@@ -258,12 +264,18 @@ export type Database = {
           course_id?: string | null
           course_name: string
           created_at?: string | null
+          download_count?: number | null
+          download_enabled?: boolean | null
+          downloaded_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
           id?: string
           is_active?: boolean | null
           issue_date?: string | null
           recipient_name: string
           updated_at?: string | null
           user_id?: string | null
+          verification_code?: string | null
           verification_hash: string
         }
         Update: {
@@ -273,12 +285,18 @@ export type Database = {
           course_id?: string | null
           course_name?: string
           created_at?: string | null
+          download_count?: number | null
+          download_enabled?: boolean | null
+          downloaded_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
           id?: string
           is_active?: boolean | null
           issue_date?: string | null
           recipient_name?: string
           updated_at?: string | null
           user_id?: string | null
+          verification_code?: string | null
           verification_hash?: string
         }
         Relationships: [

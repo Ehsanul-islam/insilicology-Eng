@@ -13,7 +13,13 @@ export interface Certificate {
   issueDate: string;
   certificateNumber: string;
   verificationHash: string;
+  verificationCode: string | null;
   isActive: boolean;
+  downloadEnabled: boolean;
+  downloadedAt: string | null;
+  downloadCount: number;
+  enabledAt: string | null;
+  enabledBy: string | null;
   certificateData: Record<string, any> | null;
 }
 
@@ -57,7 +63,13 @@ export const useCertificates = () => {
         issueDate: cert.issue_date || cert.completion_date,
         certificateNumber: cert.certificate_number,
         verificationHash: cert.verification_hash,
+        verificationCode: cert.verification_code || null,
         isActive: cert.is_active || true,
+        downloadEnabled: cert.download_enabled || false,
+        downloadedAt: cert.downloaded_at || null,
+        downloadCount: cert.download_count || 0,
+        enabledAt: cert.enabled_at || null,
+        enabledBy: cert.enabled_by || null,
         certificateData: cert.certificate_data as Record<string, any> | null,
       })) || [];
 
@@ -86,11 +98,11 @@ export const useVerifyCertificate = () => {
     setResult(null);
 
     try {
-      // Search by certificate number or verification hash
+      // Search by certificate number, verification hash, or 6-digit code
       const { data, error } = await supabase
         .from('certificates')
         .select('*')
-        .or(`certificate_number.ilike.${certificateNumber},verification_hash.eq.${certificateNumber}`)
+        .or(`certificate_number.ilike.${certificateNumber},verification_hash.eq.${certificateNumber},verification_code.eq.${certificateNumber}`)
         .eq('is_active', true)
         .maybeSingle();
 
@@ -107,7 +119,13 @@ export const useVerifyCertificate = () => {
           issueDate: data.issue_date || data.completion_date,
           certificateNumber: data.certificate_number,
           verificationHash: data.verification_hash,
+          verificationCode: data.verification_code || null,
           isActive: data.is_active || true,
+          downloadEnabled: data.download_enabled || false,
+          downloadedAt: data.downloaded_at || null,
+          downloadCount: data.download_count || 0,
+          enabledAt: data.enabled_at || null,
+          enabledBy: data.enabled_by || null,
           certificateData: data.certificate_data as Record<string, any> | null,
         };
 

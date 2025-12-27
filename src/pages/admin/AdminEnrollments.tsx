@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { CheckCircle, XCircle, Eye, Trash2, ExternalLink } from 'lucide-react';
+import { CheckCircle, XCircle, Eye, Trash2, ExternalLink, Award } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -29,7 +29,7 @@ const AdminEnrollments = () => {
 
   // Dialog states
   const [selectedEnrollment, setSelectedEnrollment] = useState<EnrollmentWithDetails | null>(null);
-  const [actionDialog, setActionDialog] = useState<'view' | 'approve' | 'reject' | null>(null);
+  const [actionDialog, setActionDialog] = useState<'view' | 'approve' | 'reject' | 'complete' | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [deleteEnrollmentDialog, setDeleteEnrollmentDialog] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -54,6 +54,8 @@ const AdminEnrollments = () => {
     } else if (action === 'reject') {
       setActionDialog('reject');
       setRejectionReason('');
+    } else if (action === 'complete') {
+      setActionDialog('complete');
     } else if (action === 'delete') {
       setDeleteEnrollmentDialog(true);
     }
@@ -118,6 +120,35 @@ const AdminEnrollments = () => {
     }
   };
 
+  const handleComplete = async () => {
+    if (!selectedEnrollment) return;
+    setProcessing(true);
+    try {
+      const { error } = await supabase
+        .from('enrollments')
+        .update({
+          status: 'completed',
+          completion_date: new Date().toISOString(),
+          progress_percentage: 100,
+        })
+        .eq('id', selectedEnrollment.id);
+
+      if (error) throw error;
+
+      toast.success(
+        `${selectedEnrollment.user_name} marked as completed for ${selectedEnrollment.course_title}`
+      );
+      setActionDialog(null);
+      loadEnrollments();
+    } catch (error: any) {
+      console.error('Mark as completed error:', error);
+      const errorMessage = error?.message || 'Failed to mark as completed';
+      toast.error(`Failed to mark as completed: ${errorMessage}`);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const handleBulkAction = async (action: string, selectedIds: string[]) => {
     setProcessing(true);
     try {
@@ -126,6 +157,15 @@ const AdminEnrollments = () => {
           await updateEnrollmentStatus(id, 'active');
         } else if (action === 'reject') {
           await updateEnrollmentStatus(id, 'cancelled', 'Bulk rejection');
+        } else if (action === 'complete') {
+          await supabase
+            .from('enrollments')
+            .update({
+              status: 'completed',
+              completion_date: new Date().toISOString(),
+              progress_percentage: 100,
+            })
+            .eq('id', id);
         }
       }
       toast.success(`${selectedIds.length} enrollments updated`);
@@ -235,11 +275,13 @@ const AdminEnrollments = () => {
         rowActions={[
           { label: 'View Details', value: 'view', icon: <Eye className="w-4 h-4" /> },
           { label: 'Approve', value: 'approve', icon: <CheckCircle className="w-4 h-4" /> },
+          { label: 'Mark as Completed', value: 'complete', icon: <Award className="w-4 h-4" /> },
           { label: 'Reject', value: 'reject', icon: <XCircle className="w-4 h-4" />, variant: 'destructive' },
           { label: 'Delete', value: 'delete', icon: <Trash2 className="w-4 h-4" />, variant: 'destructive' },
         ]}
         bulkActions={[
           { label: 'Approve Selected', value: 'approve', icon: <CheckCircle className="w-4 h-4 mr-2" /> },
+          { label: 'Mark as Completed', value: 'complete', icon: <Award className="w-4 h-4 mr-2" /> },
           { label: 'Reject Selected', value: 'reject', icon: <XCircle className="w-4 h-4 mr-2" /> },
         ]}
         onBulkAction={handleBulkAction}
@@ -379,6 +421,40 @@ const AdminEnrollments = () => {
             </Button>
             <Button variant="destructive" onClick={handleReject} disabled={processing}>
               {processing ? 'Rejecting...' : 'Reject Enrollment'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Mark as Completed Dialog */}
+      <Dialog open={actionDialog === 'complete'} onOpenChange={() => setActionDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-primary" />
+              Mark as Completed
+            </DialogTitle>
+            <DialogDescription>
+              Are you sure you want to mark this enrollment as completed for{' '}
+              <strong>{selectedEnrollment?.user_name}</strong> in{' '}
+              <strong>{selectedEnrollment?.course_title}</strong>?
+              <br />
+              <br />
+              This will:
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Set status to "completed"</li>
+                <li>Set progress to 100%</li>
+                <li>Record completion date as today</li>
+                <li>Make the student eligible for a certificate</li>
+              </ul>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setActionDialog(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleComplete} disabled={processing}>
+              {processing ? 'Marking as Completed...' : 'Mark as Completed'}
             </Button>
           </DialogFooter>
         </DialogContent>

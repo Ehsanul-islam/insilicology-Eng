@@ -34,6 +34,7 @@ interface CertificateWithDetails {
   verification_hash: string;
   user_id: string;
   course_id: string;
+  download_enabled: boolean;
 }
 
 interface CompletedEnrollment {
@@ -54,7 +55,7 @@ const AdminCertificates = () => {
 
   // Dialog states
   const [selectedCertificate, setSelectedCertificate] = useState<CertificateWithDetails | null>(null);
-  const [actionDialog, setActionDialog] = useState<'view' | 'revoke' | 'reinstate' | 'issue' | null>(null);
+  const [actionDialog, setActionDialog] = useState<'view' | 'revoke' | 'reinstate' | 'issue' | 'enable_download' | null>(null);
   const [selectedEnrollment, setSelectedEnrollment] = useState<string>('');
   const [processing, setProcessing] = useState(false);
 
@@ -223,6 +224,31 @@ const AdminCertificates = () => {
     }
   };
 
+  const handleEnableDownload = async () => {
+    if (!selectedCertificate) return;
+
+    setProcessing(true);
+    try {
+      const response = await supabase.functions.invoke('issue-certificate', {
+        body: {
+          action: 'enable_download',
+          certificateId: selectedCertificate.id,
+        },
+      });
+
+      if (response.error) throw response.error;
+
+      toast.success('Download enabled successfully');
+      setActionDialog(null);
+      loadCertificates();
+    } catch (error) {
+      console.error('Error enabling download:', error);
+      toast.error('Failed to enable download');
+    } finally {
+      setProcessing(false);
+    }
+  };
+
   const columns: Column<CertificateWithDetails>[] = [
     {
       key: 'certificate_number',
@@ -248,13 +274,21 @@ const AdminCertificates = () => {
         <span className="text-sm">{new Date(item.issue_date).toLocaleDateString()}</span>
       ),
     },
+    // New status column combining Active/Revoked + Download Status
     {
       key: 'is_active',
       header: 'Status',
       render: (item) => (
-        <Badge variant={item.is_active ? 'default' : 'destructive'}>
-          {item.is_active ? 'Active' : 'Revoked'}
-        </Badge>
+        <div className="flex gap-2">
+          <Badge variant={item.is_active ? 'default' : 'destructive'}>
+            {item.is_active ? 'Active' : 'Revoked'}
+          </Badge>
+          {item.is_active && (
+            <Badge variant={item.download_enabled ? 'secondary' : 'outline'}>
+              {item.download_enabled ? 'Downloadable' : 'Pending Approval'}
+            </Badge>
+          )}
+        </div>
       ),
     },
   ];
@@ -263,6 +297,7 @@ const AdminCertificates = () => {
     // Filter by status
     if (filter === 'active' && !c.is_active) return false;
     if (filter === 'revoked' && c.is_active) return false;
+    if (filter === 'pending' && c.download_enabled) return false;
 
     // Filter by search
     if (!searchQuery) return true;
@@ -304,10 +339,20 @@ const AdminCertificates = () => {
           filterOptions={[
             { label: 'All Certificates', value: 'all' },
             { label: 'Active', value: 'active' },
+            { label: 'Pending Approval', value: 'pending' },
             { label: 'Revoked', value: 'revoked' },
           ]}
-          onRowAction={handleAction}
+          onRowAction={(action, item) => {
+            // Custom logic to show "Enable Download" only if not yet enabled
+            if (action === 'enable_download') {
+              setSelectedCertificate(item);
+              setActionDialog('enable_download');
+            } else {
+              handleAction(action, item);
+            }
+          }}
           rowActions={[
+            { label: 'Enable Download', value: 'enable_download', icon: <Award className="w-4 h-4" /> },
             { label: 'View Certificate', value: 'view', icon: <Eye className="w-4 h-4" /> },
             { label: 'Revoke', value: 'revoke', icon: <Ban className="w-4 h-4" />, variant: 'destructive' },
             { label: 'Reinstate', value: 'reinstate', icon: <RotateCcw className="w-4 h-4" /> },
@@ -362,6 +407,27 @@ const AdminCertificates = () => {
               disabled={processing || !selectedEnrollment}
             >
               {processing ? 'Issuing...' : 'Issue Certificate'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Enable Download Dialog */}
+      <Dialog open={actionDialog === 'enable_download'} onOpenChange={() => setActionDialog(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enable Certificate Download</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to enable downloads for <strong>{selectedCertificate?.recipient_name}</strong>?
+              The student will be able to download their certificate immediately.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setActionDialog(null)}>
+              Cancel
+            </Button>
+            <Button onClick={handleEnableDownload} disabled={processing}>
+              {processing ? 'Enabling...' : 'Enable Download'}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,66 +1,59 @@
 import { Link } from 'react-router-dom';
-import { QRCodeSVG } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { GraduationCap, Award, Download, Share2, ExternalLink, ArrowLeft, Calendar, Loader2 } from 'lucide-react';
+import { GraduationCap, Award, Download, Share2, ExternalLink, ArrowLeft, Calendar, Loader2, Eye, Shield } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
-import { useCertificates } from '@/hooks/useCertificates';
+import { useCertificates, Certificate } from '@/hooks/useCertificates';
 import { useDashboardData } from '@/hooks/useDashboardData';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { CertificatePreviewModal } from '@/components/certificates/CertificatePreviewModal';
+
+// Helper function to get certificate status
+const getCertificateStatus = (cert: Certificate) => {
+  if (!cert.downloadEnabled) {
+    return {
+      icon: '🟡',
+      label: 'Pending Approval',
+      variant: 'secondary' as const,
+      message: 'Your certificate is being reviewed by admin',
+      color: 'text-amber-600'
+    };
+  }
+
+  if (cert.downloadEnabled && !cert.downloadedAt) {
+    return {
+      icon: '🟢',
+      label: 'Ready to Download',
+      variant: 'default' as const,
+      message: 'Your certificate is ready! Click below to download',
+      color: 'text-green-600'
+    };
+  }
+
+  return {
+    icon: '✅',
+    label: 'Downloaded',
+    variant: 'outline' as const,
+    message: `Downloaded ${cert.downloadCount} time(s)`,
+    color: 'text-blue-600'
+  };
+};
 
 const MyCertificates = () => {
   const { certificates, loading: certsLoading } = useCertificates();
   const { enrolledCourses, stats, loading: dashLoading } = useDashboardData();
-  const [downloadingId, setDownloadingId] = useState<string | null>(null);
+  const [previewCertificate, setPreviewCertificate] = useState<Certificate | null>(null);
 
   const loading = certsLoading || dashLoading;
 
   // Get in-progress courses (not 100% complete)
   const inProgressCourses = enrolledCourses.filter(c => c.progress < 100 && c.progress > 0);
 
-  const handleDownloadPDF = async (certificateId: string, certificateNumber: string) => {
-    setDownloadingId(certificateId);
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-certificate-pdf', {
-        body: { certificateId },
-      });
-
-      if (error) throw error;
-
-      if (data?.pdfBase64) {
-        // Convert base64 to blob and download
-        const byteCharacters = atob(data.pdfBase64);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-        const byteArray = new Uint8Array(byteNumbers);
-        const blob = new Blob([byteArray], { type: 'application/pdf' });
-        
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${certificateNumber}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-        
-        toast.success('Certificate downloaded successfully!');
-      }
-    } catch (error) {
-      console.error('Error downloading certificate:', error);
-      toast.error('Failed to download certificate. Please try again.');
-    } finally {
-      setDownloadingId(null);
-    }
-  };
-
-  const handleShare = async (certificate: typeof certificates[0]) => {
-    const verificationUrl = `${window.location.origin}/verify-certificate?code=${certificate.verificationHash}`;
+  const handleShare = async (certificate: Certificate) => {
+    const code = certificate.verificationCode || certificate.verificationHash;
+    const verificationUrl = `${window.location.origin}/verify-certificate?code=${code}`;
     const shareText = `I earned a certificate for completing "${certificate.courseName}" at LearnCraft! Verify it here:`;
 
     if (navigator.share) {
@@ -194,101 +187,114 @@ const MyCertificates = () => {
               <CardContent>
                 {certificates.length > 0 ? (
                   <div className="space-y-4">
-                    {certificates.map((cert) => (
-                      <div
-                        key={cert.id}
-                        className="relative overflow-hidden rounded-lg border border-accent/20 bg-gradient-to-br from-accent/5 to-accent/10 p-6 hover:shadow-lg transition-shadow"
-                      >
-                        {/* Certificate Badge */}
-                        <div className="absolute top-4 right-4">
-                          <Badge className="bg-accent text-accent-foreground">
-                            Verified
-                          </Badge>
-                        </div>
-
-                        {/* Certificate Content */}
-                        <div className="space-y-4">
-                          <div className="flex items-start gap-4">
-                            <div className="p-3 bg-accent rounded-lg">
-                              <Award className="w-8 h-8 text-accent-foreground" />
-                            </div>
-                            <div className="flex-1">
-                              <h3 className="text-xl font-bold mb-1">
-                                {cert.courseName}
-                              </h3>
-                              <p className="text-sm text-muted-foreground">
-                                Awarded to: {cert.recipientName}
-                              </p>
-                            </div>
+                    {certificates.map((cert) => {
+                      const status = getCertificateStatus(cert);
+                      return (
+                        <div
+                          key={cert.id}
+                          className="relative overflow-hidden rounded-lg border border-primary/20 bg-gradient-to-br from-white to-slate-50 p-6 hover:shadow-lg transition-shadow"
+                        >
+                          {/* Status Badge */}
+                          <div className="absolute top-4 right-4 flex gap-2">
+                            <Badge variant={status.variant} className="gap-1">
+                              <span>{status.icon}</span>
+                              {status.label}
+                            </Badge>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                              <p className="text-muted-foreground">Completion Date</p>
-                              <p className="font-medium">
-                                {new Date(cert.completionDate).toLocaleDateString()}
-                              </p>
+                          {/* Certificate Content */}
+                          <div className="space-y-4 pr-32">
+                            <div className="flex items-start gap-4">
+                              <div className="p-3 bg-primary/10 rounded-lg">
+                                <Award className="w-8 h-8 text-primary" />
+                              </div>
+                              <div className="flex-1">
+                                <h3 className="text-xl font-bold mb-1">
+                                  {cert.courseName}
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                  Awarded to: {cert.recipientName}
+                                </p>
+                                <p className={`text-xs mt-2 font-medium ${status.color}`}>
+                                  {status.message}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="text-muted-foreground">Issue Date</p>
-                              <p className="font-medium">
-                                {new Date(cert.issueDate).toLocaleDateString()}
-                              </p>
+
+                            <div className="grid grid-cols-3 gap-4 text-sm">
+                              <div>
+                                <p className="text-muted-foreground">Completion Date</p>
+                                <p className="font-medium">
+                                  {new Date(cert.completionDate).toLocaleDateString()}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">Issue Date</p>
+                                <p className="font-medium">
+                                  {new Date(cert.issueDate).toLocaleDateString()}
+                                </p>
+                              </div>
+                              {cert.verificationCode && (
+                                <div>
+                                  <div className="flex items-center gap-1 mb-1">
+                                    <Shield className="w-3 h-3 text-primary" />
+                                    <p className="text-muted-foreground">Verify Code</p>
+                                  </div>
+                                  <p className="font-mono font-bold text-lg text-primary">
+                                    {cert.verificationCode}
+                                  </p>
+                                </div>
+                              )}
                             </div>
-                            <div className="col-span-2">
-                              <p className="text-muted-foreground">Certificate Number</p>
+
+                            <div className="pt-2 border-t border-gray-200">
+                              <p className="text-xs text-muted-foreground">Certificate Number</p>
                               <p className="font-mono text-xs">{cert.certificateNumber}</p>
                             </div>
-                          </div>
 
-                          {/* QR Code */}
-                          <div className="flex items-center gap-4 pt-2">
-                            <div className="p-2 bg-white rounded-lg shadow-sm">
-                              <QRCodeSVG
-                                value={`${window.location.origin}/verify-certificate?code=${cert.verificationHash}`}
-                                size={64}
-                                level="H"
-                              />
-                            </div>
-                            <p className="text-xs text-muted-foreground flex-1">
-                              Scan to verify this certificate
-                            </p>
-                          </div>
+                            {/* Actions */}
+                            <div className="flex flex-wrap gap-2 pt-2">
+                              <Button
+                                size="sm"
+                                variant="default"
+                                onClick={() => setPreviewCertificate(cert)}
+                              >
+                                <Eye className="w-4 h-4 mr-2" />
+                                View Certificate
+                              </Button>
 
-                          {/* Actions */}
-                          <div className="flex flex-wrap gap-2 pt-2">
-                            <Button 
-                              size="sm" 
-                              variant="default"
-                              onClick={() => handleDownloadPDF(cert.id, cert.certificateNumber)}
-                              disabled={downloadingId === cert.id}
-                            >
-                              {downloadingId === cert.id ? (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                              ) : (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setPreviewCertificate(cert)}
+                                disabled={!cert.downloadEnabled}
+                              >
                                 <Download className="w-4 h-4 mr-2" />
-                              )}
-                              Download PDF
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => handleShare(cert)}
-                            >
-                              <Share2 className="w-4 h-4 mr-2" />
-                              Share
-                            </Button>
-                            <Button size="sm" variant="ghost" asChild>
-                              <Link to={`/verify-certificate?code=${cert.verificationHash}`}>
-                                <ExternalLink className="w-4 h-4 mr-2" />
-                                Verify
-                              </Link>
-                            </Button>
+                                Download PDF
+                              </Button>
+
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleShare(cert)}
+                              >
+                                <Share2 className="w-4 h-4 mr-2" />
+                                Share
+                              </Button>
+
+                              <Button size="sm" variant="ghost" asChild>
+                                <Link to={`/verify-certificate?code=${cert.verificationCode || cert.verificationHash}`}>
+                                  <ExternalLink className="w-4 h-4 mr-2" />
+                                  Verify
+                                </Link>
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      )
+                    })}
+
+                  </div >
                 ) : (
                   <div className="text-center py-12">
                     <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
@@ -303,12 +309,12 @@ const MyCertificates = () => {
                     </Button>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-          </div>
+              </CardContent >
+            </Card >
+          </div >
 
           {/* Sidebar - In Progress */}
-          <div className="space-y-6">
+          < div className="space-y-6" >
             <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle className="text-base">Almost There!</CardTitle>
@@ -374,9 +380,17 @@ const MyCertificates = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
+          </div >
+        </div >
       </main>
+
+      {previewCertificate && (
+        <CertificatePreviewModal
+          isOpen={!!previewCertificate}
+          onClose={() => setPreviewCertificate(null)}
+          certificate={previewCertificate}
+        />
+      )}
     </div>
   );
 };
