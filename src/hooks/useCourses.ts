@@ -142,43 +142,64 @@ export const useCourseDetail = (slug: string | undefined) => {
       if (courseError) throw courseError;
       setCourse(courseData);
 
-      // Fetch lessons
-      const { data: lessonsData } = await supabase
-        .from('lessons')
-        .select('*')
-        .eq('course_id', courseData.id)
-        .eq('is_active', true)
-        .order('lesson_order', { ascending: true });
+      // Fetch lessons, enrollment, and resources in parallel
+      const fetchRelatedData = async (courseId: string) => {
+        const { data: { user } } = await supabase.auth.getUser();
 
-      setLessons(lessonsData || []);
+        const lessonsPromise = supabase
+          .from('lessons')
+          .select('*')
+          .eq('course_id', courseId)
+          .eq('is_active', true)
+          .order('lesson_order', { ascending: true });
 
-      setLessons(lessonsData || []);
+        // If no user, we can skip enrollment and user-specific resources fetch
+        if (!user) {
+          const [lessonsResult] = await Promise.all([lessonsPromise]);
+          return {
+            lessons: lessonsResult.data || [],
+            enrollment: null,
+            resources: []
+          };
+        }
 
-
-      // Check enrollment status
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: enrollment } = await supabase
+        const enrollmentPromise = supabase
           .from('enrollments')
           .select('*')
-          .eq('course_id', courseData.id)
+          .eq('course_id', courseId)
           .eq('user_id', user.id)
           .eq('status', 'active')
           .maybeSingle();
 
-        setIsEnrolled(!!enrollment);
+        const [lessonsResult, enrollmentResult] = await Promise.all([
+          lessonsPromise,
+          enrollmentPromise
+        ]);
 
-        // Fetch resources if enrolled
+        const enrollment = enrollmentResult.data;
+        let resourcesData: Tables<'course_resources'>[] = [];
+
         if (enrollment) {
-          const { data: resourcesData } = await supabase
+          const { data } = await supabase
             .from('course_resources')
             .select('*')
-            .eq('course_id', courseData.id)
+            .eq('course_id', courseId)
             .eq('is_active', true);
-
-          setResources(resourcesData || []);
+          resourcesData = data || [];
         }
-      }
+
+        return {
+          lessons: lessonsResult.data || [],
+          enrollment,
+          resources: resourcesData
+        };
+      };
+
+      const { lessons, enrollment, resources } = await fetchRelatedData(courseData.id);
+
+      setLessons(lessons);
+      setIsEnrolled(!!enrollment);
+      setResources(resources);
     } catch (err) {
       console.error('Error fetching course:', err);
       setError('Failed to load course details');

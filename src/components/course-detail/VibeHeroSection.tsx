@@ -185,7 +185,8 @@ const VibeHeroSection = memo(({
                       <img
                         src={posterUrl}
                         alt={title}
-                        loading="lazy"
+                        loading="eager"
+                        fetchPriority="high"
                         className="absolute inset-0 w-full h-full object-cover"
                       />
                       {/* Play Overlay */}

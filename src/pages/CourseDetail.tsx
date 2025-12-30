@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import Navbar from '@/components/Navbar';
@@ -10,20 +10,20 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCourseDetail } from '@/hooks/useCourses';
 import { EnrollmentDialog } from '@/components/EnrollmentDialog';
 
-// Import all course detail components
-import {
-  VibeHeroSection,
-  CourseDescription,
-  ComparisonTable,
-  TargetAudienceCards,
-  CurriculumAccordion,
-  InstructorSection,
-  VideoTestimonials,
-  PricingSection,
-  FAQSection,
-  StickyFooterCTA,
-  EverythingYoureGettingSection,
-} from '@/components/course-detail';
+// Eager load critical components
+import VibeHeroSection from '@/components/course-detail/VibeHeroSection';
+import StickyFooterCTA from '@/components/course-detail/StickyFooterCTA';
+
+// Lazy load below-the-fold components
+const CourseDescription = lazy(() => import('@/components/course-detail/CourseDescription'));
+const ComparisonTable = lazy(() => import('@/components/course-detail/ComparisonTable'));
+const TargetAudienceCards = lazy(() => import('@/components/course-detail/TargetAudienceCards'));
+const CurriculumAccordion = lazy(() => import('@/components/course-detail/CurriculumAccordion'));
+const InstructorSection = lazy(() => import('@/components/course-detail/InstructorSection'));
+const VideoTestimonials = lazy(() => import('@/components/course-detail/VideoTestimonials'));
+const PricingSection = lazy(() => import('@/components/course-detail/PricingSection'));
+const FAQSection = lazy(() => import('@/components/course-detail/FAQSection'));
+const EverythingYoureGettingSection = lazy(() => import('@/components/course-detail/EverythingYoureGettingSection'));
 
 // Type definitions for JSON fields
 interface Stats {
@@ -220,175 +220,183 @@ const CourseDetail = () => {
         />
 
         {/* Main Content Container */}
-        <div className="space-y-16 lg:space-y-24 pt-0 pb-16 lg:pb-24">
+        <Suspense fallback={
+          <div className="container-custom py-12 space-y-12">
+            <Skeleton className="h-64 w-full rounded-xl" />
+            <Skeleton className="h-96 w-full rounded-xl" />
+            <Skeleton className="h-64 w-full rounded-xl" />
+          </div>
+        }>
+          <div className="space-y-16 lg:space-y-24 pt-0 pb-16 lg:pb-24">
 
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 2: COURSE DESCRIPTION
               - Rich text content with Read More and secondary CTA
           ═══════════════════════════════════════════════════════════════════ */}
-          {course.description && (
-            <section className="container-custom">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                <CourseDescription
-                  title={course.title}
-                  description={course.description}
-                  maxLength={600}
-                  onEnrollClick={handleEnroll}
-                  showCta={!isEnrolled}
-                />
-              </motion.div>
-            </section>
-          )}
+            {course.description && (
+              <section className="container-custom">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <CourseDescription
+                    title={course.title}
+                    description={course.description}
+                    maxLength={600}
+                    onEnrollClick={handleEnroll}
+                    showCta={!isEnrolled}
+                  />
+                </motion.div>
+              </section>
+            )}
 
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 3: COMPARISON TABLE
               - What we offer vs Others feature checklist
           ═══════════════════════════════════════════════════════════════════ */}
-          {comparisonFeatures.length > 0 && (
-            <section className="container-custom">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                <ComparisonTable
-                  features={comparisonFeatures}
-                  courseTitle={course.title}
-                />
-              </motion.div>
-            </section>
-          )}
+            {comparisonFeatures.length > 0 && (
+              <section className="container-custom">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <ComparisonTable
+                    features={comparisonFeatures}
+                    courseTitle={course.title}
+                  />
+                </motion.div>
+              </section>
+            )}
 
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 4: TARGET AUDIENCE
               - Who is this course for? with persona cards
           ═══════════════════════════════════════════════════════════════════ */}
-          {targetAudience.length > 0 && (
-            <section className="container-custom">
-              <TargetAudienceCards audience={targetAudience} />
-            </section>
-          )}
+            {targetAudience.length > 0 && (
+              <section className="container-custom">
+                <TargetAudienceCards audience={targetAudience} />
+              </section>
+            )}
 
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 5: CURRICULUM
               - Module-based accordion with lessons
           ═══════════════════════════════════════════════════════════════════ */}
-          {(lessons.length > 0 || modules.length > 0) && (
-            <section className="container-custom">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                <CurriculumAccordion
-                  lessons={lessons}
-                  modules={modules}
-                  isEnrolled={isEnrolled}
-                  courseTitle={course.title}
-                />
-              </motion.div>
-            </section>
-          )}
+            {(lessons.length > 0 || modules.length > 0) && (
+              <section className="container-custom">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <CurriculumAccordion
+                    lessons={lessons}
+                    modules={modules}
+                    isEnrolled={isEnrolled}
+                    courseTitle={course.title}
+                  />
+                </motion.div>
+              </section>
+            )}
 
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 6: INSTRUCTOR
               - Photo, name, title, bio, achievements
           ═══════════════════════════════════════════════════════════════════ */}
-          {course.instructor_name && (
-            <section className="container-custom">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-              >
-                <InstructorSection
-                  name={course.instructor_name}
-                  title={course.instructor_title || undefined}
-                  bio={course.instructor_bio || undefined}
-                  photo={course.instructor_photo || undefined}
-                />
-              </motion.div>
-            </section>
-          )}
+            {course.instructor_name && (
+              <section className="container-custom">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <InstructorSection
+                    name={course.instructor_name}
+                    title={course.instructor_title || undefined}
+                    bio={course.instructor_bio || undefined}
+                    photo={course.instructor_photo || undefined}
+                  />
+                </motion.div>
+              </section>
+            )}
 
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 7: VIDEO TESTIMONIALS
               - Horizontal scrollable video/text testimonial cards
           ═══════════════════════════════════════════════════════════════════ */}
-          {testimonials.length > 0 && (
-            <section className="container-custom">
-              <VideoTestimonials testimonials={testimonials} />
-            </section>
-          )}
+            {testimonials.length > 0 && (
+              <section className="container-custom">
+                <VideoTestimonials testimonials={testimonials} />
+              </section>
+            )}
 
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 7.5: EVERYTHING YOU'RE GETTING
               - Value breakdown with purple banners and itemized list
           ═══════════════════════════════════════════════════════════════════ */}
-          {/* ═══════════════════════════════════════════════════════════════════
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 7.5 & 8: EVERYTHING YOU'RE GETTING & PRICING
               - Grouped to eliminate vertical spacing
           ═══════════════════════════════════════════════════════════════════ */}
-          <div>
-            {valueBreakdown.length > 0 && (
-              <EverythingYoureGettingSection
-                valueBreakdown={valueBreakdown}
-                totalValue={valueBreakdown.reduce((sum, item) => sum + (item.original_price || 0), 0)}
-                priceOffer={course.price_offer}
-                priceRegular={course.price_regular}
-                onEnrollClick={handleEnroll}
-                isEnrolled={isEnrolled}
-              />
-            )}
-
-            <section className="container-custom pt-8 lg:pt-12">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="max-w-2xl mx-auto"
-              >
-                <PricingSection
+            <div>
+              {valueBreakdown.length > 0 && (
+                <EverythingYoureGettingSection
+                  valueBreakdown={valueBreakdown}
+                  totalValue={valueBreakdown.reduce((sum, item) => sum + (item.original_price || 0), 0)}
                   priceOffer={course.price_offer}
                   priceRegular={course.price_regular}
-                  valueBreakdown={valueBreakdown.length > 0 ? valueBreakdown : undefined}
-                  countdownEndDate={course.countdown_end_date}
                   onEnrollClick={handleEnroll}
                   isEnrolled={isEnrolled}
-                  upcoming={course.upcoming || false}
-                  whatsIncluded={whatsIncluded.length > 0 ? whatsIncluded : undefined}
                 />
-              </motion.div>
-            </section>
-          </div>
+              )}
 
-          {/* ═══════════════════════════════════════════════════════════════════
+              <section className="container-custom pt-8 lg:pt-12">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="max-w-2xl mx-auto"
+                >
+                  <PricingSection
+                    priceOffer={course.price_offer}
+                    priceRegular={course.price_regular}
+                    valueBreakdown={valueBreakdown.length > 0 ? valueBreakdown : undefined}
+                    countdownEndDate={course.countdown_end_date}
+                    onEnrollClick={handleEnroll}
+                    isEnrolled={isEnrolled}
+                    upcoming={course.upcoming || false}
+                    whatsIncluded={whatsIncluded.length > 0 ? whatsIncluded : undefined}
+                  />
+                </motion.div>
+              </section>
+            </div>
+
+            {/* ═══════════════════════════════════════════════════════════════════
               SECTION 9: FAQ
               - Accordion Q&A
           ═══════════════════════════════════════════════════════════════════ */}
-          {faqs.length > 0 && (
-            <section className="container-custom">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="max-w-3xl mx-auto"
-              >
-                <FAQSection faqs={faqs} />
-              </motion.div>
-            </section>
-          )}
-        </div>
+            {faqs.length > 0 && (
+              <section className="container-custom">
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                  className="max-w-3xl mx-auto"
+                >
+                  <FAQSection faqs={faqs} />
+                </motion.div>
+              </section>
+            )}
+          </div>
+        </Suspense>
       </main>
 
       <Footer />
