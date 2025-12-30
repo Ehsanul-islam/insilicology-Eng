@@ -12,6 +12,7 @@ import {
   ChevronLeft,
   GraduationCap,
   Calendar,
+  Video,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -32,6 +33,7 @@ import { cn } from '@/lib/utils';
 const mainNavItems = [
   { title: 'Overview', url: '/admin', icon: LayoutDashboard },
   { title: 'Courses', url: '/admin/courses', icon: BookOpen },
+  { title: 'Live Sessions', url: '/admin/live-sessions', icon: Video },
   { title: 'Enrollments', url: '/admin/enrollments', icon: CreditCard },
   { title: 'Certificates', url: '/admin/certificates', icon: Award },
 ];

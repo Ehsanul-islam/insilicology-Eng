@@ -16,6 +16,7 @@ import {
   BarChart3,
   Loader2,
   ExternalLink,
+  Video,
 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useDashboardData } from '@/hooks/useDashboardData';
@@ -322,6 +323,12 @@ const Dashboard = () => {
                   <Link to="/my-certificates">
                     <Award className="w-4 h-4 mr-2" />
                     My Certificates
+                  </Link>
+                </Button>
+                <Button variant="ghost" className="w-full justify-start" asChild>
+                  <Link to="/my-sessions">
+                    <Video className="w-4 h-4 mr-2" />
+                    Live Sessions
                   </Link>
                 </Button>
                 <Button variant="ghost" className="w-full justify-start" asChild>

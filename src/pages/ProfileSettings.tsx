@@ -60,8 +60,8 @@ const ProfileSettings = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error('Image size must be less than 2MB');
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
       return;
     }
 
@@ -275,7 +275,7 @@ const ProfileSettings = () => {
                           {isLoading ? 'Uploading...' : 'Change Photo'}
                         </Button>
                         <p className="text-xs text-muted-foreground">
-                          JPG, PNG or GIF. Max size 2MB.
+                          JPG, PNG or GIF. Max size 5MB.
                         </p>
                       </div>
                     </div>

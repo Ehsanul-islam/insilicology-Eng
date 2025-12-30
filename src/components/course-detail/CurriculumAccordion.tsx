@@ -1,8 +1,8 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   ChevronDown, ChevronRight,
-  Database, Globe, Bot, Share2, Mic, Code, Layers, 
+  Database, Globe, Bot, Share2, Mic, Code, Layers,
   Smartphone, Shield, Zap, BookOpen, Target, Rocket,
   Brain, Settings, Users, Star, Award
 } from 'lucide-react';
@@ -63,10 +63,10 @@ interface GroupedModule {
   lessons: Lesson[];
 }
 
-const CurriculumAccordion = ({ 
-  lessons, 
+const CurriculumAccordion = ({
+  lessons,
   modules = [],
-  isEnrolled = false, 
+  isEnrolled = false,
   onEnrollClick,
   courseTitle = 'our course'
 }: CurriculumAccordionProps) => {
@@ -75,7 +75,7 @@ const CurriculumAccordion = ({
   // Group lessons by module
   const groupedModules = useMemo(() => {
     const moduleMap = new Map<number, Lesson[]>();
-    
+
     // Sort lessons by order first
     const sortedLessons = [...lessons].sort(
       (a, b) => (a.lesson_order || 0) - (b.lesson_order || 0)
@@ -84,7 +84,7 @@ const CurriculumAccordion = ({
     // Try to parse module number from lesson title
     sortedLessons.forEach((lesson) => {
       const moduleMatch = lesson.title.match(/^(Module\s*(\d+)|Week\s*(\d+)|Part\s*(\d+)|Chapter\s*(\d+))[:.-]?\s*/i);
-      
+
       if (moduleMatch) {
         const moduleNum = parseInt(moduleMatch[2] || moduleMatch[3] || moduleMatch[4] || moduleMatch[5] || '1');
         if (!moduleMap.has(moduleNum)) {
@@ -106,7 +106,7 @@ const CurriculumAccordion = ({
     if (moduleMap.size === 1 && lessons.length > 10) {
       const allLessons = Array.from(moduleMap.values()).flat();
       moduleMap.clear();
-      
+
       const lessonsPerModule = Math.ceil(allLessons.length / Math.ceil(allLessons.length / 8));
       allLessons.forEach((lesson, idx) => {
         const moduleNum = Math.floor(idx / lessonsPerModule) + 1;
@@ -119,20 +119,38 @@ const CurriculumAccordion = ({
 
     // Build result with module metadata
     const result: GroupedModule[] = [];
-    const sortedModuleNums = Array.from(moduleMap.keys()).sort((a, b) => a - b);
-    
-    sortedModuleNums.forEach((moduleNum, idx) => {
-      const moduleLessons = moduleMap.get(moduleNum)!;
-      const moduleData = modules[idx] || modules[moduleNum - 1];
-      
-      result.push({
-        name: moduleData?.title || `Module ${moduleNum}`,
-        subtitle: moduleData?.subtitle || '',
-        description: moduleData?.description || '',
-        icon: moduleData?.icon || defaultIcons[idx % defaultIcons.length],
-        lessons: moduleLessons,
+
+    if (modules && modules.length > 0) {
+      // If we have explicit modules metadata, respect that structure
+      modules.forEach((moduleData, idx) => {
+        const moduleNum = idx + 1;
+        const moduleLessons = moduleMap.get(moduleNum) || [];
+
+        result.push({
+          name: moduleData.title || `Module ${moduleNum}`,
+          subtitle: moduleData.subtitle || '',
+          description: moduleData.description || '',
+          icon: moduleData.icon || defaultIcons[idx % defaultIcons.length],
+          lessons: moduleLessons,
+        });
       });
-    });
+    } else {
+      // Fallback: Determine modules from found lessons
+      const sortedModuleNums = Array.from(moduleMap.keys()).sort((a, b) => a - b);
+
+      sortedModuleNums.forEach((moduleNum, idx) => {
+        const moduleLessons = moduleMap.get(moduleNum)!;
+        const moduleData = modules[idx] || modules[moduleNum - 1];
+
+        result.push({
+          name: moduleData?.title || `Module ${moduleNum}`,
+          subtitle: moduleData?.subtitle || '',
+          description: moduleData?.description || '',
+          icon: moduleData?.icon || defaultIcons[idx % defaultIcons.length],
+          lessons: moduleLessons,
+        });
+      });
+    }
 
     return result;
   }, [lessons, modules]);
@@ -165,7 +183,7 @@ const CurriculumAccordion = ({
         </h2>
         <p className="text-muted-foreground text-base">
           <span className="italic">Season 1</span> of {courseTitle} has{' '}
-          <span className="font-semibold text-foreground">{groupedModules.length}</span> detailed modules that will teach you everything you need to work with N8n and AI.
+          <span className="font-semibold text-foreground">{groupedModules.length}</span> detailed modules designed to help you master the course content.
         </p>
       </motion.div>
 
@@ -247,7 +265,7 @@ const CurriculumAccordion = ({
                         >
                           {/* Blue Bullet Point */}
                           <span className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0" />
-                          
+
                           {/* Lesson Title */}
                           <span className="text-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                             {lesson.title}

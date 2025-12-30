@@ -30,10 +30,10 @@ const EverythingYoureGettingSection = ({
   const finalPrice = priceOffer || priceRegular || 0;
 
   return (
-    <section className="py-16 lg:py-24 bg-[#f5f7ff] relative overflow-hidden">
+    <section className="pt-16 lg:pt-24 pb-8 lg:pb-12 bg-[#f5f7ff] relative overflow-hidden">
       {/* Subtle Grid Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-30" />
-      
+
       <div className="container-custom relative z-10 max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -58,7 +58,7 @@ const EverythingYoureGettingSection = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] rounded-t-2xl p-6 text-white"
+            className="bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] rounded-t-2xl p-4 text-white"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center shrink-0">
@@ -90,14 +90,14 @@ const EverythingYoureGettingSection = ({
                   {/* Icon - Minimalistic */}
                   <div className="shrink-0">
                     {item.is_premium ? (
-                      <Crown className="w-5 h-5 text-slate-700" fill="currentColor" />
+                      <Crown className="w-5 h-5 text-yellow-500" fill="currentColor" />
                     ) : (
                       <div className="w-5 h-5 rounded-full border-2 border-slate-400 flex items-center justify-center">
                         <Check className="w-3 h-3 text-slate-600" strokeWidth={3} />
                       </div>
                     )}
                   </div>
-                  
+
                   {/* Text Content */}
                   <div className="flex-1 min-w-0">
                     <h4 className="font-hind-siliguri text-sm font-medium text-[#0a2463]">
@@ -110,7 +110,7 @@ const EverythingYoureGettingSection = ({
                     )}
                   </div>
                 </div>
-                
+
                 {/* Price */}
                 <div className="ml-4 shrink-0">
                   <div className="text-sm font-medium text-[#8b5cf6]">
@@ -127,7 +127,7 @@ const EverythingYoureGettingSection = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] rounded-b-2xl p-6 text-white"
+            className="bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] rounded-b-2xl p-4 text-white"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -150,18 +150,16 @@ const EverythingYoureGettingSection = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="space-y-6 pt-4"
+            className="pt-1 text-center"
           >
             {/* Pricing Text */}
-            <div className="text-center space-y-2">
-              <p className="text-2xl lg:text-3xl font-bold text-green-600 dark:text-green-500">
-                The program fee is only ${finalPrice.toLocaleString()}
-              </p>
-              {hasDiscount && (
-                <p className="text-lg text-green-600 dark:text-green-500">
-                  The program fee is ${finalPrice.toLocaleString()}
-                </p>
-              )}
+            <div className="mb-4">
+              <span className="text-xl text-[#ec4899] font-medium mr-2">
+                The program fee is only
+              </span>
+              <span className="text-2xl lg:text-3xl font-bold text-[#ec4899]">
+                ${finalPrice.toLocaleString()}
+              </span>
             </div>
 
             {/* Enroll Button */}

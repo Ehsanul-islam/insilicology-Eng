@@ -73,7 +73,7 @@ const CourseDescription = ({
         return (
           <ul key={pIndex} className="my-4 space-y-3">
             {items.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3 text-slate-700 dark:text-slate-300">
+              <li key={idx} className="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
                 <span className="w-2 h-2 rounded-full bg-purple-600 mt-2 shrink-0" />
                 <span className="leading-relaxed">{renderInlineFormatting(item.replace('- ', ''))}</span>
               </li>
@@ -86,7 +86,7 @@ const CourseDescription = ({
       const lines = paragraph.split('\n');
 
       return (
-        <p key={pIndex} className="text-slate-700 dark:text-slate-300 leading-relaxed mb-4 last:mb-0">
+        <p key={pIndex} className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-4 last:mb-0">
           {lines.map((line, lIndex) => (
             <span key={lIndex}>
               {lIndex > 0 && <br />}

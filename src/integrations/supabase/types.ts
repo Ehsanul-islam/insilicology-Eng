@@ -14,92 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      audit_log: {
-        Row: {
-          action: string
-          id: string
-          ip_address: string | null
-          new_values: Json | null
-          old_values: Json | null
-          performed_at: string | null
-          performed_by: string | null
-          record_id: string | null
-          table_name: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          action: string
-          id?: string
-          ip_address?: string | null
-          new_values?: Json | null
-          old_values?: Json | null
-          performed_at?: string | null
-          performed_by?: string | null
-          record_id?: string | null
-          table_name?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          action?: string
-          id?: string
-          ip_address?: string | null
-          new_values?: Json | null
-          old_values?: Json | null
-          performed_at?: string | null
-          performed_by?: string | null
-          record_id?: string | null
-          table_name?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "audit_log_performed_by_fkey"
-            columns: ["performed_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      batch_participants: {
-        Row: {
-          batch_id: string | null
-          id: string
-          joined_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          batch_id?: string | null
-          id?: string
-          joined_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          batch_id?: string | null
-          id?: string
-          joined_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "batch_participants_batch_id_fkey"
-            columns: ["batch_id"]
-            isOneToOne: false
-            referencedRelation: "course_batches"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "batch_participants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       blog_categories: {
         Row: {
           created_at: string | null
@@ -134,13 +48,16 @@ export type Database = {
           content: string | null
           created_at: string | null
           excerpt: string | null
+          featured: boolean | null
           featured_image: string | null
           id: string
           meta_description: string | null
           meta_title: string | null
           published: boolean | null
           published_at: string | null
+          reading_time: number | null
           slug: string
+          tags: string[] | null
           title: string
           updated_at: string | null
           view_count: number | null
@@ -151,13 +68,16 @@ export type Database = {
           content?: string | null
           created_at?: string | null
           excerpt?: string | null
+          featured?: boolean | null
           featured_image?: string | null
           id?: string
           meta_description?: string | null
           meta_title?: string | null
           published?: boolean | null
           published_at?: string | null
+          reading_time?: number | null
           slug: string
+          tags?: string[] | null
           title: string
           updated_at?: string | null
           view_count?: number | null
@@ -168,14 +88,17 @@ export type Database = {
           content?: string | null
           created_at?: string | null
           excerpt?: string | null
+          featured?: boolean | null
           featured_image?: string | null
           id?: string
           meta_description?: string | null
           meta_title?: string | null
           published?: boolean | null
           published_at?: string | null
-          slug?: string
-          title?: string
+          reading_time?: number | null
+          slug: string
+          tags?: string[] | null
+          title: string
           updated_at?: string | null
           view_count?: number | null
         }
@@ -482,135 +405,135 @@ export type Database = {
       courses: {
         Row: {
           certificate: boolean | null
+          comparison_features: Json | null
+          countdown_end_date: string | null
           course_type: Database["public"]["Enums"]["course_type"] | null
           created_at: string | null
           description: string | null
           difficulty: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text: string | null
           enrollment_form_fields: Json | null
+          faq: Json | null
           featured: boolean | null
           id: string
+          instructor_bio: string | null
+          instructor_id: string | null
+          instructor_name: string | null
+          instructor_photo: string | null
+          instructor_title: string | null
           language: string | null
           learning_outcomes: Json | null
           module_count: number | null
+          modules: Json | null
           payment_instructions: string | null
           payment_methods: Json | null
           poster_url: string | null
           price_offer: number | null
           price_regular: number | null
+          promo_video_url: string | null
           requirements: Json | null
           roadmap: Json | null
           slug: string
           start_date: string | null
+          stats: Json | null
           status: Database["public"]["Enums"]["course_status"] | null
+          target_audience: Json | null
+          testimonials: Json | null
           title: string
           topics: Json | null
           upcoming: boolean | null
           updated_at: string | null
+          value_breakdown: Json | null
           whats_included: Json | null
           why_join: Json | null
-          instructor_id: string | null
-          instructor_name: string | null
-          instructor_title: string | null
-          instructor_bio: string | null
-          instructor_photo: string | null
-          comparison_features: Json | null
-          target_audience: Json | null
-          testimonials: Json | null
-          value_breakdown: Json | null
-          stats: Json | null
-          faq: Json | null
-          modules: Json | null
-          promo_video_url: string | null
-          countdown_end_date: string | null
         }
         Insert: {
           certificate?: boolean | null
+          comparison_features?: Json | null
+          countdown_end_date?: string | null
           course_type?: Database["public"]["Enums"]["course_type"] | null
           created_at?: string | null
           description?: string | null
           difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text?: string | null
           enrollment_form_fields?: Json | null
+          faq?: Json | null
           featured?: boolean | null
           id?: string
+          instructor_bio?: string | null
+          instructor_id?: string | null
+          instructor_name?: string | null
+          instructor_photo?: string | null
+          instructor_title?: string | null
           language?: string | null
           learning_outcomes?: Json | null
           module_count?: number | null
+          modules?: Json | null
           payment_instructions?: string | null
           payment_methods?: Json | null
           poster_url?: string | null
           price_offer?: number | null
           price_regular?: number | null
+          promo_video_url?: string | null
           requirements?: Json | null
           roadmap?: Json | null
           slug: string
           start_date?: string | null
+          stats?: Json | null
           status?: Database["public"]["Enums"]["course_status"] | null
+          target_audience?: Json | null
+          testimonials?: Json | null
           title: string
           topics?: Json | null
           upcoming?: boolean | null
           updated_at?: string | null
+          value_breakdown?: Json | null
           whats_included?: Json | null
           why_join?: Json | null
-          instructor_id?: string | null
-          instructor_name?: string | null
-          instructor_title?: string | null
-          instructor_bio?: string | null
-          instructor_photo?: string | null
-          comparison_features?: Json | null
-          target_audience?: Json | null
-          testimonials?: Json | null
-          value_breakdown?: Json | null
-          stats?: Json | null
-          faq?: Json | null
-          modules?: Json | null
-          promo_video_url?: string | null
-          countdown_end_date?: string | null
         }
         Update: {
           certificate?: boolean | null
+          comparison_features?: Json | null
+          countdown_end_date?: string | null
           course_type?: Database["public"]["Enums"]["course_type"] | null
           created_at?: string | null
           description?: string | null
           difficulty?: Database["public"]["Enums"]["difficulty_level"] | null
           duration_text?: string | null
           enrollment_form_fields?: Json | null
+          faq?: Json | null
           featured?: boolean | null
           id?: string
+          instructor_bio?: string | null
+          instructor_id?: string | null
+          instructor_name?: string | null
+          instructor_photo?: string | null
+          instructor_title?: string | null
           language?: string | null
           learning_outcomes?: Json | null
           module_count?: number | null
+          modules?: Json | null
           payment_instructions?: string | null
           payment_methods?: Json | null
           poster_url?: string | null
           price_offer?: number | null
           price_regular?: number | null
+          promo_video_url?: string | null
           requirements?: Json | null
           roadmap?: Json | null
           slug?: string
           start_date?: string | null
+          stats?: Json | null
           status?: Database["public"]["Enums"]["course_status"] | null
+          target_audience?: Json | null
+          testimonials?: Json | null
           title?: string
           topics?: Json | null
           upcoming?: boolean | null
           updated_at?: string | null
+          value_breakdown?: Json | null
           whats_included?: Json | null
           why_join?: Json | null
-          instructor_id?: string | null
-          instructor_name?: string | null
-          instructor_title?: string | null
-          instructor_bio?: string | null
-          instructor_photo?: string | null
-          comparison_features?: Json | null
-          target_audience?: Json | null
-          testimonials?: Json | null
-          value_breakdown?: Json | null
-          stats?: Json | null
-          faq?: Json | null
-          modules?: Json | null
-          promo_video_url?: string | null
-          countdown_end_date?: string | null
         }
         Relationships: []
       }
@@ -807,103 +730,261 @@ export type Database = {
           },
         ]
       }
-      portfolio_categories: {
+      live_sessions: {
         Row: {
+          course_id: string
           created_at: string | null
-          display_order: number | null
-          icon: string | null
+          created_by: string | null
+          description: string | null
+          duration_minutes: number | null
+          end_time: string
           id: string
-          name: string
-          slug: string
+          instructor_id: string | null
+          is_active: boolean | null
+          is_recurring: boolean | null
+          meeting_id: string | null
+          meeting_link: string | null
+          meeting_passcode: string | null
+          meeting_platform: string | null
+          notification_sent: boolean | null
+          parent_session_id: string | null
+          recording_added_at: string | null
+          recording_added_by: string | null
+          recording_drive_link: string | null
+          recurrence_end_date: string | null
+          recurrence_pattern: string | null
+          reminder_1h_sent: boolean | null
+          reminder_24h_sent: boolean | null
+          scheduled_date: string
+          session_number: number | null
+          start_time: string
+          status: string | null
+          timezone: string
+          title: string
           updated_at: string | null
         }
         Insert: {
+          course_id: string
           created_at?: string | null
-          display_order?: number | null
-          icon?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          end_time: string
           id?: string
-          name: string
-          slug: string
+          instructor_id?: string | null
+          is_active?: boolean | null
+          is_recurring?: boolean | null
+          meeting_id?: string | null
+          meeting_link?: string | null
+          meeting_passcode?: string | null
+          meeting_platform?: string | null
+          notification_sent?: boolean | null
+          parent_session_id?: string | null
+          recording_added_at?: string | null
+          recording_added_by?: string | null
+          recording_drive_link?: string | null
+          recurrence_end_date?: string | null
+          recurrence_pattern?: string | null
+          reminder_1h_sent?: boolean | null
+          reminder_24h_sent?: boolean | null
+          scheduled_date: string
+          session_number?: number | null
+          start_time: string
+          status?: string | null
+          timezone?: string
+          title: string
           updated_at?: string | null
         }
         Update: {
+          course_id?: string
           created_at?: string | null
-          display_order?: number | null
-          icon?: string | null
+          created_by?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          end_time?: string
           id?: string
-          name?: string
-          slug?: string
+          instructor_id?: string | null
+          is_active?: boolean | null
+          is_recurring?: boolean | null
+          meeting_id?: string | null
+          meeting_link?: string | null
+          meeting_passcode?: string | null
+          meeting_platform?: string | null
+          notification_sent?: boolean | null
+          parent_session_id?: string | null
+          recording_added_at?: string | null
+          recording_added_by?: string | null
+          recording_drive_link?: string | null
+          recurrence_end_date?: string | null
+          recurrence_pattern?: string | null
+          reminder_1h_sent?: boolean | null
+          reminder_24h_sent?: boolean | null
+          scheduled_date?: string
+          session_number?: number | null
+          start_time?: string
+          status?: string | null
+          timezone?: string
+          title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "live_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_sessions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_sessions_instructor_id_fkey"
+            columns: ["instructor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_sessions_parent_session_id_fkey"
+            columns: ["parent_session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "live_sessions_recording_added_by_fkey"
+            columns: ["recording_added_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_preferences: {
+        Row: {
+          created_at: string | null
+          email_enabled: boolean | null
+          id: string
+          new_qa_response: boolean | null
+          push_enabled: boolean | null
+          recording_available: boolean | null
+          reminder_15m_before: boolean | null
+          reminder_1h_before: boolean | null
+          reminder_24h_before: boolean | null
+          session_cancelled: boolean | null
+          session_created: boolean | null
+          session_updated: boolean | null
+          sms_enabled: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email_enabled?: boolean | null
+          id?: string
+          new_qa_response?: boolean | null
+          push_enabled?: boolean | null
+          recording_available?: boolean | null
+          reminder_15m_before?: boolean | null
+          reminder_1h_before?: boolean | null
+          reminder_24h_before?: boolean | null
+          session_cancelled?: boolean | null
+          session_created?: boolean | null
+          session_updated?: boolean | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email_enabled?: boolean | null
+          id?: string
+          new_qa_response?: boolean | null
+          push_enabled?: boolean | null
+          recording_available?: boolean | null
+          reminder_15m_before?: boolean | null
+          reminder_1h_before?: boolean | null
+          reminder_24h_before?: boolean | null
+          session_cancelled?: boolean | null
+          session_created?: boolean | null
+          session_updated?: boolean | null
+          sms_enabled?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       portfolio_projects: {
         Row: {
-          category: string | null
-          client_name: string | null
-          country: string | null
+          category: string
+          challenge: string | null
           created_at: string | null
-          description: string | null
-          duration_text: string | null
-          featured: boolean | null
-          gallery_images: Json | null
-          hero_image_url: string | null
+          demo_url: string | null
+          description: string
+          github_url: string | null
           id: string
-          results: Json | null
-          services: Json | null
+          image_url: string | null
+          is_featured: boolean | null
+          key_outcomes: Json | null
           slug: string
-          status: Database["public"]["Enums"]["project_status"] | null
-          summary: string | null
-          team_size: string | null
-          technologies: Json | null
-          challenges: Json | null
-          solutions: Json | null
+          solution: string | null
+          technologies: string[]
+          testimonial_author: string | null
+          testimonial_content: string | null
+          testimonial_role: string | null
           title: string
           updated_at: string | null
         }
         Insert: {
-          category?: string | null
-          client_name?: string | null
-          country?: string | null
+          category: string
+          challenge?: string | null
           created_at?: string | null
-          description?: string | null
-          duration_text?: string | null
-          featured?: boolean | null
-          gallery_images?: Json | null
-          hero_image_url?: string | null
+          demo_url?: string | null
+          description: string
+          github_url?: string | null
           id?: string
-          results?: Json | null
-          services?: Json | null
+          image_url?: string | null
+          is_featured?: boolean | null
+          key_outcomes?: Json | null
           slug: string
-          status?: Database["public"]["Enums"]["project_status"] | null
-          summary?: string | null
-          team_size?: string | null
-          technologies?: Json | null
-          challenges?: Json | null
-          solutions?: Json | null
+          solution?: string | null
+          technologies: string[]
+          testimonial_author?: string | null
+          testimonial_content?: string | null
+          testimonial_role?: string | null
           title: string
           updated_at?: string | null
         }
         Update: {
-          category?: string | null
-          client_name?: string | null
-          country?: string | null
+          category?: string
+          challenge?: string | null
           created_at?: string | null
-          description?: string | null
-          duration_text?: string | null
-          featured?: boolean | null
-          gallery_images?: Json | null
-          hero_image_url?: string | null
+          demo_url?: string | null
+          description?: string
+          github_url?: string | null
           id?: string
-          results?: Json | null
-          services?: Json | null
-          slug: string
-          status?: Database["public"]["Enums"]["project_status"] | null
-          summary?: string | null
-          team_size?: string | null
-          technologies?: Json | null
-          challenges?: Json | null
-          solutions?: Json | null
+          image_url?: string | null
+          is_featured?: boolean | null
+          key_outcomes?: Json | null
+          slug?: string
+          solution?: string | null
+          technologies?: string[]
+          testimonial_author?: string | null
+          testimonial_content?: string | null
+          testimonial_role?: string | null
           title?: string
           updated_at?: string | null
         }
@@ -917,8 +998,11 @@ export type Database = {
           email: string | null
           full_name: string | null
           id: string
-          phone: string | null
+          linkedin_url: string | null
+          portfolio_url: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
           updated_at: string | null
+          website_url: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -927,8 +1011,11 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id: string
-          phone?: string | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
           updated_at?: string | null
+          website_url?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -937,62 +1024,77 @@ export type Database = {
           email?: string | null
           full_name?: string | null
           id?: string
-          phone?: string | null
+          linkedin_url?: string | null
+          portfolio_url?: string | null
+          role?: Database["public"]["Enums"]["app_role"] | null
           updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      schema_versions: {
-        Row: {
-          applied_at: string | null
-          description: string | null
-          id: number
-          version_name: string
-        }
-        Insert: {
-          applied_at?: string | null
-          description?: string | null
-          id?: number
-          version_name: string
-        }
-        Update: {
-          applied_at?: string | null
-          description?: string | null
-          id?: number
-          version_name?: string
+          website_url?: string | null
         }
         Relationships: []
       }
-      user_roles: {
+      session_qa: {
         Row: {
+          content: string
           created_at: string | null
           id: string
-          role: Database["public"]["Enums"]["app_role"]
+          instructor_response: string | null
+          is_answered: boolean | null
+          is_pinned: boolean | null
+          question_type: string | null
+          responded_at: string | null
+          responded_by: string | null
+          session_id: string
+          updated_at: string | null
+          upvotes: number | null
           user_id: string
         }
         Insert: {
+          content: string
           created_at?: string | null
           id?: string
-          role: Database["public"]["Enums"]["app_role"]
+          instructor_response?: string | null
+          is_answered?: boolean | null
+          is_pinned?: boolean | null
+          question_type?: string | null
+          responded_at?: string | null
+          responded_by?: string | null
+          session_id: string
+          updated_at?: string | null
+          upvotes?: number | null
           user_id: string
         }
         Update: {
+          content?: string
           created_at?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          instructor_response?: string | null
+          is_answered?: boolean | null
+          is_pinned?: boolean | null
+          question_type?: string | null
+          responded_at?: string | null
+          responded_by?: string | null
+          session_id?: string
+          updated_at?: string | null
+          upvotes?: number | null
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_roles_user_id_fkey"
+            foreignKeyName: "session_qa_responded_by_fkey"
+            columns: ["responded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_qa_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "session_qa_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -1000,73 +1102,43 @@ export type Database = {
           },
         ]
       }
-      visitor_analytics: {
-        Row: {
-          country: string | null
-          created_at: string | null
-          device_type: string | null
-          id: string
-          ip_address: unknown
-          page_url: string
-          referrer: string | null
-          session_id: string
-          user_agent: string | null
-        }
-        Insert: {
-          country?: string | null
-          created_at?: string | null
-          device_type?: string | null
-          id?: string
-          ip_address?: unknown
-          page_url: string
-          referrer?: string | null
-          session_id: string
-          user_agent?: string | null
-        }
-        Update: {
-          country?: string | null
-          created_at?: string | null
-          device_type?: string | null
-          id?: string
-          ip_address?: unknown
-          page_url?: string
-          referrer?: string | null
-          session_id?: string
-          user_agent?: string | null
-        }
-        Relationships: []
-      }
       upcoming_programs: {
         Row: {
           created_at: string | null
-          display_order: number | null
+          description: string | null
+          difficulty: string | null
+          duration: string | null
           id: string
-          image_url: string
-          registration_link: string
-          start_date: string
-          status: Database["public"]["Enums"]["program_status"]
+          image_url: string | null
+          notify_list: Json | null
+          start_date: string | null
+          status: string | null
           title: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          display_order?: number | null
+          description?: string | null
+          difficulty?: string | null
+          duration?: string | null
           id?: string
-          image_url: string
-          registration_link: string
-          start_date: string
-          status?: Database["public"]["Enums"]["program_status"]
+          image_url?: string | null
+          notify_list?: Json | null
+          start_date?: string | null
+          status?: string | null
           title: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          display_order?: number | null
+          description?: string | null
+          difficulty?: string | null
+          duration?: string | null
           id?: string
-          image_url?: string
-          registration_link?: string
-          start_date?: string
-          status?: Database["public"]["Enums"]["program_status"]
+          image_url?: string | null
+          notify_list?: Json | null
+          start_date?: string | null
+          status?: string | null
           title?: string
           updated_at?: string | null
         }
@@ -1077,16 +1149,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_user_roles: {
-        Args: {
-          _user_id: string
-        }
-        Returns: Database["public"]["Enums"]["app_role"][]
-      }
       has_role: {
         Args: {
-          _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
       }
@@ -1113,12 +1179,12 @@ type PublicSchema = Database[Extract<keyof Database, "public">]
 export type Tables<
   PublicTableNameOrOptions extends
   | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
-  | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+  | { schema: Exclude<keyof Database, '__InternalSupabase'> },
+  TableName extends PublicTableNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
     Database[PublicTableNameOrOptions["schema"]]["Views"])
   : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
+> = PublicTableNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
     Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
@@ -1138,11 +1204,11 @@ export type Tables<
 export type TablesInsert<
   PublicTableNameOrOptions extends
   | keyof PublicSchema["Tables"]
-  | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+  | { schema: Exclude<keyof Database, '__InternalSupabase'> },
+  TableName extends PublicTableNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
   : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
+> = PublicTableNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
     Insert: infer I
   }
@@ -1159,11 +1225,11 @@ export type TablesInsert<
 export type TablesUpdate<
   PublicTableNameOrOptions extends
   | keyof PublicSchema["Tables"]
-  | { schema: keyof Database },
-  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+  | { schema: Exclude<keyof Database, '__InternalSupabase'> },
+  TableName extends PublicTableNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
   : never = never,
-> = PublicTableNameOrOptions extends { schema: keyof Database }
+> = PublicTableNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
     Update: infer U
   }
@@ -1180,11 +1246,11 @@ export type TablesUpdate<
 export type Enums<
   PublicEnumNameOrOptions extends
   | keyof PublicSchema["Enums"]
-  | { schema: keyof Database },
-  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+  | { schema: Exclude<keyof Database, '__InternalSupabase'> },
+  EnumName extends PublicEnumNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
   : never = never,
-> = PublicEnumNameOrOptions extends { schema: keyof Database }
+> = PublicEnumNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
   ? PublicSchema["Enums"][PublicEnumNameOrOptions]
@@ -1193,13 +1259,13 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
   | keyof PublicSchema["CompositeTypes"]
-  | { schema: keyof Database },
+  | { schema: Exclude<keyof Database, '__InternalSupabase'> },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
+    schema: Exclude<keyof Database, '__InternalSupabase'>
   }
   ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
   : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+> = PublicCompositeTypeNameOrOptions extends { schema: Exclude<keyof Database, '__InternalSupabase'> }
   ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
   ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]

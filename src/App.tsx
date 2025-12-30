@@ -38,6 +38,7 @@ const HelpCenter = lazy(() => import("./pages/HelpCenter"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const MyCertificates = lazy(() => import("./pages/MyCertificates"));
+const StudentLiveSessions = lazy(() => import("./pages/StudentLiveSessions"));
 const LearnPage = lazy(() => import("./pages/LearnPage"));
 
 // Lazy load instructor pages
@@ -45,6 +46,8 @@ const InstructorLayout = lazy(() => import("./components/layouts/InstructorLayou
 const InstructorDashboard = lazy(() => import("./pages/instructor/InstructorDashboard"));
 const InstructorCourses = lazy(() => import("./pages/instructor/InstructorCourses"));
 const InstructorCourseEditor = lazy(() => import("./pages/instructor/InstructorCourseEditor"));
+// const CourseCurriculum = lazy(() => import("@/pages/instructor/CourseCurriculum"));
+const InstructorLiveSessions = lazy(() => import("./pages/instructor/InstructorLiveSessions"));
 
 // Lazy load admin pages
 const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
@@ -63,6 +66,7 @@ const AdminBlogEditor = lazy(() => import("./pages/admin/AdminBlogEditor"));
 const AdminBlogCategories = lazy(() => import("./pages/admin/AdminBlogCategories"));
 const AdminPrograms = lazy(() => import("./pages/admin/AdminPrograms"));
 const AdminProgramEditor = lazy(() => import("./pages/admin/AdminProgramEditor"));
+const AdminLiveSessions = lazy(() => import("./pages/admin/AdminLiveSessions"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -140,6 +144,14 @@ const App = () => (
                     }
                   />
                   <Route
+                    path="/my-sessions"
+                    element={
+                      <ProtectedRoute>
+                        <StudentLiveSessions />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
                     path="/profile/settings"
                     element={
                       <ProtectedRoute>
@@ -175,7 +187,8 @@ const App = () => (
                     <Route index element={<InstructorDashboard />} />
                     <Route path="courses" element={<InstructorCourses />} />
 
-                    <Route path="courses/:id/edit" element={<InstructorCourseEditor />} />
+                    {/* <Route path="courses/:courseId/curriculum" element={<CourseCurriculum />} /> */}
+                    <Route path="live-sessions" element={<InstructorLiveSessions />} />
                   </Route>
 
                   {/* Admin Routes */}
@@ -224,6 +237,14 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <AdminLessonEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/live-sessions"
+                    element={
+                      <ProtectedRoute>
+                        <AdminLiveSessions />
                       </ProtectedRoute>
                     }
                   />

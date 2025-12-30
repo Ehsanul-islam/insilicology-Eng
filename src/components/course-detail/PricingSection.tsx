@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { 
-  Check, ArrowRight, Flame, Users, Shield, Clock, RefreshCw, Award
+import {
+  Check, ArrowRight, Flame, Users, Shield, Clock, Star, Video
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CountdownTimer from './CountdownTimer';
@@ -55,9 +55,7 @@ const PricingSection = ({
         <h2 className="text-2xl lg:text-[30px] font-bold mb-3 text-foreground">
           Join the Program Today
         </h2>
-        <p className="text-muted-foreground text-base max-w-xl mx-auto">
-          Join the n8n AI program today — learn automation and build a new skill for yourself
-        </p>
+
       </motion.div>
 
       {/* Countdown Timer - Vibe Academy Minimalistic Style */}
@@ -66,7 +64,7 @@ const PricingSection = ({
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-[#f5f7ff] rounded-2xl p-6 border-2 border-dashed border-pink-300/50 text-center"
+          className="bg-[#f5f7ff] rounded-2xl p-4 border-2 border-dashed border-pink-300/50 text-center"
         >
           <p className="text-[#ec4899] mb-4 text-base font-medium">
             When the offer ends, the price will go up to ${Number(priceRegular).toLocaleString()}!
@@ -197,27 +195,27 @@ const PricingSection = ({
           </motion.div>
 
           {/* Trust Indicators */}
-          <div className="mt-6 grid grid-cols-2 gap-4">
+          <div className="mt-6 grid grid-cols-2 gap-x-32 gap-y-3 w-fit mx-auto">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Shield className="w-4 h-4 text-green-600" />
+              <Shield className="w-4 h-4 text-green-600 shrink-0" />
               <span>Secure Payment</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Clock className="w-4 h-4 text-blue-600" />
+              <Clock className="w-4 h-4 text-blue-600 shrink-0" />
               <span>Lifetime Access</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <RefreshCw className="w-4 h-4 text-purple-600" />
-              <span>100% Money Back</span>
+              <Star className="w-4 h-4 text-purple-600 shrink-0" />
+              <span>Best Instructor</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Award className="w-4 h-4 text-amber-600" />
-              <span>Free Season 2</span>
+              <Video className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>Class Recordings</span>
             </div>
           </div>
 
           {/* Social Proof */}
-          <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 text-center">
+          <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-center">
             <p className="text-sm text-muted-foreground">
               Trusted by <span className="font-semibold text-foreground">{enrolledCount.toLocaleString()}+</span> Students
             </p>

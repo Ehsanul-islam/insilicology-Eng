@@ -279,7 +279,7 @@ const CourseDetail = () => {
               SECTION 5: CURRICULUM
               - Module-based accordion with lessons
           ═══════════════════════════════════════════════════════════════════ */}
-          {lessons.length > 0 && (
+          {(lessons.length > 0 || modules.length > 0) && (
             <section className="container-custom">
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -333,41 +333,43 @@ const CourseDetail = () => {
               SECTION 7.5: EVERYTHING YOU'RE GETTING
               - Value breakdown with purple banners and itemized list
           ═══════════════════════════════════════════════════════════════════ */}
-          {valueBreakdown.length > 0 && (
-            <EverythingYoureGettingSection
-              valueBreakdown={valueBreakdown}
-              totalValue={valueBreakdown.reduce((sum, item) => sum + (item.original_price || 0), 0)}
-              priceOffer={course.price_offer}
-              priceRegular={course.price_regular}
-              onEnrollClick={handleEnroll}
-              isEnrolled={isEnrolled}
-            />
-          )}
-
           {/* ═══════════════════════════════════════════════════════════════════
-              SECTION 8: PRICING & ENROLLMENT
-              - Value breakdown, countdown timer, enrollment CTA
+              SECTION 7.5 & 8: EVERYTHING YOU'RE GETTING & PRICING
+              - Grouped to eliminate vertical spacing
           ═══════════════════════════════════════════════════════════════════ */}
-          <section className="container-custom">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="max-w-2xl mx-auto"
-            >
-              <PricingSection
+          <div>
+            {valueBreakdown.length > 0 && (
+              <EverythingYoureGettingSection
+                valueBreakdown={valueBreakdown}
+                totalValue={valueBreakdown.reduce((sum, item) => sum + (item.original_price || 0), 0)}
                 priceOffer={course.price_offer}
                 priceRegular={course.price_regular}
-                valueBreakdown={valueBreakdown.length > 0 ? valueBreakdown : undefined}
-                countdownEndDate={course.countdown_end_date}
                 onEnrollClick={handleEnroll}
                 isEnrolled={isEnrolled}
-                upcoming={course.upcoming || false}
-                whatsIncluded={whatsIncluded.length > 0 ? whatsIncluded : undefined}
               />
-            </motion.div>
-          </section>
+            )}
+
+            <section className="container-custom pt-8 lg:pt-12">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="max-w-2xl mx-auto"
+              >
+                <PricingSection
+                  priceOffer={course.price_offer}
+                  priceRegular={course.price_regular}
+                  valueBreakdown={valueBreakdown.length > 0 ? valueBreakdown : undefined}
+                  countdownEndDate={course.countdown_end_date}
+                  onEnrollClick={handleEnroll}
+                  isEnrolled={isEnrolled}
+                  upcoming={course.upcoming || false}
+                  whatsIncluded={whatsIncluded.length > 0 ? whatsIncluded : undefined}
+                />
+              </motion.div>
+            </section>
+          </div>
 
           {/* ═══════════════════════════════════════════════════════════════════
               SECTION 9: FAQ

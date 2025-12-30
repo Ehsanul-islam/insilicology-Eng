@@ -10,7 +10,8 @@ import {
     LogOut,
     Menu,
     X,
-    GraduationCap
+    GraduationCap,
+    Video
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { startCase } from 'lodash';
@@ -24,6 +25,7 @@ const InstructorLayout = () => {
     const navigation = [
         { name: 'Dashboard', href: '/instructor', icon: LayoutDashboard },
         { name: 'My Courses', href: '/instructor/courses', icon: BookOpen },
+        { name: 'Live Sessions', href: '/instructor/live-sessions', icon: Video },
         // { name: 'Students', href: '/instructor/students', icon: Users }, // Future
         // { name: 'Earnings', href: '/instructor/earnings', icon: DollarSign }, // Future
         { name: 'Settings', href: '/profile/settings', icon: Settings },

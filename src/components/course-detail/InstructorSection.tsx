@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { 
+import {
   Twitter, Linkedin, Github, Globe, Youtube, Instagram,
   Award, Star, Briefcase
 } from 'lucide-react';
@@ -17,6 +17,7 @@ interface SocialLinks {
 interface InstructorSectionProps {
   name: string;
   title?: string;
+  specialization?: string;
   bio?: string;
   photo?: string;
   socialLinks?: SocialLinks;
@@ -39,6 +40,7 @@ const socialIconMap: Record<string, React.ComponentType<{ className?: string }>>
 const InstructorSection = ({
   name,
   title,
+  specialization,
   bio,
   photo,
   socialLinks,
@@ -73,7 +75,7 @@ const InstructorSection = ({
           <div className="relative pt-12 pb-8 px-6 text-center">
             {/* Gradient Background */}
             <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-purple-50 to-transparent dark:from-pink-950/20 dark:via-purple-950/20 dark:to-transparent" />
-            
+
             {/* Photo Container */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -84,7 +86,7 @@ const InstructorSection = ({
             >
               {/* Glow Effect */}
               <div className="absolute -inset-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full blur-xl opacity-30" />
-              
+
               {/* Photo */}
               <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl mx-auto">
                 {photo ? (
@@ -123,20 +125,22 @@ const InstructorSection = ({
               className="relative flex flex-wrap justify-center gap-2 mb-4"
             >
               {title && (
-                <Badge 
-                  variant="secondary" 
+                <Badge
+                  variant="secondary"
                   className="bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-700 dark:text-pink-300 border-0 px-4 py-1.5"
                 >
                   <Briefcase className="w-3.5 h-3.5 mr-1.5" />
                   {title}
                 </Badge>
               )}
-              <Badge 
-                variant="secondary"
-                className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-0 px-4 py-1.5"
-              >
-                Automation Expert
-              </Badge>
+              {specialization && (
+                <Badge
+                  variant="secondary"
+                  className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-0 px-4 py-1.5"
+                >
+                  {specialization}
+                </Badge>
+              )}
             </motion.div>
 
             {/* Bio */}
@@ -146,7 +150,7 @@ const InstructorSection = ({
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.3 }}
-                className="relative text-muted-foreground leading-relaxed max-w-md mx-auto"
+                className="relative text-muted-foreground text-sm leading-relaxed max-w-md mx-auto"
               >
                 {bio}
               </motion.p>
@@ -192,7 +196,7 @@ const InstructorSection = ({
               {Object.entries(socialLinks).map(([platform, url]) => {
                 if (!url) return null;
                 const Icon = socialIconMap[platform] || Globe;
-                
+
                 return (
                   <motion.a
                     key={platform}
@@ -210,12 +214,7 @@ const InstructorSection = ({
             </motion.div>
           )}
 
-          {/* Footer CTA */}
-          <div className="px-6 py-4 bg-gradient-to-r from-pink-50 to-purple-50 dark:from-pink-950/20 dark:to-purple-950/20 border-t border-slate-100 dark:border-slate-800">
-            <p className="text-center text-sm text-muted-foreground">
-              Join {name}'s course to master automation
-            </p>
-          </div>
+
         </div>
       </motion.div>
     </div>

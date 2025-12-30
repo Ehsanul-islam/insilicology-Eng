@@ -129,7 +129,7 @@ const VibeHeroSection = memo(({
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-left mb-2"
+          className="text-left mb-4"
         >
           {/* Title - Black & Bold */}
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight text-black mb-4">
@@ -139,37 +139,37 @@ const VibeHeroSection = memo(({
           {/* Meta Row: Batch & Instructor */}
           <div className="flex flex-wrap items-center gap-4 text-sm">
             {batch && (
-              <Badge variant="secondary" className="bg-[#dcfce7] text-[#166534] hover:bg-[#dcfce7]/80 px-2 py-0.5 text-xs font-medium border-0">
+              <Badge variant="secondary" className="bg-[#dcfce7] text-[#166534] hover:bg-[#dcfce7]/80 px-2.5 py-0.5 text-xs font-semibold border-0 rounded-md">
                 <Clock className="w-3.5 h-3.5 mr-1.5" />
                 {batch}
               </Badge>
             )}
 
             {instructorName && (
-              <div className="flex items-center text-gray-700 font-medium">
-                <span className="text-gray-500 mr-2">Speaker:</span>
-                {instructorName}
+              <div className="flex items-center text-gray-900 font-medium">
+                <span className="text-gray-500 mr-1.5">Speaker:</span>
+                <span className='font-semibold text-[#6d28d9]'>{instructorName}</span>
               </div>
             )}
           </div>
         </motion.div>
 
-        {/* 72/28 Grid Layout with minimal gap */}
-        <div className="grid lg:grid-cols-[72fr_28fr] gap-1">
+        {/* 65/35 Grid Layout for wider card */}
+        <div className="grid lg:grid-cols-[65fr_35fr] gap-6 lg:gap-8 items-start">
           {/* Left Column (65%) - Poster Card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.72, x: -50 }}
-            animate={{ opacity: 1, scale: 0.8, x: 0 }}
+            initial={{ opacity: 0, scale: 0.95, x: -20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="relative origin-top-left"
+            className="relative"
           >
             {/* Video Container with Glow */}
             <div className="relative group">
               {/* Glow Effect */}
-              <div className="absolute -inset-3 bg-gradient-to-r from-pink-500/30 via-purple-500/30 to-indigo-500/30 rounded-3xl blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+              <div className="absolute -inset-3 bg-gradient-to-r from-pink-500/20 via-purple-500/20 to-indigo-500/20 rounded-3xl blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
 
               {/* Video Frame */}
-              <div className="relative rounded-2xl overflow-hidden vibe-glass">
+              <div className="relative rounded-2xl overflow-hidden vibe-glass shadow-lg">
                 <div className="relative aspect-video bg-slate-900/80 rounded-2xl overflow-hidden">
                   {youtubeId ? (
                     <iframe
@@ -192,7 +192,7 @@ const VibeHeroSection = memo(({
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
                         <motion.div
                           whileHover={{ scale: 1.1 }}
-                          className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center cursor-pointer"
+                          className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center cursor-pointer border border-white/30"
                         >
                           <Play className="w-6 h-6 text-white ml-1" fill="white" />
                         </motion.div>
@@ -210,14 +210,14 @@ const VibeHeroSection = memo(({
                 </div>
               </div>
 
-              {/* Premium Contents Badge */}
+              {/* Premium Contents Badge - Re-positioned */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.8 }}
-                className="absolute -right-3 -bottom-3 lg:-right-6 lg:-bottom-5"
+                className="absolute right-4 bottom-4"
               >
-                <div className="px-3 py-1.5 rounded-lg bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 shadow-xl">
+                <div className="px-3 py-1.5 rounded-full bg-emerald-50/90 backdrop-blur-md border border-emerald-100 shadow-sm">
                   <div className="flex items-center gap-1.5">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-emerald-700 text-xs font-semibold">Premium Contents</span>
@@ -229,100 +229,100 @@ const VibeHeroSection = memo(({
 
           {/* Right Column (35%) - Info Sidebar */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.72, x: 50 }}
-            animate={{ opacity: 1, scale: 0.8, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="relative origin-top-left"
+            className="relative"
           >
-            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-xl h-full flex flex-col">
+            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] h-full flex flex-col">
               {/* Section Title */}
-              <h3 className="text-xl font-bold text-gray-900 mb-6">
+              <h3 className="text-2xl font-bold text-blue-600 mb-6">
                 Course Details
               </h3>
 
-              {/* Info Items */}
-              <div className="grid grid-cols-2 gap-x-4 gap-y-6 flex-1">
+              {/* Info Items - Optimized Grid */}
+              <div className="grid grid-cols-2 gap-x-8 gap-y-6 flex-1 mb-8">
                 {/* Start Date */}
                 {startDate && (
-                  <div className="flex gap-3">
-                    <Calendar className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-0.5">Start</p>
-                      <p className="text-sm text-gray-900 font-bold">{startDate}</p>
+                  <div className="group">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Calendar className="w-5 h-5 text-blue-600" />
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Start</p>
                     </div>
+                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{startDate}</p>
                   </div>
                 )}
 
                 {/* End Date */}
                 {endDate && (
-                  <div className="flex gap-3">
-                    <Calendar className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-0.5">End</p>
-                      <p className="text-sm text-gray-900 font-bold">{endDate}</p>
+                  <div className="group">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Calendar className="w-5 h-5 text-blue-600" />
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">End</p>
                     </div>
+                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{endDate}</p>
                   </div>
                 )}
 
                 {/* Time */}
                 {courseTime && (
-                  <div className="flex gap-3">
-                    <Clock className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-0.5">Time</p>
-                      <p className="text-sm text-gray-900 font-bold">{courseTime}</p>
+                  <div className="group">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Clock className="w-5 h-5 text-amber-600" />
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Time</p>
                     </div>
+                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{courseTime}</p>
                   </div>
                 )}
 
                 {/* Capacity */}
                 {(capacity || participantCount) && (
-                  <div className="flex gap-3">
-                    <Users className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-0.5">Capacity</p>
-                      <p className="text-sm text-gray-900 font-bold">
-                        {capacity || `${participantCount} Seats`}
-                      </p>
+                  <div className="group">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Users className="w-5 h-5 text-emerald-600" />
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Capacity</p>
                     </div>
+                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">
+                      {capacity || `${participantCount} Seats`}
+                    </p>
                   </div>
                 )}
 
                 {/* Duration */}
                 {duration && (
-                  <div className="flex gap-3">
-                    <Clock className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-0.5">Duration</p>
-                      <p className="text-sm text-gray-900 font-bold">{duration}</p>
+                  <div className="group">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <Clock className="w-5 h-5 text-purple-600" />
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Duration</p>
                     </div>
+                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{duration}</p>
                   </div>
                 )}
 
                 {/* Modules Count */}
                 {modulesCount && (
-                  <div className="flex gap-3">
-                    <BookOpen className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-0.5">Modules</p>
-                      <p className="text-sm text-gray-900 font-bold">{modulesCount} Modules</p>
+                  <div className="group">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <BookOpen className="w-5 h-5 text-indigo-600" />
+                      <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Modules</p>
                     </div>
+                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{modulesCount} Modules</p>
                   </div>
                 )}
               </div>
 
               {/* Divider */}
-              <hr className="border-gray-200 my-6" />
+              <div className="h-px bg-gray-100 w-full mb-6" />
 
               {/* Pricing Section */}
               <div className="mb-6">
                 {priceRegular && priceOffer ? (
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-gray-400 line-through text-sm font-medium">
-                      ${priceRegular.toLocaleString()}
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-400 line-through text-lg font-semibold">
+                      ${priceRegular}
                     </span>
-                    <span className="text-red-600 text-2xl font-bold">
-                      ${priceOffer.toLocaleString()}
+                    <span className="text-[#ef4444] text-[32px] font-black tracking-tight leading-none">
+                      ${priceOffer}
                     </span>
                   </div>
                 ) : null}
@@ -331,7 +331,7 @@ const VibeHeroSection = memo(({
               {/* CTA Button */}
               <Button
                 onClick={onEnrollClick}
-                className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black font-bold py-6 text-base rounded-md mt-auto transition-all"
+                className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black font-extrabold py-3.5 text-[15px] rounded-lg shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
               >
                 {isEnrolled ? 'Continue Learning' : 'Enroll Now'}
               </Button>
@@ -344,15 +344,15 @@ const VibeHeroSection = memo(({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
-          className="flex flex-col items-center gap-2 mt-4 mb-4 cursor-pointer relative z-20"
+          className="flex flex-col items-center gap-2 mt-8 mb-4 cursor-pointer relative z-20"
           onClick={scrollToContent}
         >
-          <span className="text-gray-400 text-sm">Scroll to explore</span>
+          <span className="text-gray-400 text-xs font-medium uppercase tracking-widest opacity-70">Scroll to explore</span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
           >
-            <ChevronDown className="w-6 h-6 text-gray-400" />
+            <ChevronDown className="w-5 h-5 text-gray-300" />
           </motion.div>
         </motion.div>
       </div>

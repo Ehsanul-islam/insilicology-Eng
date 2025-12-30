@@ -44,6 +44,7 @@ import {
   Upload,
   Loader2,
   X,
+  Database,
 } from 'lucide-react';
 
 // Import shared types, utilities, and constants
@@ -74,7 +75,7 @@ const AdminCourseEditor = () => {
 
   const fetchInstructors = useCallback(async () => {
     try {
-      const { data: roles, error: rolesError } = await supabase
+      const { data: roles, error: rolesError } = await (supabase as any)
         .from('user_roles')
         .select('user_id')
         .eq('role', 'instructor');
@@ -114,6 +115,7 @@ const AdminCourseEditor = () => {
       if (error) throw error;
 
       if (data) {
+        const courseData = data as any;
         setFormData({
           title: data.title || '',
           slug: data.slug || '',
@@ -129,7 +131,7 @@ const AdminCourseEditor = () => {
           price_regular: data.price_regular?.toString() || '',
           price_offer: data.price_offer?.toString() || '',
           start_date: data.start_date ? new Date(data.start_date) : undefined,
-          end_date: data.end_date ? new Date(data.end_date) : undefined,
+          end_date: courseData.end_date ? new Date(courseData.end_date) : undefined,
           duration_text: data.duration_text || '',
           module_count: data.module_count?.toString() || '',
           instructor_id: data.instructor_id || '',
@@ -147,16 +149,16 @@ const AdminCourseEditor = () => {
             ? data.topics as string[]
             : [''],
           comparison_features: Array.isArray(data.comparison_features) && data.comparison_features.length > 0
-            ? data.comparison_features as ComparisonFeature[]
+            ? data.comparison_features as unknown as ComparisonFeature[]
             : [{ feature: '', us: true, others: false }],
           target_audience: Array.isArray(data.target_audience) && data.target_audience.length > 0
-            ? data.target_audience as TargetAudienceCard[]
+            ? data.target_audience as unknown as TargetAudienceCard[]
             : [{ title: '', description: '', icon: 'GraduationCap' }],
           testimonials: Array.isArray(data.testimonials) && data.testimonials.length > 0
-            ? data.testimonials as Testimonial[]
+            ? data.testimonials as unknown as Testimonial[]
             : [{ name: '', role: '', text: '', video_url: '', rating: 5 }],
           value_breakdown: Array.isArray(data.value_breakdown) && data.value_breakdown.length > 0
-            ? (data.value_breakdown as { item: string; original_price: number; is_premium?: boolean; sub_text?: string }[]).map(v => ({
+            ? (data.value_breakdown as unknown as { item: string; original_price: number; is_premium?: boolean; sub_text?: string }[]).map(v => ({
               item: v.item,
               original_price: v.original_price?.toString() || '',
               is_premium: v.is_premium || false,
@@ -173,18 +175,18 @@ const AdminCourseEditor = () => {
             batch: (data.stats as Record<string, string>)?.batch || '',
           },
           faq: Array.isArray(data.faq) && data.faq.length > 0
-            ? data.faq as FAQItem[]
+            ? data.faq as unknown as FAQItem[]
             : [{ question: '', answer: '' }],
           whats_included: Array.isArray(data.whats_included) && data.whats_included.length > 0
             ? data.whats_included as string[]
             : [''],
           modules: Array.isArray(data.modules) && data.modules.length > 0
-            ? data.modules as ModuleItem[]
+            ? data.modules as unknown as ModuleItem[]
             : [{ title: '', subtitle: '', description: '', icon: 'Database' }],
           payment_methods: Array.isArray(data.payment_methods) ? data.payment_methods as string[] : [],
           payment_instructions: data.payment_instructions || '',
           enrollment_form_fields: Array.isArray(data.enrollment_form_fields)
-            ? data.enrollment_form_fields as EnrollmentFormField[]
+            ? data.enrollment_form_fields as unknown as EnrollmentFormField[]
             : [],
         });
       }
@@ -249,7 +251,7 @@ const AdminCourseEditor = () => {
         learning_outcomes: formData.learning_outcomes.filter(o => o.trim()),
         requirements: formData.requirements.filter(r => r.trim()),
         topics: formData.topics.filter(t => t.trim()),
-        comparison_features: formData.comparison_features.filter(c => c.feature.trim()),
+        comparison_features: formData.comparison_features.filter(c => c.feature.trim()) as any,
         target_audience: formData.target_audience.filter(t => t.title.trim()),
         testimonials: formData.testimonials.filter(t => t.name.trim()),
         value_breakdown: formData.value_breakdown
@@ -282,7 +284,7 @@ const AdminCourseEditor = () => {
       if (isEditing) {
         const { error } = await supabase
           .from('courses')
-          .update(courseData)
+          .update(courseData as any)
           .eq('id', id);
 
         if (error) throw error;
@@ -290,7 +292,7 @@ const AdminCourseEditor = () => {
       } else {
         const { error } = await supabase
           .from('courses')
-          .insert([courseData]);
+          .insert([courseData] as any);
 
         if (error) throw error;
         toast.success('Course created successfully');
@@ -343,10 +345,10 @@ const AdminCourseEditor = () => {
       return;
     }
 
-    // Validate file size (2MB max)
-    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+    // Validate file size (5MB max)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
     if (file.size > maxSize) {
-      toast.error('Image size must be less than 2MB');
+      toast.error('Image size must be less than 5MB');
       return;
     }
 
@@ -668,7 +670,7 @@ const AdminCourseEditor = () => {
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          JPG, PNG or GIF. Max size 2MB.
+                          JPG, PNG or GIF. Max size 5MB.
                         </p>
                       </div>
                       {formData.poster_url && (

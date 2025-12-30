@@ -87,12 +87,12 @@ const CountdownTimer = ({ endDate, onExpire, variant = 'default' }: CountdownTim
   // Hero variant with larger display - Vibe Academy minimalistic style
   if (variant === 'hero') {
     return (
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-center gap-2 text-sm text-[#ec4899] font-medium">
           <Clock className="w-4 h-4" />
           <span>Limited Time Offer Ends In</span>
         </div>
-        <div className="flex gap-3 justify-center">
+        <div className="flex gap-2 justify-center">
           {[
             { value: timeLeft.days, label: 'Days' },
             { value: timeLeft.hours, label: 'Hours' },
@@ -106,20 +106,20 @@ const CountdownTimer = ({ endDate, onExpire, variant = 'default' }: CountdownTim
               transition={{ delay: index * 0.1 }}
               className="flex flex-col items-center"
             >
-              <div className="w-20 h-20 rounded-xl bg-white flex items-center justify-center shadow-sm border border-slate-100">
+              <div className="w-14 h-14 rounded-lg bg-white flex items-center justify-center shadow-sm border border-slate-100">
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={item.value}
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="text-3xl font-bold font-mono text-[#ec4899]"
+                    className="text-2xl font-bold font-mono text-[#ec4899]"
                   >
                     {String(item.value).padStart(2, '0')}
                   </motion.span>
                 </AnimatePresence>
               </div>
-              <span className="text-sm text-muted-foreground mt-2 font-normal">{item.label}</span>
+              <span className="text-[10px] text-muted-foreground mt-1 font-medium uppercase tracking-wide">{item.label}</span>
             </motion.div>
           ))}
         </div>
