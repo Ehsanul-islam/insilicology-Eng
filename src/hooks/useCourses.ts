@@ -2,7 +2,11 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
 
-export type Course = Tables<'courses'>;
+export type Course = Tables<'courses'> & {
+  end_date?: string | null;
+  course_time?: string | null;
+  participant_count?: number | null;
+};
 
 export type CourseFilters = {
   search: string;
@@ -95,7 +99,7 @@ export const useCourses = (filters: CourseFilters, pagination: PaginationState) 
 
         if (fetchError) throw fetchError;
 
-        setCourses(data || []);
+        setCourses((data as unknown as Course[]) || []);
         setTotalCount(count || 0);
       } catch (err) {
         console.error('Error fetching courses:', err);
@@ -140,7 +144,7 @@ export const useCourseDetail = (slug: string | undefined) => {
         .single();
 
       if (courseError) throw courseError;
-      setCourse(courseData);
+      setCourse(courseData as unknown as Course);
 
       // Fetch lessons, enrollment, and resources in parallel
       const fetchRelatedData = async (courseId: string) => {

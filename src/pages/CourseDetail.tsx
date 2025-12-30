@@ -158,18 +158,18 @@ const CourseDetail = () => {
 
   // Parse JSON fields with type safety
   const stats = course.stats as Stats | null;
-  const comparisonFeatures = (course.comparison_features as ComparisonFeature[] | null) || [];
-  const targetAudience = (course.target_audience as TargetAudienceItem[] | null) || [];
-  const valueBreakdown = (course.value_breakdown as ValueBreakdownItem[] | null) || [];
-  const testimonials = (course.testimonials as Testimonial[] | null) || [];
-  const faqs = (course.faq as FAQItem[] | null) || [];
+  const comparisonFeatures = (course.comparison_features as unknown as ComparisonFeature[] | null) || [];
+  const targetAudience = (course.target_audience as unknown as TargetAudienceItem[] | null) || [];
+  const valueBreakdown = (course.value_breakdown as unknown as ValueBreakdownItem[] | null) || [];
+  const testimonials = (course.testimonials as unknown as Testimonial[] | null) || [];
+  const faqs = (course.faq as unknown as FAQItem[] | null) || [];
   const whatsIncluded = Array.isArray(course.whats_included)
-    ? (course.whats_included as string[])
+    ? (course.whats_included as unknown as string[])
     : [];
   const topics = Array.isArray(course.topics)
-    ? (course.topics as string[])
+    ? (course.topics as unknown as string[])
     : [];
-  const modules = (course.modules as ModuleItem[] | null) || [];
+  const modules = (course.modules as unknown as ModuleItem[] | null) || [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -424,7 +424,7 @@ const CourseDetail = () => {
             price_regular: course.price_regular,
             payment_methods: course.payment_methods as string[] | null,
             payment_instructions: course.payment_instructions,
-            enrollment_form_fields: course.enrollment_form_fields as { id: string; label: string; type: string; required: boolean; placeholder?: string; options?: string[] }[] | null,
+            enrollment_form_fields: course.enrollment_form_fields as unknown as { id: string; label: string; type: 'text' | 'email' | 'phone' | 'select' | 'textarea'; required: boolean; placeholder?: string; options?: string[] }[] | null,
           }}
           open={enrollmentOpen}
           onOpenChange={setEnrollmentOpen}
