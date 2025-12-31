@@ -99,20 +99,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
         </div>
 
         {/* Topics */}
-        {topics.length > 0 && (
-          <div className="flex flex-wrap gap-1">
-            {topics.slice(0, 3).map((topic, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {String(topic)}
-              </Badge>
-            ))}
-            {topics.length > 3 && (
-              <Badge variant="outline" className="text-xs">
-                +{topics.length - 3}
-              </Badge>
-            )}
-          </div>
-        )}
+
 
         <div className="flex items-center justify-between text-xs">
           {course.duration_text && (

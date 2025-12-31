@@ -23,7 +23,9 @@ const InstructorSection = lazy(() => import('@/components/course-detail/Instruct
 const VideoTestimonials = lazy(() => import('@/components/course-detail/VideoTestimonials'));
 const PricingSection = lazy(() => import('@/components/course-detail/PricingSection'));
 const FAQSection = lazy(() => import('@/components/course-detail/FAQSection'));
+
 const EverythingYoureGettingSection = lazy(() => import('@/components/course-detail/EverythingYoureGettingSection'));
+const CourseTags = lazy(() => import('@/components/course-detail/CourseTags'));
 
 // Type definitions for JSON fields
 interface Stats {
@@ -248,6 +250,27 @@ const CourseDetail = () => {
                     onEnrollClick={handleEnroll}
                     showCta={!isEnrolled}
                   />
+                </motion.div>
+              </section>
+            )}
+
+            {/* ═══════════════════════════════════════════════════════════════════
+              SECTION 2.5: COURSE TAGS
+              - Skills / Tags
+          ═══════════════════════════════════════════════════════════════════ */}
+            {/* ═══════════════════════════════════════════════════════════════════
+              SECTION 2.5: COURSE TAGS
+              - Skills / Tags
+          ═══════════════════════════════════════════════════════════════════ */}
+            {topics.length > 0 && (
+              <section className="w-full max-w-4xl mx-auto px-4 -mt-24 lg:-mt-40 -mb-12 lg:-mb-20">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <CourseTags tags={topics} />
                 </motion.div>
               </section>
             )}

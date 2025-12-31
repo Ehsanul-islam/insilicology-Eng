@@ -154,8 +154,8 @@ const VibeHeroSection = memo(({
           </div>
         </motion.div>
 
-        {/* 65/35 Grid Layout for wider card */}
-        <div className="grid lg:grid-cols-[65fr_35fr] gap-6 lg:gap-8 items-start">
+        {/* 65/35 Grid Layout for wider card - increased gap */}
+        <div className="grid lg:grid-cols-[65fr_35fr] gap-8 lg:gap-12 items-stretch">
           {/* Left Column (65%) - Poster Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, x: -20 }}
@@ -193,9 +193,9 @@ const VibeHeroSection = memo(({
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors">
                         <motion.div
                           whileHover={{ scale: 1.1 }}
-                          className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center cursor-pointer border border-white/30"
+                          className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center cursor-pointer border border-white/30"
                         >
-                          <Play className="w-6 h-6 text-white ml-1" fill="white" />
+                          <Play className="w-8 h-8 text-white ml-1" fill="white" />
                         </motion.div>
                       </div>
                     </>
@@ -218,10 +218,10 @@ const VibeHeroSection = memo(({
                 transition={{ delay: 0.8 }}
                 className="absolute right-4 bottom-4"
               >
-                <div className="px-3 py-1.5 rounded-full bg-emerald-50/90 backdrop-blur-md border border-emerald-100 shadow-sm">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-emerald-700 text-xs font-semibold">Premium Contents</span>
+                <div className="px-4 py-2 rounded-full bg-emerald-50/90 backdrop-blur-md border border-emerald-100 shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-emerald-700 text-sm font-semibold">Premium Contents</span>
                   </div>
                 </div>
               </motion.div>
@@ -235,55 +235,55 @@ const VibeHeroSection = memo(({
             transition={{ delay: 0.5, duration: 0.8 }}
             className="relative"
           >
-            <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] h-full flex flex-col">
+            <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] h-full flex flex-col">
               {/* Section Title */}
-              <h3 className="text-2xl font-bold text-blue-600 mb-6">
+              <h3 className="text-2xl font-bold text-blue-600 mb-5">
                 Course Details
               </h3>
 
               {/* Info Items - Optimized Grid */}
-              <div className="grid grid-cols-2 gap-x-8 gap-y-6 flex-1 mb-8">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-5 flex-1 mb-6">
                 {/* Start Date */}
                 {startDate && (
                   <div className="group">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <Calendar className="w-5 h-5 text-blue-600" />
+                    <div className="flex items-center gap-2 mb-1">
+                      <Calendar className="w-4 h-4 text-blue-600" />
                       <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Start</p>
                     </div>
-                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{startDate}</p>
+                    <p className="text-base font-extrabold text-gray-900 pl-6">{startDate}</p>
                   </div>
                 )}
 
                 {/* End Date */}
                 {endDate && (
                   <div className="group">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <Calendar className="w-5 h-5 text-blue-600" />
+                    <div className="flex items-center gap-2 mb-1">
+                      <Calendar className="w-4 h-4 text-blue-600" />
                       <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">End</p>
                     </div>
-                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{endDate}</p>
+                    <p className="text-base font-extrabold text-gray-900 pl-6">{endDate}</p>
                   </div>
                 )}
 
                 {/* Time */}
                 {courseTime && (
                   <div className="group">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <Clock className="w-5 h-5 text-amber-600" />
+                    <div className="flex items-center gap-2 mb-1">
+                      <Clock className="w-4 h-4 text-amber-600" />
                       <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Time</p>
                     </div>
-                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{courseTime}</p>
+                    <p className="text-base font-extrabold text-gray-900 pl-6">{courseTime}</p>
                   </div>
                 )}
 
                 {/* Capacity */}
                 {(capacity || participantCount) && (
                   <div className="group">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <Users className="w-5 h-5 text-emerald-600" />
+                    <div className="flex items-center gap-2 mb-1">
+                      <Users className="w-4 h-4 text-emerald-600" />
                       <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Capacity</p>
                     </div>
-                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">
+                    <p className="text-base font-extrabold text-gray-900 pl-6">
                       {capacity || `${participantCount} Seats`}
                     </p>
                   </div>
@@ -292,37 +292,37 @@ const VibeHeroSection = memo(({
                 {/* Duration */}
                 {duration && (
                   <div className="group">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <Clock className="w-5 h-5 text-purple-600" />
+                    <div className="flex items-center gap-2 mb-1">
+                      <Clock className="w-4 h-4 text-purple-600" />
                       <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Duration</p>
                     </div>
-                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{duration}</p>
+                    <p className="text-base font-extrabold text-gray-900 pl-6">{duration}</p>
                   </div>
                 )}
 
                 {/* Modules Count */}
                 {modulesCount && (
                   <div className="group">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <BookOpen className="w-5 h-5 text-indigo-600" />
+                    <div className="flex items-center gap-2 mb-1">
+                      <BookOpen className="w-4 h-4 text-indigo-600" />
                       <p className="text-[11px] text-gray-500 uppercase tracking-wider font-bold">Modules</p>
                     </div>
-                    <p className="text-[15px] font-extrabold text-gray-900 pl-7">{modulesCount} Modules</p>
+                    <p className="text-base font-extrabold text-gray-900 pl-6">{modulesCount} Modules</p>
                   </div>
                 )}
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-gray-100 w-full mb-6" />
+              <div className="h-px bg-gray-100 w-full mb-5" />
 
               {/* Pricing Section */}
-              <div className="mb-6">
+              <div className="mb-5">
                 {priceRegular && priceOffer ? (
                   <div className="flex items-center gap-3">
                     <span className="text-gray-400 line-through text-lg font-semibold">
                       ${priceRegular}
                     </span>
-                    <span className="text-[#ef4444] text-[32px] font-black tracking-tight leading-none">
+                    <span className="text-[#ef4444] text-4xl font-black tracking-tight leading-none">
                       ${priceOffer}
                     </span>
                   </div>
@@ -332,7 +332,7 @@ const VibeHeroSection = memo(({
               {/* CTA Button */}
               <Button
                 onClick={onEnrollClick}
-                className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black font-extrabold py-3.5 text-[15px] rounded-lg shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+                className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black font-extrabold py-3.5 text-lg rounded-lg shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
               >
                 {isEnrolled ? 'Continue Learning' : 'Enroll Now'}
               </Button>
