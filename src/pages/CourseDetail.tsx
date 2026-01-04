@@ -263,7 +263,7 @@ const CourseDetail = () => {
               - Skills / Tags
           ═══════════════════════════════════════════════════════════════════ */}
             {topics.length > 0 && (
-              <section className="w-full max-w-4xl mx-auto px-4 -mt-24 lg:-mt-40 -mb-12 lg:-mb-20">
+              <section className="w-full max-w-4xl mx-auto px-4 -mt-36 lg:-mt-56 -mb-24 lg:-mb-32">
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   whileInView={{ opacity: 1, y: 0 }}

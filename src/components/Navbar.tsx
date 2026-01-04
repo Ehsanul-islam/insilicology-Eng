@@ -54,15 +54,16 @@ const Navbar = () => {
     .toUpperCase() || 'U';
 
   const mainNavLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'Courses', href: '/courses' },
-    { name: 'Portfolio', href: '/portfolio' },
+    { name: 'Academy', href: '/academy' },
+    { name: 'Research', href: '/research' },
+    { name: 'Lab', href: '/lab' },
   ];
 
   const othersDropdownLinks = [
-    { name: 'Blog', href: '/blog' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Publications', href: '/publications' },
+    { name: 'Community', href: '/community' },
     { name: 'Career', href: '/career' },
+    { name: 'Contact', href: '/contact' },
   ];
 
   return (

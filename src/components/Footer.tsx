@@ -10,7 +10,11 @@ const Footer = () => {
       { name: 'Help Center', href: '/help' },
     ],
     Resources: [
-      { name: 'Courses', href: '/courses' },
+      { name: 'Academy', href: '/academy' },
+      { name: 'Research', href: '/research' },
+      { name: 'Publications', href: '/publications' },
+      { name: 'Lab', href: '/lab' },
+      { name: 'Community', href: '/community' },
       { name: 'Success Stories', href: '/stories' },
       { name: 'Verify Certificate', href: '/verify-certificate' },
       { name: 'Contact', href: '/contact' },

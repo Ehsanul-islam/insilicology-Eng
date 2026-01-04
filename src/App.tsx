@@ -40,6 +40,8 @@ const ProfileSettings = lazy(() => import("./pages/ProfileSettings"));
 const MyCertificates = lazy(() => import("./pages/MyCertificates"));
 const StudentLiveSessions = lazy(() => import("./pages/StudentLiveSessions"));
 const LearnPage = lazy(() => import("./pages/LearnPage"));
+const Research = lazy(() => import("./pages/Research"));
+const Community = lazy(() => import("./pages/Community"));
 
 // Lazy load instructor pages
 const InstructorLayout = lazy(() => import("./components/layouts/InstructorLayout"));
@@ -110,11 +112,19 @@ const App = () => (
                 <Routes>
                   {/* Public Routes */}
                   <Route path="/" element={<Index />} />
+                  <Route path="/academy" element={<Courses />} />
                   <Route path="/courses" element={<Courses />} />
+                  <Route path="/academy/:slug" element={<CourseDetail />} />
                   <Route path="/courses/:slug" element={<CourseDetail />} />
+                  <Route path="/research" element={<Research />} />
+                  <Route path="/lab" element={<Portfolio />} />
                   <Route path="/portfolio" element={<Portfolio />} />
+                  <Route path="/lab/:slug" element={<PortfolioDetail />} />
                   <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
+                  <Route path="/publications" element={<Blog />} />
                   <Route path="/blog" element={<Blog />} />
+                  <Route path="/publications/:slug" element={<BlogPost />} />
+                  <Route path="/community" element={<Community />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/careers" element={<Career />} />

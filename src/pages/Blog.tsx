@@ -59,11 +59,11 @@ const Blog = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Blog - Tech Insights, Tutorials & Career Advice | LearnCraft"
-        description="Stay updated with the latest in technology, programming tutorials, career advice, and industry insights from our expert contributors."
-        url="/blog"
+        title="Publications - Papers, Preprints and Case Studies | insilicology"
+        description="Stay updated with our latest papers, preprints, and case studies."
+        url="/publications"
         type="website"
-        tags={['blog', 'tech blog', 'programming tutorials', 'career advice', 'technology news']}
+        tags={['publications', 'papers', 'preprints', 'case studies', 'research']}
       />
       <Navbar />
 
@@ -98,11 +98,11 @@ const Blog = () => {
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
-                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-400 to-blue-200 bg-[length:200%_auto] animate-gradient-x">Blog</span>
+                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-400 to-blue-200 bg-[length:200%_auto] animate-gradient-x">Publications</span>
                 </h1>
 
                 <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium mb-6">
-                  Insights, tutorials, and stories from the world of technology and professional development.
+                  Papers, preprints, and case studies from our research team.
                 </p>
 
                 {/* Search Bar */}

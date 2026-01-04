@@ -188,11 +188,12 @@ const CurriculumAccordion = ({
       </motion.div>
 
       {/* Module Cards */}
-      <div className="space-y-4">
+      <div className="space-y-4 w-[75%] mx-auto">
         {groupedModules.map((module, moduleIndex) => {
           const moduleId = `module-${moduleIndex}`;
           const isExpanded = expandedModules.has(moduleId);
           const IconComponent = iconMap[module.icon] || Database;
+          const hasLessons = module.lessons && module.lessons.length > 0;
 
           return (
             <motion.div
@@ -201,78 +202,100 @@ const CurriculumAccordion = ({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: moduleIndex * 0.05 }}
-              className="rounded-2xl overflow-hidden"
+              className="rounded-xl overflow-hidden shadow-sm"
             >
-              {/* Module Card Header - Purple Gradient */}
+              {/* Module Card Header - Gradient */}
               <button
                 onClick={() => toggleModule(moduleId)}
-                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 p-5 text-left transition-all hover:from-indigo-500 hover:via-purple-500 hover:to-indigo-600"
+                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 p-5 text-left flex items-start gap-4 transition-all hover:brightness-110"
               >
-                <div className="flex items-start gap-4">
-                  {/* Module Icon */}
-                  <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center shrink-0 border border-white/20">
-                    <IconComponent className="w-6 h-6 text-white" />
-                  </div>
-
-                  {/* Module Info */}
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-bold text-white text-base">
-                      Module {moduleIndex + 1}: {module.name}
-                    </h3>
-                    {module.subtitle && (
-                      <p className="text-white/80 text-sm mt-0.5">
-                        {module.subtitle}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Expand Icon */}
-                  <motion.div
-                    animate={{ rotate: isExpanded ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="shrink-0 mt-1"
-                  >
-                    <ChevronRight className="w-6 h-6 text-white" />
-                  </motion.div>
+                {/* Module Icon Container */}
+                <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center shrink-0 border border-white/20">
+                  <IconComponent className="w-6 h-6 text-white" />
                 </div>
 
-                {/* Module Description - Below the main content */}
-                {module.description && (
-                  <p className="text-white/70 text-sm mt-3 pl-16">
-                    {module.description}
-                  </p>
-                )}
+                {/* Module Info */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-white text-base leading-tight mb-1">
+                    {module.name}
+                  </h3>
+                  {module.subtitle ? (
+                    <p className="text-white/80 text-sm font-normal">
+                      {module.subtitle}
+                    </p>
+                  ) : (
+                    <p className="text-white/80 text-sm font-normal uppercase tracking-wide">
+                      Module {moduleIndex + 1}
+                    </p>
+                  )}
+                </div>
+
+                {/* Expand Icon */}
+                <motion.div
+                  animate={{ rotate: isExpanded ? 90 : 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="shrink-0 mt-1"
+                >
+                  <ChevronRight className="w-6 h-6 text-white" />
+                </motion.div>
               </button>
 
-              {/* Expanded Lessons - Bullet List */}
+              {/* Expanded Content - White Background */}
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden bg-white dark:bg-slate-900"
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="bg-white dark:bg-slate-900 border-x border-b border-gray-100 dark:border-slate-800"
                   >
-                    <ul className="py-5 px-6 space-y-3">
-                      {module.lessons.map((lesson, lessonIndex) => (
-                        <motion.li
-                          key={lesson.id}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: lessonIndex * 0.02 }}
-                          className="flex items-start gap-3"
-                        >
-                          {/* Blue Bullet Point */}
-                          <span className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0" />
+                    <div className="px-6 pt-5 pb-2">
+                      {/* Module Description with Bullet Logic */}
+                      {module.description && (
+                        <div className={hasLessons ? "mb-4 border-b border-gray-100 dark:border-slate-800 pb-4" : ""}>
+                          {module.description.includes('•') ? (
+                            <ul className="space-y-1">
+                              {module.description.split('•').filter(Boolean).map((item, idx) => (
+                                <li key={idx} className="flex items-start gap-3">
+                                  <span className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0" />
+                                  <span className="text-muted-foreground text-sm font-normal leading-relaxed">
+                                    {item.trim()}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <p className="text-muted-foreground text-sm font-normal leading-relaxed">
+                              {module.description}
+                            </p>
+                          )}
+                        </div>
+                      )}
 
-                          {/* Lesson Title */}
-                          <span className="text-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                            {lesson.title}
-                          </span>
-                        </motion.li>
-                      ))}
-                    </ul>
+                      {/* Lesson List */}
+                      {hasLessons && (
+                        <ul className="space-y-3 pb-4">
+                          {module.lessons.map((lesson, lessonIndex) => (
+                            <motion.li
+                              key={lesson.id}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ delay: lessonIndex * 0.05 }}
+                              className="flex items-start gap-3 group/lesson"
+                            >
+                              {/* Blue Bullet Point */}
+                              <span className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0 group-hover/lesson:scale-125 transition-transform" />
+
+                              {/* Title */}
+                              <span className="text-gray-700 dark:text-gray-300 font-normal text-base group-hover/lesson:text-blue-600 dark:group-hover/lesson:text-blue-400 transition-colors">
+                                {lesson.title}
+                              </span>
+                            </motion.li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -287,11 +310,11 @@ const CurriculumAccordion = ({
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center pt-4"
+          className="text-center pt-8"
         >
           <button
             onClick={onEnrollClick}
-            className="vibe-cta-gradient text-white px-8 py-3.5 text-base font-semibold rounded-xl shadow-lg shadow-pink-500/25 hover:shadow-pink-500/40 transition-all duration-300"
+            className="bg-[#4f46e5] hover:bg-[#4338ca] text-white px-8 py-3.5 text-base font-semibold rounded-xl shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all duration-300 transform hover:-translate-y-1"
           >
             Enroll Now
           </button>

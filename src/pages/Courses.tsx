@@ -65,10 +65,10 @@ const Courses = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <SEOHead
-        title="All Courses - Learn Web Development, Data Science, Design & More"
-        description="Browse our complete catalog of expert-led online courses. Master web development, data science, UI/UX design, digital marketing, cloud computing and more."
-        url="/courses"
-        tags={['online courses', 'web development', 'data science', 'professional training']}
+        title="Academy - Courses & Bootcamps | insilicology"
+        description="Browse our complete catalog of expert-led online courses and bootcamps."
+        url="/academy"
+        tags={['academy', 'online courses', 'bootcamps', 'web development', 'data science']}
       />
       <Navbar />
 
@@ -100,17 +100,17 @@ const Courses = () => {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-purple-500"></span>
                   </span>
-                  ELITE PLATFORM
+                  ELITE ACADEMY
                 </motion.div>
 
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
-                  Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A855F7] via-[#22D3EE] to-[#A855F7] bg-[length:200%_auto] animate-gradient-x">All Courses</span>
+                  Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A855F7] via-[#22D3EE] to-[#A855F7] bg-[length:200%_auto] animate-gradient-x">Academy</span>
                 </h1>
 
                 <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
                   {totalCount > 0
-                    ? `Master in-demand skills with ${totalCount} expert-curated courses for modern professionals.`
-                    : 'Master in-demand skills with expert-curated courses for modern professionals.'
+                    ? `Master in-demand skills with ${totalCount} expert-curated courses and bootcamps at our Academy.`
+                    : 'Master in-demand skills with expert-curated courses and bootcamps at our Academy.'
                   }
                 </p>
               </motion.div>
