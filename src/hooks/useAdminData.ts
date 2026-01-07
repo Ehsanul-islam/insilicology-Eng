@@ -41,7 +41,6 @@ export interface CourseWithDetails {
   featured: boolean;
   upcoming: boolean;
   created_at: string;
-  enrollment_count?: number;
 }
 
 export const useAdminData = () => {

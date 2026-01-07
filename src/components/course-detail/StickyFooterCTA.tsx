@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tables } from '@/integrations/supabase/types';
+
+type Course = Tables<'courses'>;
 
 interface StickyFooterCTAProps {
   price?: number | null;
@@ -10,6 +13,7 @@ interface StickyFooterCTAProps {
   isEnrolled?: boolean;
   upcoming?: boolean;
   courseTitle?: string;
+  course?: Course | null;
 }
 
 const StickyFooterCTA = ({
@@ -19,13 +23,16 @@ const StickyFooterCTA = ({
   isEnrolled,
   upcoming,
   courseTitle,
+  course,
 }: StickyFooterCTAProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
 
-  const hasDiscount = priceRegular && price && price < priceRegular;
+  const displayRegularPrice = priceRegular;
+
+  const hasDiscount = displayRegularPrice && price && price < displayRegularPrice;
   const discountPercent = hasDiscount
-    ? Math.round(((Number(priceRegular) - Number(price)) / Number(priceRegular)) * 100)
+    ? Math.round(((Number(displayRegularPrice) - Number(price)) / Number(displayRegularPrice)) * 100)
     : 0;
 
   useEffect(() => {
@@ -77,7 +84,7 @@ const StickyFooterCTA = ({
         >
           {/* Backdrop blur */}
           <div className="absolute inset-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-t border-border" />
-          
+
           {/* Content */}
           <div className="relative px-4 py-3 flex items-center justify-between gap-4">
             {/* Price Info */}
@@ -94,10 +101,10 @@ const StickyFooterCTA = ({
                 {hasDiscount && (
                   <>
                     <span className="text-sm line-through text-muted-foreground">
-                      ${Number(priceRegular).toLocaleString()}
+                      ${Number(displayRegularPrice).toLocaleString()}
                     </span>
-                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">
-                      {discountPercent}% off
+                    <span className={`text-xs font-semibold ${isEarlyBirdActive ? 'text-orange-600' : 'text-green-600 dark:text-green-400'}`}>
+                      {discountPercent}% off {isEarlyBirdActive && ' (EB)'}
                     </span>
                   </>
                 )}

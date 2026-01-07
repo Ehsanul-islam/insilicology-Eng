@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Hind Siliguri', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         siliguri: ['Hind Siliguri', 'Inter', 'system-ui', 'sans-serif'],
         bengali: ['Hind Siliguri', 'sans-serif'],
       },

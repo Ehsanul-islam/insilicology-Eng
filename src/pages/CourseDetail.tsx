@@ -219,6 +219,7 @@ const CourseDetail = () => {
           priceOffer={course.price_offer ? Number(course.price_offer) : undefined}
           duration={course.duration_text || undefined}
           modulesCount={course.module_count || undefined}
+          course={course}
         />
 
         {/* Main Content Container */}
@@ -395,7 +396,9 @@ const CourseDetail = () => {
                     onEnrollClick={handleEnroll}
                     isEnrolled={isEnrolled}
                     upcoming={course.upcoming || false}
-                    whatsIncluded={whatsIncluded.length > 0 ? whatsIncluded : undefined}
+                    whatsIncluded={course.whats_included as string[]}
+                    enrolledCount={course.enrollment_count || undefined}
+                    course={course}
                   />
                 </motion.div>
               </section>
@@ -435,6 +438,7 @@ const CourseDetail = () => {
         isEnrolled={isEnrolled}
         upcoming={course.upcoming || false}
         courseTitle={course.title}
+        course={course}
       />
 
       {/* Enrollment Dialog */}

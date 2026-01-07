@@ -3,6 +3,10 @@ import { motion } from 'framer-motion';
 import { Users, MessageCircle, Headphones, ChevronDown, Play, Calendar, Clock, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tables } from '@/integrations/supabase/types';
+import { Sparkles, Flame } from 'lucide-react';
+
+type Course = Tables<'courses'>;
 
 interface Stats {
   students?: number;
@@ -32,6 +36,7 @@ interface VibeHeroSectionProps {
   instructorName?: string;
   duration?: string;
   modulesCount?: number;
+  course?: Course | null;
 }
 
 // Text scramble effect hook
@@ -94,6 +99,7 @@ const VibeHeroSection = memo(({
   instructorName,
   duration,
   modulesCount,
+  course,
 }: VibeHeroSectionProps) => {
   const scrambledTitle = useTextScramble(title, 3000);
 
@@ -149,6 +155,18 @@ const VibeHeroSection = memo(({
               <div className="flex items-center text-gray-900 font-medium">
                 <span className="text-gray-500 mr-1.5">Speaker:</span>
                 <span className='font-semibold text-[#6d28d9]'>{instructorName}</span>
+              </div>
+            )}
+
+            {isEarlyBirdActive && (
+              <div className="flex items-center gap-2">
+                <Badge className="bg-orange-100 border-orange-300 text-orange-600 hover:bg-orange-100 font-bold px-2 py-0.5 flex items-center gap-1 rounded-full shadow-sm">
+                  <Flame className="w-3 h-3 animate-pulse text-orange-600" />
+                  <span className="text-[10px]">Early Bird Offer</span>
+                </Badge>
+                <Badge className="bg-red-600 text-white hover:bg-red-600 font-black text-[9px] px-1.5 py-0 rounded">
+                  LIMITED
+                </Badge>
               </div>
             )}
           </div>
@@ -318,13 +336,15 @@ const VibeHeroSection = memo(({
               {/* Pricing Section */}
               <div className="mb-5">
                 {priceRegular && priceOffer ? (
-                  <div className="flex items-center gap-3">
-                    <span className="text-gray-400 line-through text-lg font-semibold">
-                      ${priceRegular}
-                    </span>
-                    <span className="text-[#ef4444] text-4xl font-black tracking-tight leading-none">
-                      ${priceOffer}
-                    </span>
+                  <div className="text-center">
+                    <div className="flex items-baseline justify-center gap-2">
+                      <span className="text-gray-400 line-through text-lg font-semibold">
+                        ${priceRegular}
+                      </span>
+                      <span className="text-[#ef4444] text-4xl font-black tracking-tight leading-none">
+                        ${priceOffer}
+                      </span>
+                    </div>
                   </div>
                 ) : null}
               </div>

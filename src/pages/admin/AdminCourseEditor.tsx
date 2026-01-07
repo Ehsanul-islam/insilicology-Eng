@@ -45,6 +45,7 @@ import {
   Loader2,
   X,
   Database,
+  Flame,
 } from 'lucide-react';
 
 // Import shared types, utilities, and constants
@@ -237,12 +238,12 @@ const AdminCourseEditor = () => {
         featured: formData.featured,
         upcoming: formData.upcoming,
         certificate: formData.certificate,
-        price_regular: formData.price_regular ? parseFloat(formData.price_regular) : null,
-        price_offer: formData.price_offer ? parseFloat(formData.price_offer) : null,
+        price_regular: formData.price_regular && !isNaN(parseFloat(formData.price_regular)) ? parseFloat(formData.price_regular) : null,
+        price_offer: formData.price_offer && !isNaN(parseFloat(formData.price_offer)) ? parseFloat(formData.price_offer) : null,
         start_date: formData.start_date ? format(formData.start_date, 'yyyy-MM-dd') : null,
         end_date: formData.end_date ? format(formData.end_date, 'yyyy-MM-dd') : null,
         duration_text: formData.duration_text.trim() || null,
-        module_count: formData.module_count ? parseInt(formData.module_count) : null,
+        module_count: formData.module_count && !isNaN(parseInt(formData.module_count)) ? parseInt(formData.module_count) : null,
         instructor_id: formData.instructor_id || null,
         instructor_name: formData.instructor_name.trim() || null,
         instructor_title: formData.instructor_title.trim() || null,
@@ -258,7 +259,7 @@ const AdminCourseEditor = () => {
           .filter(v => v.item.trim())
           .map(v => ({
             item: v.item,
-            original_price: v.original_price ? parseFloat(v.original_price) : 0,
+            original_price: v.original_price && !isNaN(parseFloat(v.original_price)) ? parseFloat(v.original_price) : 0,
             is_premium: v.is_premium || false,
             sub_text: v.sub_text?.trim() || undefined,
           })),
@@ -734,6 +735,7 @@ const AdminCourseEditor = () => {
                         />
                       </div>
                     </div>
+
                   </CardContent>
                 </Card>
               </div>
@@ -753,7 +755,7 @@ const AdminCourseEditor = () => {
                           setFormData(prev => ({ ...prev, status: value }))
                         }
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="status">
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                         <SelectContent>
@@ -809,7 +811,7 @@ const AdminCourseEditor = () => {
                           setFormData(prev => ({ ...prev, course_type: value }))
                         }
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="course_type">
                           <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
@@ -827,7 +829,7 @@ const AdminCourseEditor = () => {
                           setFormData(prev => ({ ...prev, difficulty: value }))
                         }
                       >
-                        <SelectTrigger>
+                        <SelectTrigger id="difficulty">
                           <SelectValue placeholder="Select level" />
                         </SelectTrigger>
                         <SelectContent>
@@ -946,7 +948,7 @@ const AdminCourseEditor = () => {
                         }
                       }}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger id="instructor_id">
                         <SelectValue placeholder="Select an instructor..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -1879,8 +1881,9 @@ const AdminCourseEditor = () => {
                       <div key={index} className="flex gap-4 p-4 border rounded-lg">
                         <div className="flex-1 space-y-3">
                           <div>
-                            <Label>Question</Label>
+                            <Label htmlFor={`faq_q_${index}`}>Question</Label>
                             <Input
+                              id={`faq_q_${index}`}
                               value={faqItem.question}
                               onChange={(e) =>
                                 updateArrayField('faq', index, {
@@ -1892,8 +1895,9 @@ const AdminCourseEditor = () => {
                             />
                           </div>
                           <div>
-                            <Label>Answer</Label>
+                            <Label htmlFor={`faq_a_${index}`}>Answer</Label>
                             <Textarea
+                              id={`faq_a_${index}`}
                               value={faqItem.answer}
                               onChange={(e) =>
                                 updateArrayField('faq', index, {
@@ -1984,7 +1988,9 @@ const AdminCourseEditor = () => {
                   <CardDescription>Instructions shown to students during enrollment</CardDescription>
                 </CardHeader>
                 <CardContent>
+                  <Label htmlFor="payment_instructions">Payment Instructions</Label>
                   <Textarea
+                    id="payment_instructions"
                     value={formData.payment_instructions}
                     onChange={(e) =>
                       setFormData(prev => ({ ...prev, payment_instructions: e.target.value }))
@@ -2008,8 +2014,9 @@ const AdminCourseEditor = () => {
                         <div className="flex-1 space-y-3">
                           <div className="grid gap-3 sm:grid-cols-3">
                             <div>
-                              <Label>Field ID</Label>
+                              <Label htmlFor={`ef_id_${index}`}>Field ID</Label>
                               <Input
+                                id={`ef_id_${index}`}
                                 value={field.id}
                                 onChange={(e) => {
                                   const updated = [...formData.enrollment_form_fields];
@@ -2020,8 +2027,9 @@ const AdminCourseEditor = () => {
                               />
                             </div>
                             <div>
-                              <Label>Label</Label>
+                              <Label htmlFor={`ef_label_${index}`}>Label</Label>
                               <Input
+                                id={`ef_label_${index}`}
                                 value={field.label}
                                 onChange={(e) => {
                                   const updated = [...formData.enrollment_form_fields];
@@ -2032,7 +2040,7 @@ const AdminCourseEditor = () => {
                               />
                             </div>
                             <div>
-                              <Label>Type</Label>
+                              <Label htmlFor={`ef_type_${index}`}>Type</Label>
                               <Select
                                 value={field.type}
                                 onValueChange={(value: 'text' | 'phone' | 'email' | 'select' | 'textarea') => {
@@ -2041,7 +2049,7 @@ const AdminCourseEditor = () => {
                                   setFormData(prev => ({ ...prev, enrollment_form_fields: updated }));
                                 }}
                               >
-                                <SelectTrigger>
+                                <SelectTrigger id={`ef_type_${index}`}>
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -2135,7 +2143,7 @@ const AdminCourseEditor = () => {
           </Button>
         </div>
       </form>
-    </AdminLayout>
+    </AdminLayout >
   );
 };
 

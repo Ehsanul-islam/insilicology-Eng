@@ -4,6 +4,9 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import CountdownTimer from './CountdownTimer';
+import { Tables } from '@/integrations/supabase/types';
+
+type Course = Tables<'courses'>;
 
 interface ValueItem {
   item: string;
@@ -20,6 +23,7 @@ interface PricingSectionProps {
   upcoming?: boolean;
   whatsIncluded?: string[];
   enrolledCount?: number;
+  course?: Course | null;
 }
 
 const PricingSection = ({
@@ -32,13 +36,10 @@ const PricingSection = ({
   upcoming,
   whatsIncluded,
   enrolledCount = 3000,
+  course,
 }: PricingSectionProps) => {
   const hasDiscount = priceRegular && priceOffer && priceOffer < priceRegular;
-
-  // Calculate total value from breakdown
-  const totalValue = valueBreakdown?.reduce(
-    (sum, item) => sum + (item.original_price || 0), 0
-  ) || 0;
+  const totalValue = valueBreakdown?.reduce((acc, item) => acc + Number(item.original_price || 0), 0) || 0;
 
   return (
     <div className="space-y-8" id="checkout">
@@ -55,7 +56,6 @@ const PricingSection = ({
         <h2 className="text-2xl lg:text-[30px] font-bold mb-3 text-foreground">
           Join the Program Today
         </h2>
-
       </motion.div>
 
       {/* Countdown Timer - Vibe Academy Minimalistic Style */}
@@ -91,22 +91,20 @@ const PricingSection = ({
           </div>
 
           {/* Price Display */}
-          <div className="flex items-baseline gap-3 mb-2">
-            <span className="text-4xl lg:text-5xl font-bold vibe-gradient-text">
-              ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}
-            </span>
-            {hasDiscount && (
-              <span className="text-xl text-muted-foreground line-through">
-                ${Number(priceRegular).toLocaleString()}
+          <div className="flex items-end justify-between gap-4 mb-6">
+            <div className="flex items-baseline gap-3">
+              <span className="text-4xl lg:text-5xl font-bold vibe-gradient-text">
+                ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}
               </span>
-            )}
-            {hasDiscount && (
-              <span className="px-3 py-1 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 text-white text-sm font-semibold">
-                Special Offer
-              </span>
-            )}
+              {hasDiscount && (
+                <span className="text-xl text-muted-foreground line-through">
+                  ${Number(priceRegular).toLocaleString()}
+                </span>
+              )}
+            </div>
           </div>
-          <p className="text-muted-foreground">One-time payment, lifetime access</p>
+
+          <p className="text-muted-foreground text-sm">One-time payment, lifetime access</p>
         </div>
 
         {/* What's Included */}
@@ -187,7 +185,7 @@ const PricingSection = ({
                 'Pre-Register Now'
               ) : (
                 <>
-                  <span>Enroll Now ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}</span>
+                  <span>Enroll Now - ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}</span>
                   <ArrowRight className="w-6 h-6 ml-2 transition-transform group-hover:translate-x-1" />
                 </>
               )}

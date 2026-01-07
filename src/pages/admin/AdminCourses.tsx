@@ -147,123 +147,122 @@ const AdminCourses = () => {
       header: 'Level',
       render: (item) => getDifficultyBadge(item.difficulty),
     },
-    {
-      key: 'price_offer',
-      header: 'Price',
-      render: (item) => (
-        <div>
-          {item.price_offer ? (
-            <>
-              <span className="font-medium">${item.price_offer}</span>
-              {item.price_regular && item.price_regular !== item.price_offer && (
-                <span className="text-xs text-muted-foreground line-through ml-2">
-                  ${item.price_regular}
-                </span>
-              )}
-            </>
-          ) : (
-            <span className="text-muted-foreground">Free</span>
-          )}
-        </div>
-      ),
+    key: 'price_offer',
+    header: 'Price',
+    render: (item) => (
+      <div>
+        {item.price_offer ? (
+          <>
+            <span className="font-medium">${item.price_offer}</span>
+            {item.price_regular && item.price_regular !== item.price_offer && (
+              <span className="text-xs text-muted-foreground line-through ml-2">
+                ${item.price_regular}
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="text-muted-foreground">Free</span>
+        )}
+      </div>
+    ),
     },
-    {
-      key: 'created_at',
-      header: 'Created',
-      render: (item) => (
-        <span className="text-sm">{new Date(item.created_at).toLocaleDateString()}</span>
-      ),
+  {
+    key: 'created_at',
+    header: 'Created',
+    render: (item) => (
+      <span className="text-sm">{new Date(item.created_at).toLocaleDateString()}</span>
+    ),
     },
   ];
 
-  const filteredCourses = courses.filter((c) => {
-    // Filter by status
-    if (filter !== 'all' && c.status !== filter) return false;
+const filteredCourses = courses.filter((c) => {
+  // Filter by status
+  if (filter !== 'all' && c.status !== filter) return false;
 
-    // Filter by search
-    if (!searchQuery) return true;
-    const query = searchQuery.toLowerCase();
-    return (
-      c.title.toLowerCase().includes(query) ||
-      c.slug.toLowerCase().includes(query)
-    );
-  });
-
+  // Filter by search
+  if (!searchQuery) return true;
+  const query = searchQuery.toLowerCase();
   return (
-    <AdminLayout title="Courses">
-      <SEOHead
-        title="Manage Courses - Admin"
-        description="Manage your courses"
-        url="/admin/courses"
-      />
+    c.title.toLowerCase().includes(query) ||
+    c.slug.toLowerCase().includes(query)
+  );
+});
 
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <p className="text-muted-foreground">
-            Manage your courses, add new ones, or update existing content.
-          </p>
-          <Button asChild>
-            <Link to="/admin/courses/new">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Course
-            </Link>
-          </Button>
-        </div>
+return (
+  <AdminLayout title="Courses">
+    <SEOHead
+      title="Manage Courses - Admin"
+      description="Manage your courses"
+      url="/admin/courses"
+    />
 
-        <DataTable
-          data={filteredCourses}
-          columns={columns}
-          loading={loading}
-          searchPlaceholder="Search courses..."
-          onSearch={setSearchQuery}
-          onFilter={setFilter}
-          filterValue={filter}
-          filterOptions={[
-            { label: 'All Courses', value: 'all' },
-            { label: 'Published', value: 'published' },
-            { label: 'Draft', value: 'draft' },
-            { label: 'Archived', value: 'archived' },
-          ]}
-          onRowAction={handleAction}
-          rowActions={[
-            { label: 'View', value: 'view', icon: <Eye className="w-4 h-4" /> },
-            { label: 'Edit', value: 'edit', icon: <Edit className="w-4 h-4" /> },
-            { label: 'Publish', value: 'publish', icon: <Send className="w-4 h-4" /> },
-            { label: 'Archive', value: 'archive', icon: <Archive className="w-4 h-4" /> },
-            { label: 'Delete', value: 'delete', icon: <Trash2 className="w-4 h-4" />, variant: 'destructive' },
-          ]}
-          bulkActions={[
-            { label: 'Publish Selected', value: 'publish', icon: <Send className="w-4 h-4 mr-2" /> },
-            { label: 'Archive Selected', value: 'archive', icon: <Archive className="w-4 h-4 mr-2" /> },
-            { label: 'Delete Selected', value: 'delete', icon: <Trash2 className="w-4 h-4 mr-2" /> },
-          ]}
-          emptyMessage="No courses found"
-        />
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <p className="text-muted-foreground">
+          Manage your courses, add new ones, or update existing content.
+        </p>
+        <Button asChild>
+          <Link to="/admin/courses/new">
+            <Plus className="w-4 h-4 mr-2" />
+            Add Course
+          </Link>
+        </Button>
       </div>
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Course</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete <strong>{selectedCourse?.title}</strong>? This action
-              cannot be undone and will remove all associated data including lessons, resources,
-              and enrollments.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialog(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={processing}>
-              {processing ? 'Deleting...' : 'Delete Course'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </AdminLayout>
-  );
+      <DataTable
+        data={filteredCourses}
+        columns={columns}
+        loading={loading}
+        searchPlaceholder="Search courses..."
+        onSearch={setSearchQuery}
+        onFilter={setFilter}
+        filterValue={filter}
+        filterOptions={[
+          { label: 'All Courses', value: 'all' },
+          { label: 'Published', value: 'published' },
+          { label: 'Draft', value: 'draft' },
+          { label: 'Archived', value: 'archived' },
+        ]}
+        onRowAction={handleAction}
+        rowActions={[
+          { label: 'View', value: 'view', icon: <Eye className="w-4 h-4" /> },
+          { label: 'Edit', value: 'edit', icon: <Edit className="w-4 h-4" /> },
+          { label: 'Publish', value: 'publish', icon: <Send className="w-4 h-4" /> },
+          { label: 'Archive', value: 'archive', icon: <Archive className="w-4 h-4" /> },
+          { label: 'Delete', value: 'delete', icon: <Trash2 className="w-4 h-4" />, variant: 'destructive' },
+        ]}
+        bulkActions={[
+          { label: 'Publish Selected', value: 'publish', icon: <Send className="w-4 h-4 mr-2" /> },
+          { label: 'Archive Selected', value: 'archive', icon: <Archive className="w-4 h-4 mr-2" /> },
+          { label: 'Delete Selected', value: 'delete', icon: <Trash2 className="w-4 h-4 mr-2" /> },
+        ]}
+        emptyMessage="No courses found"
+      />
+    </div>
+
+    {/* Delete Confirmation Dialog */}
+    <Dialog open={deleteDialog} onOpenChange={setDeleteDialog}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete Course</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete <strong>{selectedCourse?.title}</strong>? This action
+            cannot be undone and will remove all associated data including lessons, resources,
+            and enrollments.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setDeleteDialog(false)}>
+            Cancel
+          </Button>
+          <Button variant="destructive" onClick={handleDelete} disabled={processing}>
+            {processing ? 'Deleting...' : 'Delete Course'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  </AdminLayout>
+);
 };
 
 export default AdminCourses;

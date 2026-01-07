@@ -33,7 +33,8 @@ const CourseCard = ({ course }: CourseCardProps) => {
   const topics = Array.isArray(course.topics) ? course.topics as string[] : [];
 
   return (
-    <Card className="card-hover group h-full flex flex-col backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border border-white/20 shadow-xl">
+    <Card className="card-hover group h-full flex flex-col backdrop-blur-md bg-white/80 dark:bg-gray-900/80 border border-white/20 shadow-xl overflow-hidden relative">
+
       <CardHeader className="p-0">
         <div className="relative overflow-hidden aspect-video">
           <ImageSkeleton
@@ -116,25 +117,27 @@ const CourseCard = ({ course }: CourseCardProps) => {
         </div>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {hasDiscount ? (
-            <>
-              <span className="text-xl font-bold text-primary">${Number(course.price_offer).toLocaleString()}</span>
-              <span className="text-xs text-muted-foreground line-through">${Number(course.price_regular).toLocaleString()}</span>
-              <Badge className="bg-destructive text-destructive-foreground text-xs">
-                {discountPercent}% OFF
-              </Badge>
-            </>
-          ) : course.price_offer ? (
-            <span className="text-xl font-bold">${Number(course.price_offer).toLocaleString()}</span>
-          ) : (
-            <span className="text-xl font-bold text-green-600">Free</span>
-          )}
+      <CardFooter className="p-4 pt-0 flex flex-col items-stretch gap-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {hasDiscount ? (
+              <>
+                <span className="text-xl font-bold text-primary">${Number(course.price_offer).toLocaleString()}</span>
+                <span className="text-xs text-muted-foreground line-through">${Number(course.price_regular).toLocaleString()}</span>
+                <Badge className="bg-destructive text-white text-[10px] px-1.5 h-5">
+                  {discountPercent}% OFF
+                </Badge>
+              </>
+            ) : course.price_offer ? (
+              <span className="text-xl font-bold">${Number(course.price_offer).toLocaleString()}</span>
+            ) : (
+              <span className="text-xl font-bold text-green-600">Free</span>
+            )}
+          </div>
+          <Button className="btn-primary" asChild>
+            <Link to={`/courses/${course.slug}`}>View Details</Link>
+          </Button>
         </div>
-        <Button className="btn-primary" asChild>
-          <Link to={`/courses/${course.slug}`}>View Details</Link>
-        </Button>
       </CardFooter>
     </Card>
   );
