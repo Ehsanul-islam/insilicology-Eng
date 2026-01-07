@@ -103,8 +103,8 @@ const StickyFooterCTA = ({
                     <span className="text-sm line-through text-muted-foreground">
                       ${Number(displayRegularPrice).toLocaleString()}
                     </span>
-                    <span className={`text-xs font-semibold ${isEarlyBirdActive ? 'text-orange-600' : 'text-green-600 dark:text-green-400'}`}>
-                      {discountPercent}% off {isEarlyBirdActive && ' (EB)'}
+                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">
+                      {discountPercent}% off
                     </span>
                   </>
                 )}

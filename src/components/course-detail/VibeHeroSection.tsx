@@ -158,17 +158,7 @@ const VibeHeroSection = memo(({
               </div>
             )}
 
-            {isEarlyBirdActive && (
-              <div className="flex items-center gap-2">
-                <Badge className="bg-orange-100 border-orange-300 text-orange-600 hover:bg-orange-100 font-bold px-2 py-0.5 flex items-center gap-1 rounded-full shadow-sm">
-                  <Flame className="w-3 h-3 animate-pulse text-orange-600" />
-                  <span className="text-[10px]">Early Bird Offer</span>
-                </Badge>
-                <Badge className="bg-red-600 text-white hover:bg-red-600 font-black text-[9px] px-1.5 py-0 rounded">
-                  LIMITED
-                </Badge>
-              </div>
-            )}
+
           </div>
         </motion.div>
 
