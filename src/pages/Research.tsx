@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Microscope, Atom, Dna, Database, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import ResearchInsights from '@/components/ResearchInsights';
 
 const Research = () => {
     const services = [
@@ -48,37 +49,63 @@ const Research = () => {
             />
             <Navbar />
 
-            <main>
+            <main className="pt-16">
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-20 overflow-hidden bg-[#0a0a0a] text-white">
+                <section className="relative pt-2 pb-4 overflow-hidden bg-[#0a0a0a] text-white border-b border-white/5">
                     <div className="absolute inset-0 opacity-[0.03]"
                         style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
 
                     <div className="container-custom relative z-10">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="max-w-3xl"
-                        >
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
-                                <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                                </span>
-                                Research & Services
+                        <div className="flex flex-col lg:flex-row gap-6 lg:items-center justify-between">
+                            {/* Left Column: Content */}
+                            <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                className="max-w-2xl"
+                            >
+                                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[9px] font-bold mb-2">
+                                    <span className="relative flex h-1.5 w-1.5">
+                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                                        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+                                    </span>
+                                    RESEARCH & SERVICES
+                                </div>
+
+                                <h1 className="text-3xl md:text-5xl font-black mb-1 tracking-tighter leading-tight">
+                                    Advanced <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Scientific Research</span> Services
+                                </h1>
+
+                                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
+                                    Advanced <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 font-semibold">CADD, computational chemistry, and bioinformatics</span> services
+                                </p>
+                            </motion.div>
+
+                            {/* Right Column: Compact Horizontal Stats */}
+                            <div className="flex flex-wrap gap-2 md:gap-3">
+                                {[
+                                    { label: 'Projects', value: '100+' },
+                                    { label: 'Research Areas', value: '4+' },
+                                    { label: 'Success Rate', value: '95%' },
+                                ].map((stat, i) => (
+                                    <motion.div
+                                        key={stat.label}
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        transition={{ delay: 0.2 + (i * 0.1) }}
+                                        className="flex flex-col items-center justify-center min-w-[90px] md:min-w-[110px] p-2 md:p-3 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] transition-all hover:scale-105 group backdrop-blur-sm"
+                                    >
+                                        <span className="text-lg md:text-xl font-bold text-white group-hover:text-primary transition-colors tracking-tight">{stat.value}</span>
+                                        <span className="text-[8px] md:text-[9px] uppercase tracking-wider text-slate-500 font-bold mt-0.5">{stat.label}</span>
+                                    </motion.div>
+                                ))}
                             </div>
-
-                            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
-                                Advanced <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Scientific Research</span> Services
-                            </h1>
-
-                            <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
-                                Accelerate your discovery with our cutting-edge computational chemistry and bioinformatics services. We provide precision execution for complex scientific problems.
-                            </p>
-                        </motion.div>
+                        </div>
                     </div>
                 </section>
+
+                {/* Research Insights Section */}
+                <ResearchInsights />
 
                 {/* Services Grid */}
                 <section className="py-20">

@@ -17,9 +17,9 @@ const Community = () => {
             />
             <Navbar />
 
-            <main>
+            <main className="pt-16">
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-20 overflow-hidden bg-[#0a0a0a] text-white">
+                <section className="relative pt-2 pb-4 overflow-hidden bg-[#0a0a0a] text-white border-b border-white/5">
                     <div className="absolute inset-0 opacity-[0.03]"
                         style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
 
@@ -28,22 +28,22 @@ const Community = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6 }}
-                            className="max-w-3xl"
+                            className="max-w-2xl"
                         >
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 text-sm font-medium mb-6">
-                                <span className="relative flex h-2 w-2">
+                            <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 text-[9px] font-bold mb-2">
+                                <span className="relative flex h-1.5 w-1.5">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-400"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-yellow-400"></span>
                                 </span>
-                                Global Community
+                                GLOBAL COMMUNITY
                             </div>
 
-                            <h1 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">
+                            <h1 className="text-3xl md:text-5xl font-black mb-1 tracking-tighter leading-tight">
                                 Connect, Collaborate, <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-amber-600">Grow Together</span>
                             </h1>
 
-                            <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
+                            <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
                                 A thriving ecosystem of students, mentors, and collaborators pushing the boundaries of scientific research and learning.
                             </p>
                         </motion.div>

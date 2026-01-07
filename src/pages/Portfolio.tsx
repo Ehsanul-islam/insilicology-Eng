@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Building2, MapPin } from 'lucide-react';
 import { usePortfolio } from '@/hooks/usePortfolio';
-import PortfolioInsights from '@/components/PortfolioInsights';
 
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -81,14 +80,6 @@ const Portfolio = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="max-w-2xl"
               >
-                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-amber-500/5 border border-amber-500/20 text-[9px] font-bold text-amber-200/80 mb-3 backdrop-blur-md">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
-                  </span>
-                  ELITE BLOG
-                </div>
-
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
                   Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-[length:200%_auto] animate-gradient-x">Blog</span>
                 </h1>
@@ -123,9 +114,6 @@ const Portfolio = () => {
             </div>
           </div>
         </section>
-
-        {/* Portfolio Insights Section */}
-        <PortfolioInsights />
 
         {/* Filter Section */}
         <section className="py-8 border-b border-border">
@@ -252,7 +240,7 @@ const Portfolio = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-br from-primary-dark to-primary text-white">
+        <section className="py-8 bg-gradient-to-br from-primary-dark to-primary text-white">
           <div className="container-custom text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -260,14 +248,14 @@ const Portfolio = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <h2 className="text-4xl font-bold mb-4">Ready to Start Your Project?</h2>
-              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              <h2 className="text-2xl font-bold mb-2">Ready to Start Your Project?</h2>
+              <p className="text-sm text-white/90 mb-4 max-w-2xl mx-auto">
                 Let's discuss how we can help bring your vision to life with cutting-edge technology and expert development.
               </p>
-              <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground" asChild>
+              <Button size="default" className="bg-accent hover:bg-accent/90 text-accent-foreground" asChild>
                 <Link to="/contact">
                   Get in Touch
-                  <ArrowRight className="w-5 h-5 ml-2" />
+                  <ArrowRight className="w-4 h-4 ml-2" />
                 </Link>
               </Button>
             </motion.div>
