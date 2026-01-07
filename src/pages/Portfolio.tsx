@@ -50,9 +50,9 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Blog - Real-World Projects & Case Studies | LearnCraft"
+        title="Portfolio - Real-World Projects & Case Studies | insilicology"
         description="Explore our portfolio of successful projects across web development, mobile apps, data science, and design. See how we transform ideas into reality."
-        url="/blog"
+        url="/portfolio"
         type="website"
         tags={['portfolio', 'case studies', 'web development projects', 'mobile apps', 'data science']}
       />
@@ -81,7 +81,7 @@ const Portfolio = () => {
                 className="max-w-2xl"
               >
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
-                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-[length:200%_auto] animate-gradient-x">Blog</span>
+                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-[length:200%_auto] animate-gradient-x">Portfolio</span>
                 </h1>
 
                 <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
@@ -154,7 +154,7 @@ const Portfolio = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <Link to={`/portfolio/${project.slug}`}>
+                    <Link key={project.id} to={`/portfolio/${project.slug}`}>
                       <Card className="group overflow-hidden h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                         {/* Image */}
                         <div className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden">

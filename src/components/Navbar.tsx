@@ -60,7 +60,7 @@ const Navbar = () => {
   ];
 
   const othersDropdownLinks = [
-    { name: 'Publications', href: '/publications' },
+    { name: 'Portfolio', href: '/portfolio' },
     { name: 'Community', href: '/community' },
     { name: 'Contact', href: '/contact' },
   ];

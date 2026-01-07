@@ -118,12 +118,12 @@ const App = () => (
                   <Route path="/courses/:slug" element={<CourseDetail />} />
                   <Route path="/research" element={<Research />} />
                   <Route path="/research" element={<Research />} />
-                  <Route path="/blog" element={<Portfolio />} />
+                  <Route path="/blog" element={<Blog />} />
                   <Route path="/portfolio" element={<Portfolio />} />
-                  <Route path="/blog/:slug" element={<PortfolioDetail />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
                   <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
-                  <Route path="/publications" element={<Blog />} />
-                  <Route path="/publications/:slug" element={<BlogPost />} />
+                  <Route path="/publications" element={<Portfolio />} />
+                  <Route path="/publications/:slug" element={<PortfolioDetail />} />
                   <Route path="/community" element={<Community />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/auth" element={<Auth />} />

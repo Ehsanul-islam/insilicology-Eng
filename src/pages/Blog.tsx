@@ -59,11 +59,11 @@ const Blog = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Publications - Papers, Preprints and Case Studies | insilicology"
-        description="Stay updated with our latest papers, preprints, and case studies."
-        url="/publications"
+        title="Blog - Latest Insights & Knowledge | insilicology"
+        description="Explore our blog for the latest papers, preprints, and case studies from our research team."
+        url="/blog"
         type="website"
-        tags={['publications', 'papers', 'preprints', 'case studies', 'research']}
+        tags={['blog', 'publications', 'papers', 'preprints', 'case studies', 'research']}
       />
       <Navbar />
 
@@ -98,24 +98,12 @@ const Blog = () => {
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
-                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-400 to-blue-200 bg-[length:200%_auto] animate-gradient-x">Publications</span>
+                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 via-purple-400 to-blue-200 bg-[length:200%_auto] animate-gradient-x">Blog</span>
                 </h1>
 
-                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium mb-6">
+                <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
                   Papers, preprints, and case studies from our research team.
                 </p>
-
-                {/* Search Bar */}
-                <div className="relative max-w-md">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="Search articles..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 h-12 bg-white text-foreground border-0"
-                  />
-                </div>
               </motion.div>
 
               {/* Right Column: Compact Horizontal Stats */}
@@ -148,30 +136,47 @@ const Blog = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="flex flex-wrap gap-3 justify-center"
+              className="flex flex-col lg:flex-row items-center gap-6"
             >
-              <Button
-                variant={selectedCategory === 'all' ? 'default' : 'outline'}
-                onClick={() => setSelectedCategory('all')}
-              >
-                All
-              </Button>
-              <Button
-                variant={selectedCategory === 'featured' ? 'default' : 'outline'}
-                onClick={() => setSelectedCategory('featured')}
-              >
-                Featured
-              </Button>
-              {categories.map((category) => (
+              {/* Relocated Search Bar */}
+              <div className="relative w-full lg:max-w-sm">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="Search articles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 h-10 bg-muted/50 border-border focus:bg-background transition-colors text-sm"
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-2 justify-center lg:justify-start flex-1">
                 <Button
-                  key={category.id}
-                  variant={selectedCategory === category.id || selectedCategory === category.slug ? 'default' : 'outline'}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className="capitalize"
+                  variant={selectedCategory === 'all' ? 'default' : 'outline'}
+                  onClick={() => setSelectedCategory('all')}
+                  size="sm"
                 >
-                  {category.name}
+                  All
                 </Button>
-              ))}
+                <Button
+                  variant={selectedCategory === 'featured' ? 'default' : 'outline'}
+                  onClick={() => setSelectedCategory('featured')}
+                  size="sm"
+                >
+                  Featured
+                </Button>
+                {categories.map((category) => (
+                  <Button
+                    key={category.id}
+                    variant={selectedCategory === category.id || selectedCategory === category.slug ? 'default' : 'outline'}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className="capitalize"
+                    size="sm"
+                  >
+                    {category.name}
+                  </Button>
+                ))}
+              </div>
             </motion.div>
           </div>
         </section>

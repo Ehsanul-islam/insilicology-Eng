@@ -6,6 +6,16 @@ export type PortfolioProject = Tables<'portfolio_projects'>;
 export type PortfolioInsert = TablesInsert<'portfolio_projects'>;
 export type PortfolioUpdate = TablesUpdate<'portfolio_projects'>;
 
+export interface PortfolioCategory {
+    id: string;
+    name: string;
+    slug: string;
+    icon?: string;
+    display_order?: number;
+    created_at?: string;
+    updated_at?: string;
+}
+
 interface FetchPortfoliosOptions {
     status?: 'draft' | 'published' | 'archived';
     featured?: boolean;
@@ -231,24 +241,98 @@ export const usePortfolio = () => {
     };
 
     /**
-     * Fetch categories (stub function - portfolio doesn't have categories yet)
-     * Returns empty array to prevent errors in components that call this function
+     * Fetch all portfolio categories
      */
     const fetchCategories = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            const { data, error } = await supabase
+            const { data, error: fetchError } = await supabase
                 .from('portfolio_categories')
                 .select('*')
                 .order('display_order', { ascending: true });
 
-            if (error) {
-                console.error('Error fetching categories:', error);
-                return [];
-            }
+            if (fetchError) throw fetchError;
             return data || [];
         } catch (err) {
-            console.error('Error in fetchCategories:', err);
+            console.error('Error fetching categories:', err);
             return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Create a new category
+     */
+    const createCategory = async (category: Omit<PortfolioCategory, 'id' | 'created_at' | 'updated_at'>) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { data, error: createError } = await supabase
+                .from('portfolio_categories')
+                .insert(category)
+                .select()
+                .single();
+
+            if (createError) throw createError;
+            return data;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Failed to create category';
+            setError(errorMessage);
+            console.error('Error creating category:', err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Update an existing category
+     */
+    const updateCategory = async (id: string, updates: Partial<PortfolioCategory>) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { data, error: updateError } = await supabase
+                .from('portfolio_categories')
+                .update(updates)
+                .eq('id', id)
+                .select()
+                .single();
+
+            if (updateError) throw updateError;
+            return data;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Failed to update category';
+            setError(errorMessage);
+            console.error('Error updating category:', err);
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * Delete a category
+     */
+    const deleteCategory = async (id: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const { error: deleteError } = await supabase
+                .from('portfolio_categories')
+                .delete()
+                .eq('id', id);
+
+            if (deleteError) throw deleteError;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Failed to delete category';
+            setError(errorMessage);
+            console.error('Error deleting category:', err);
+            throw err;
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -267,5 +351,8 @@ export const usePortfolio = () => {
         generateSlug,
         isSlugUnique,
         fetchCategories,
+        createCategory,
+        updateCategory,
+        deleteCategory,
     };
 };
