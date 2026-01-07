@@ -5,15 +5,13 @@ const Footer = () => {
   const footerLinks = {
     Company: [
       { name: 'About Us', href: '/about' },
-      { name: 'Careers', href: '/careers' },
-      { name: 'Blog', href: '/blog' },
       { name: 'Help Center', href: '/help' },
     ],
     Resources: [
       { name: 'Academy', href: '/academy' },
       { name: 'Research', href: '/research' },
       { name: 'Publications', href: '/publications' },
-      { name: 'Lab', href: '/lab' },
+      { name: 'Blog', href: '/blog' },
       { name: 'Community', href: '/community' },
       { name: 'Success Stories', href: '/stories' },
       { name: 'Verify Certificate', href: '/verify-certificate' },
@@ -22,8 +20,6 @@ const Footer = () => {
     Legal: [
       { name: 'Privacy Policy', href: '/privacy' },
       { name: 'Terms of Service', href: '/terms' },
-      { name: 'Cookie Policy', href: '/cookies' },
-      { name: 'Refund Policy', href: '/refunds' },
     ],
   };
 
@@ -37,7 +33,7 @@ const Footer = () => {
   return (
     <footer className="bg-card border-t border-border">
       <div className="container-custom py-12">
-        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-4">
@@ -65,9 +61,9 @@ const Footer = () => {
 
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
+            <div key={category} className={category === 'Resources' ? 'lg:col-span-2' : ''}>
               <h3 className="font-bold mb-4">{category}</h3>
-              <ul className="space-y-2">
+              <ul className={category === 'Resources' ? 'w-fit grid grid-cols-2 gap-x-8 gap-y-2' : 'space-y-2'}>
                 {links.map((link) => (
                   <li key={link.name}>
                     <Link

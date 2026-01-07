@@ -51,9 +51,9 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Portfolio - Real-World Projects & Case Studies | LearnCraft"
+        title="Blog - Real-World Projects & Case Studies | LearnCraft"
         description="Explore our portfolio of successful projects across web development, mobile apps, data science, and design. See how we transform ideas into reality."
-        url="/portfolio"
+        url="/blog"
         type="website"
         tags={['portfolio', 'case studies', 'web development projects', 'mobile apps', 'data science']}
       />
@@ -86,16 +86,16 @@ const Portfolio = () => {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-amber-500"></span>
                   </span>
-                  ELITE LAB
+                  ELITE BLOG
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-black mb-2 tracking-tighter leading-tight">
-                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-[length:200%_auto] animate-gradient-x">Lab</span>
+                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-[length:200%_auto] animate-gradient-x">Blog</span>
                 </h1>
 
                 <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
                   {projects.length > 0
-                    ? `Explore our collection of ${projects.length} tools, workflows, and datasets.`
+                    ? `Explore our collection of ${projects.length} articles, workflows, and datasets.`
                     : 'Discover the innovative tools and datasets we\'ve built. From workflows to datasets, we deliver excellence.'
                   }
                 </p>

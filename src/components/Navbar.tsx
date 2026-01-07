@@ -56,13 +56,12 @@ const Navbar = () => {
   const mainNavLinks = [
     { name: 'Academy', href: '/academy' },
     { name: 'Research', href: '/research' },
-    { name: 'Lab', href: '/lab' },
+    { name: 'Blog', href: '/blog' },
   ];
 
   const othersDropdownLinks = [
     { name: 'Publications', href: '/publications' },
     { name: 'Community', href: '/community' },
-    { name: 'Career', href: '/career' },
     { name: 'Contact', href: '/contact' },
   ];
 

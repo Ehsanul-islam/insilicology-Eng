@@ -117,19 +117,15 @@ const App = () => (
                   <Route path="/academy/:slug" element={<CourseDetail />} />
                   <Route path="/courses/:slug" element={<CourseDetail />} />
                   <Route path="/research" element={<Research />} />
-                  <Route path="/lab" element={<Portfolio />} />
+                  <Route path="/research" element={<Research />} />
+                  <Route path="/blog" element={<Portfolio />} />
                   <Route path="/portfolio" element={<Portfolio />} />
-                  <Route path="/lab/:slug" element={<PortfolioDetail />} />
+                  <Route path="/blog/:slug" element={<PortfolioDetail />} />
                   <Route path="/portfolio/:slug" element={<PortfolioDetail />} />
                   <Route path="/publications" element={<Blog />} />
-                  <Route path="/blog" element={<Blog />} />
                   <Route path="/publications/:slug" element={<BlogPost />} />
                   <Route path="/community" element={<Community />} />
-                  <Route path="/blog/:slug" element={<BlogPost />} />
                   <Route path="/contact" element={<Contact />} />
-                  <Route path="/careers" element={<Career />} />
-                  {/* Redirect /career to /careers (Optional) or just alias it */}
-                  <Route path="/career" element={<Career />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/verify-certificate" element={<CertificateVerify />} />
