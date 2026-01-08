@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -11,27 +11,26 @@ import { Tables } from '@/integrations/supabase/types';
 type Course = Tables<'courses'>;
 
 const FeaturedCourses = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchFeaturedCourses = async () => {
+  const { data: courses = [], isLoading: loading } = useQuery({
+    queryKey: ['featured-courses'],
+    queryFn: async () => {
       const { data, error } = await supabase
         .from('courses')
-        .select('*')
+        .select(`
+          id, title, slug, poster_url, price_offer, price_regular,
+          course_type, difficulty, start_date, end_date, certificate,
+          upcoming, duration_text, module_count, topics, status, featured, created_at
+        `)
         .eq('status', 'published')
         .eq('featured', true)
         .order('created_at', { ascending: false })
         .limit(3);
 
-      if (!error && data) {
-        setCourses(data);
-      }
-      setLoading(false);
-    };
-
-    fetchFeaturedCourses();
-  }, []);
+      if (error) throw error;
+      return data as Course[];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   return (
     <section className="pt-8 pb-8 bg-white">

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Tables } from '@/integrations/supabase/types';
 
@@ -22,121 +22,122 @@ export type PaginationState = {
   total: number;
 };
 
+// Simplified Course type for list view to avoid huge payloads
+type CourseListItem = Pick<Course,
+  'id' | 'title' | 'slug' | 'poster_url' | 'price_offer' | 'price_regular' |
+  'course_type' | 'difficulty' | 'start_date' | 'end_date' | 'certificate' |
+  'upcoming' | 'duration_text' | 'module_count' | 'topics' | 'status' | 'featured' | 'created_at'
+>;
+
 export const useCourses = (filters: CourseFilters, pagination: PaginationState) => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [totalCount, setTotalCount] = useState(0);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchCourses = async () => {
-      setLoading(true);
-      setError(null);
+  // Create a unique key for the query based on filters and pagination
+  const queryKey = ['courses', filters, pagination.page, pagination.pageSize];
 
-      try {
-        let query = supabase
-          .from('courses')
-          .select('*', { count: 'exact' })
-          .eq('status', 'published');
+  const query = useQuery({
+    queryKey,
+    queryFn: async () => {
+      let query = supabase
+        .from('courses')
+        .select(`
+          id, title, slug, poster_url, price_offer, price_regular,
+          course_type, difficulty, start_date, end_date, certificate,
+          upcoming, duration_text, module_count, topics, status, featured, created_at
+        `, { count: 'exact' })
+        .eq('status', 'published');
 
-        // Search filter
-        if (filters.search) {
-          query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
-        }
-
-        // Type filter
-        if (filters.type && filters.type !== 'all') {
-          query = query.eq('course_type', filters.type as 'recorded' | 'live' | 'hybrid');
-        }
-
-        // Difficulty filter
-        if (filters.difficulty && filters.difficulty !== 'all') {
-          query = query.eq('difficulty', filters.difficulty as 'beginner' | 'intermediate' | 'advanced');
-        }
-
-        // Price range filter
-        if (filters.priceRange && filters.priceRange !== 'all') {
-          switch (filters.priceRange) {
-            case 'free':
-              query = query.or('price_offer.is.null,price_offer.eq.0');
-              break;
-            case 'under50':
-              query = query.lt('price_offer', 50);
-              break;
-            case '50to100':
-              query = query.gte('price_offer', 50).lt('price_offer', 100);
-              break;
-            case 'over100':
-              query = query.gte('price_offer', 100);
-              break;
-          }
-        }
-
-        // Sorting
-        switch (filters.sortBy) {
-          case 'newest':
-            query = query.order('created_at', { ascending: false });
-            break;
-          case 'price-low':
-            query = query.order('price_offer', { ascending: true, nullsFirst: true });
-            break;
-          case 'price-high':
-            query = query.order('price_offer', { ascending: false, nullsFirst: false });
-            break;
-          case 'featured':
-            query = query.order('featured', { ascending: false }).order('created_at', { ascending: false });
-            break;
-          default:
-            query = query.order('created_at', { ascending: false });
-        }
-
-        // Pagination
-        const from = (pagination.page - 1) * pagination.pageSize;
-        const to = from + pagination.pageSize - 1;
-        query = query.range(from, to);
-
-        const { data, error: fetchError, count } = await query;
-
-        if (fetchError) throw fetchError;
-
-        setCourses((data as unknown as Course[]) || []);
-        setTotalCount(count || 0);
-      } catch (err) {
-        console.error('Error fetching courses:', err);
-        setError('Failed to load courses');
-      } finally {
-        setLoading(false);
+      // Search filter
+      if (filters.search) {
+        query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
       }
-    };
 
-    fetchCourses();
-  }, [filters, pagination.page, pagination.pageSize]);
+      // Type filter
+      if (filters.type && filters.type !== 'all') {
+        query = query.eq('course_type', filters.type as 'recorded' | 'live' | 'hybrid');
+      }
 
-  const totalPages = useMemo(() =>
-    Math.ceil(totalCount / pagination.pageSize),
-    [totalCount, pagination.pageSize]
-  );
+      // Difficulty filter
+      if (filters.difficulty && filters.difficulty !== 'all') {
+        query = query.eq('difficulty', filters.difficulty as 'beginner' | 'intermediate' | 'advanced');
+      }
 
-  return { courses, loading, error, totalCount, totalPages };
+      // Price range filter
+      if (filters.priceRange && filters.priceRange !== 'all') {
+        switch (filters.priceRange) {
+          case 'free':
+            query = query.or('price_offer.is.null,price_offer.eq.0');
+            break;
+          case 'under50':
+            query = query.lt('price_offer', 50);
+            break;
+          case '50to100':
+            query = query.gte('price_offer', 50).lt('price_offer', 100);
+            break;
+          case 'over100':
+            query = query.gte('price_offer', 100);
+            break;
+        }
+      }
+
+      // Sorting
+      switch (filters.sortBy) {
+        case 'newest':
+          query = query.order('created_at', { ascending: false });
+          break;
+        case 'price-low':
+          query = query.order('price_offer', { ascending: true, nullsFirst: true });
+          break;
+        case 'price-high':
+          query = query.order('price_offer', { ascending: false, nullsFirst: false });
+          break;
+        case 'featured':
+          query = query.order('featured', { ascending: false }).order('created_at', { ascending: false });
+          break;
+        default:
+          query = query.order('created_at', { ascending: false });
+      }
+
+      // Pagination
+      const from = (pagination.page - 1) * pagination.pageSize;
+      const to = from + pagination.pageSize - 1;
+      query = query.range(from, to);
+
+      const { data, error, count } = await query;
+
+      if (error) throw error;
+
+      return {
+        courses: (data as unknown as Course[]) || [],
+        totalCount: count || 0
+      };
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    placeholderData: (previousData) => previousData, // Keep showing previous data while fetching new page
+  });
+
+  const totalPages = query.data?.totalCount
+    ? Math.ceil(query.data.totalCount / pagination.pageSize)
+    : 0;
+
+  return {
+    courses: query.data?.courses || [],
+    loading: query.isLoading,
+    error: query.error ? 'Failed to load courses' : null,
+    totalCount: query.data?.totalCount || 0,
+    totalPages
+  };
 };
 
 export const useCourseDetail = (slug: string | undefined) => {
-  const [course, setCourse] = useState<Course | null>(null);
-  const [lessons, setLessons] = useState<Tables<'lessons'>[]>([]);
+  const queryClient = useQueryClient();
 
-  const [resources, setResources] = useState<Tables<'course_resources'>[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isEnrolled, setIsEnrolled] = useState(false);
+  const { data, isLoading: loading, error, refetch } = useQuery({
+    queryKey: ['course', slug],
+    queryFn: async () => {
+      if (!slug) throw new Error('No slug provided');
 
-  const fetchCourseDetail = async () => {
-    if (!slug) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      // Fetch course
+      // 1. Fetch course details (full details needed here)
       const { data: courseData, error: courseError } = await supabase
         .from('courses')
         .select('*')
@@ -145,102 +146,91 @@ export const useCourseDetail = (slug: string | undefined) => {
 
       if (courseError) throw courseError;
 
-      // Fetch enrollment count
+      // 2. Fetch enrollment count
       const { count: enrollmentCount } = await supabase
         .from('enrollments')
         .select('*', { count: 'exact', head: true })
         .eq('course_id', courseData.id)
         .neq('status', 'cancelled');
 
-      setCourse({
+      const courseWithCount = {
         ...courseData,
         participant_count: enrollmentCount || 0
-      } as unknown as Course);
+      } as unknown as Course;
 
-      // Fetch lessons, enrollment, and resources in parallel
-      const fetchRelatedData = async (courseId: string) => {
-        const { data: { user } } = await supabase.auth.getUser();
+      // 3. Fetch lessons (optimized fields), enrollment, and resources
+      const { data: { user } } = await supabase.auth.getUser();
 
-        const lessonsPromise = supabase
-          .from('lessons')
-          .select('*')
-          .eq('course_id', courseId)
-          .eq('is_active', true)
-          .order('lesson_order', { ascending: true });
+      // OPTIMIZED: Only select necessary lesson fields, NOT content
+      const lessonsPromise = supabase
+        .from('lessons')
+        .select('id, title, lesson_order, description, is_active, course_id')
+        .eq('course_id', courseData.id)
+        .eq('is_active', true)
+        .order('lesson_order', { ascending: true });
 
-        // If no user, we can skip enrollment and user-specific resources fetch
-        if (!user) {
-          const [lessonsResult] = await Promise.all([lessonsPromise]);
-          return {
-            lessons: lessonsResult.data || [],
-            enrollment: null,
-            resources: []
-          };
-        }
+      let enrollmentPromise = Promise.resolve({ data: null });
+      let resourcesPromise = Promise.resolve({ data: [] as Tables<'course_resources'>[] });
 
-        const enrollmentPromise = supabase
+      if (user) {
+        enrollmentPromise = supabase
           .from('enrollments')
           .select('*')
-          .eq('course_id', courseId)
+          .eq('course_id', courseData.id)
           .eq('user_id', user.id)
           .eq('status', 'active')
-          .maybeSingle();
+          .maybeSingle() as any;
 
-        const [lessonsResult, enrollmentResult] = await Promise.all([
-          lessonsPromise,
-          enrollmentPromise
-        ]);
+        // Only fetch resources if enrolled (logic check inside component usually, but here is safe too)
+        // Actually, let's fetch resources if enrolled check passes later, but for now we fetch all active resources
+        // and filtered by backend RLS usually. But assuming public resources aren't a thing unless enrolled.
+        // Let's stick to the original logic: fetch resources if enrolled. 
+        // We can't know if enrolled until we fetch enrollment.
+      }
 
-        const enrollment = enrollmentResult.data;
-        let resourcesData: Tables<'course_resources'>[] = [];
+      const [lessonsResult, enrollmentResult] = await Promise.all([
+        lessonsPromise,
+        enrollmentPromise
+      ]);
 
-        if (enrollment) {
-          const { data } = await supabase
-            .from('course_resources')
-            .select('*')
-            .eq('course_id', courseId)
-            .eq('is_active', true);
-          resourcesData = data || [];
-        }
+      const enrollment = enrollmentResult.data;
+      let resources: Tables<'course_resources'>[] = [];
 
-        return {
-          lessons: lessonsResult.data || [],
-          enrollment,
-          resources: resourcesData
-        };
+      if (enrollment) {
+        const { data: resData } = await supabase
+          .from('course_resources')
+          .select('*')
+          .eq('course_id', courseData.id)
+          .eq('is_active', true);
+        resources = resData || [];
+      }
+
+      return {
+        course: courseWithCount,
+        lessons: lessonsResult.data || [],
+        resources,
+        isEnrolled: !!enrollment
       };
+    },
+    enabled: !!slug,
+    staleTime: 10 * 60 * 1000, // 10 minutes caching
+  });
 
-      const { lessons, enrollment, resources } = await fetchRelatedData(courseData.id);
-
-      setLessons(lessons);
-      setIsEnrolled(!!enrollment);
-      setResources(resources);
-    } catch (err) {
-      console.error('Error fetching course:', err);
-      setError('Failed to load course details');
-    } finally {
-      setLoading(false);
-    }
+  return {
+    course: data?.course || null,
+    lessons: data?.lessons || [],
+    resources: data?.resources || [],
+    loading,
+    error: error ? 'Failed to load course details' : null,
+    isEnrolled: data?.isEnrolled || false,
+    refetch
   };
-
-  useEffect(() => {
-    fetchCourseDetail();
-  }, [slug]);
-
-  const refetch = () => {
-    fetchCourseDetail();
-  };
-
-  return { course, lessons, resources, loading, error, isEnrolled, refetch };
 };
 
 export const useUniqueFilters = () => {
-  const [types, setTypes] = useState<string[]>([]);
-  const [difficulties, setDifficulties] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchFilters = async () => {
-      // Get unique course types
+  const { data } = useQuery({
+    queryKey: ['course-filters'],
+    queryFn: async () => {
       const { data: typeData } = await supabase
         .from('courses')
         .select('course_type')
@@ -248,9 +238,7 @@ export const useUniqueFilters = () => {
         .not('course_type', 'is', null);
 
       const uniqueTypes = [...new Set(typeData?.map(c => c.course_type).filter(Boolean))] as string[];
-      setTypes(uniqueTypes);
 
-      // Get unique difficulties
       const { data: diffData } = await supabase
         .from('courses')
         .select('difficulty')
@@ -258,11 +246,14 @@ export const useUniqueFilters = () => {
         .not('difficulty', 'is', null);
 
       const uniqueDiffs = [...new Set(diffData?.map(c => c.difficulty).filter(Boolean))] as string[];
-      setDifficulties(uniqueDiffs);
-    };
 
-    fetchFilters();
-  }, []);
+      return { types: uniqueTypes, difficulties: uniqueDiffs };
+    },
+    staleTime: Infinity, // These rarely change
+  });
 
-  return { types, difficulties };
+  return {
+    types: data?.types || [],
+    difficulties: data?.difficulties || []
+  };
 };

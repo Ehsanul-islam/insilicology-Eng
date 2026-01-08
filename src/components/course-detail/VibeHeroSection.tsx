@@ -262,14 +262,14 @@ const VibeHeroSection = memo(({
             transition={{ delay: 0.5, duration: 0.8 }}
             className="relative"
           >
-            <div className="bg-white rounded-xl p-5 border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] h-full flex flex-col">
+            <div className="bg-white rounded-3xl p-6 border-0 ring-1 ring-gray-100 shadow-xl h-full flex flex-col w-full max-w-[350px] ml-auto">
               {/* Section Title */}
               <h3 className="text-2xl font-bold text-blue-600 mb-5">
                 Course Details
               </h3>
 
               {/* Info Items - Optimized Grid */}
-              <div className="grid grid-cols-2 gap-x-6 gap-y-5 flex-1 mb-6">
+              <div className="grid grid-cols-2 gap-x-5 gap-y-4 flex-1 mb-4">
                 {/* Start Date */}
                 {startDate && (
                   <div className="group">
