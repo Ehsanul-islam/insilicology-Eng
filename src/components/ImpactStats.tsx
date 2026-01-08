@@ -115,26 +115,7 @@ const ImpactStats = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-8"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, type: "spring" }}
-            className="inline-block mb-2"
-          >
-            <div className="px-3 py-1 bg-gradient-to-r from-orange-500/10 via-purple-500/10 to-blue-500/10 border border-orange-500/20 rounded-full">
-              <p className="text-xs font-semibold bg-gradient-to-r from-orange-500 via-purple-500 to-blue-500 bg-clip-text text-transparent uppercase tracking-wider">
-                🚀 Our Impact
-              </p>
-            </div>
-          </motion.div>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent">
-            Our Success Story
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-3xl mx-auto mb-4">
-            Empowering thousands of learners to build skills and shape their future
-          </p>
 
           {/* Live Stats Badge with pulse animation */}
           <motion.div
