@@ -45,7 +45,7 @@ const SEOHead = ({
   image = '/placeholder.svg',
   url,
   type = 'website',
-  siteName = 'LearnCraft',
+  siteName = 'insilicology',
   author,
   publishedTime,
   modifiedTime,
@@ -162,8 +162,8 @@ const SEOHead = ({
     "logo": `${siteUrl}/placeholder.svg`,
     "description": "Professional skills development platform with expert-led courses",
     "sameAs": [
-      "https://twitter.com/learncraft",
-      "https://linkedin.com/company/learncraft"
+      "https://twitter.com/insilicology",
+      "https://linkedin.com/company/insilicology"
     ]
   };
 

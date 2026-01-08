@@ -89,10 +89,10 @@ const ResearchInsights = () => {
 
     // Impact KPIs
     const impactMetrics = [
-        { icon: FlaskConical, label: 'Publications', value: '50+', color: 'text-blue-600', bg: 'bg-blue-500/10', count: publicationsCount },
-        { icon: Target, label: 'Success Rate', value: '95%', color: 'text-purple-600', bg: 'bg-purple-500/10', count: successCount },
-        { icon: Zap, label: 'Accuracy', value: '98%', color: 'text-green-600', bg: 'bg-green-500/10', count: accuracyCount },
-        { icon: Award, label: 'Quality', value: 'A+', color: 'text-amber-600', bg: 'bg-amber-500/10', count: null },
+        { icon: FlaskConical, label: 'Publications', value: '50+', color: 'text-blue-600', gradient: 'from-blue-600 to-blue-800', bg: 'bg-blue-500/10', count: publicationsCount },
+        { icon: Target, label: 'Success Rate', value: '95%', color: 'text-purple-600', gradient: 'from-purple-600 to-purple-800', bg: 'bg-purple-500/10', count: successCount },
+        { icon: Zap, label: 'Accuracy', value: '98%', color: 'text-green-600', gradient: 'from-green-600 to-green-800', bg: 'bg-green-500/10', count: accuracyCount },
+        { icon: Award, label: 'Quality', value: 'A+', color: 'text-amber-600', gradient: 'from-amber-600 to-amber-800', bg: 'bg-amber-500/10', count: null },
     ];
 
     const RADIAN = Math.PI / 180;
@@ -248,7 +248,7 @@ const ResearchInsights = () => {
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            <CardHeader className="pb-0 relative z-10">
+                            <CardHeader className="pt-3 pb-0 relative z-10">
                                 <CardTitle className="text-sm flex items-center gap-1.5 text-muted-foreground font-medium">
                                     <div className="p-1.5 bg-blue-500/10 rounded-lg">
                                         <Microscope className="w-3 h-3 text-blue-600" />
@@ -311,7 +311,7 @@ const ResearchInsights = () => {
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            <CardHeader className="pb-1.5 relative z-10">
+                            <CardHeader className="pt-3 pb-1.5 relative z-10">
                                 <div className="flex items-center justify-between mb-1.5">
                                     <CardTitle className="text-sm flex items-center gap-1.5 text-muted-foreground font-medium">
                                         <div className="p-1.5 bg-purple-500/10 rounded-lg">
@@ -360,7 +360,7 @@ const ResearchInsights = () => {
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            <CardHeader className="pb-1.5 relative z-10">
+                            <CardHeader className="pt-3 pb-1.5 relative z-10">
                                 <div className="flex items-center justify-between mb-1.5">
                                     <CardTitle className="text-sm flex items-center gap-1.5 text-muted-foreground font-medium">
                                         <div className="p-1.5 bg-cyan-500/10 rounded-lg">
@@ -426,7 +426,7 @@ const ResearchInsights = () => {
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            <CardHeader className="pb-1.5 relative z-10">
+                            <CardHeader className="pt-3 pb-1.5 relative z-10">
                                 <CardTitle className="text-sm flex items-center gap-1.5 text-muted-foreground font-medium">
                                     <div className="p-1.5 bg-green-500/10 rounded-lg">
                                         <Star className="w-3 h-3 text-green-600" />
@@ -502,7 +502,7 @@ const ResearchInsights = () => {
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            <CardHeader className="pb-1.5 relative z-10">
+                            <CardHeader className="pt-3 pb-1.5 relative z-10">
                                 <div className="flex items-center justify-between">
                                     <CardTitle className="text-base flex items-center gap-1.5">
                                         <div className="p-1.5 bg-indigo-500/10 rounded-lg">
@@ -547,7 +547,7 @@ const ResearchInsights = () => {
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                            <CardHeader className="pb-3 relative z-10">
+                            <CardHeader className="pt-3 pb-3 relative z-10">
                                 <CardTitle className="text-base flex items-center gap-1.5">
                                     <div className="p-1.5 bg-amber-500/10 rounded-lg">
                                         <Award className="w-4 h-4 text-amber-600" />
@@ -568,7 +568,7 @@ const ResearchInsights = () => {
                                             <div className={`p-0.5 ${metric.bg} rounded-lg mb-0.5`}>
                                                 <metric.icon className={`w-3 h-3 ${metric.color}`} />
                                             </div>
-                                            <div className={`text-base font-black bg-gradient-to-r ${metric.color.replace('text-', 'from-')} ${metric.color.replace('text-', 'to-').replace('600', '800')} bg-clip-text text-transparent`}>
+                                            <div className={`text-base font-black bg-gradient-to-r ${metric.gradient} bg-clip-text text-transparent`}>
                                                 {metric.count !== null ? `${metric.count}${metric.value.includes('K') ? 'K' : metric.value.includes('%') ? '%' : ''}${metric.value.includes('+') ? '+' : ''}` : metric.value}
                                             </div>
                                             <div className="text-[8px] text-muted-foreground text-center mt-0.5 leading-tight">{metric.label}</div>

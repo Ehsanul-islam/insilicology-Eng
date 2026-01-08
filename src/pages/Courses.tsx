@@ -65,8 +65,8 @@ const Courses = () => {
     return (
         <div className="min-h-screen flex flex-col">
             <SEOHead
-                title="সব কোর্স - লার্নক্রাফট অ্যাকাডেমি"
-                description="আধুনিক গবেষকদের জন্য বিশেষ-কিউরেটেড কোর্সের মাধ্যমে চাহিদা সম্পন্ন দক্ষতা অর্জন করুন।"
+                title="Academy"
+                description="Master in-demand skills with expert-curated courses for modern researchers."
                 url="/academy"
                 tags={['online courses', 'web development', 'data science', 'research training']}
             />

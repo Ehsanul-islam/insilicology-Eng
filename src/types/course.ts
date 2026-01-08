@@ -66,7 +66,10 @@ export interface CourseFormData {
   upcoming: boolean;
   certificate: boolean;
   price_regular: string;
+
   price_offer: string;
+  early_bird_price: string;
+  early_bird_limit: string;
   start_date: Date | undefined;
   end_date: Date | undefined;
   duration_text: string;

@@ -131,6 +131,8 @@ const AdminCourseEditor = () => {
           certificate: data.certificate ?? true,
           price_regular: data.price_regular?.toString() || '',
           price_offer: data.price_offer?.toString() || '',
+          early_bird_price: courseData.early_bird_price?.toString() || '',
+          early_bird_limit: courseData.early_bird_limit?.toString() || '',
           start_date: data.start_date ? new Date(data.start_date) : undefined,
           end_date: courseData.end_date ? new Date(courseData.end_date) : undefined,
           duration_text: data.duration_text || '',
@@ -240,6 +242,8 @@ const AdminCourseEditor = () => {
         certificate: formData.certificate,
         price_regular: formData.price_regular && !isNaN(parseFloat(formData.price_regular)) ? parseFloat(formData.price_regular) : null,
         price_offer: formData.price_offer && !isNaN(parseFloat(formData.price_offer)) ? parseFloat(formData.price_offer) : null,
+        early_bird_price: formData.early_bird_price && !isNaN(parseFloat(formData.early_bird_price)) ? parseFloat(formData.early_bird_price) : null,
+        early_bird_limit: formData.early_bird_limit && !isNaN(parseInt(formData.early_bird_limit)) ? parseInt(formData.early_bird_limit) : null,
         start_date: formData.start_date ? format(formData.start_date, 'yyyy-MM-dd') : null,
         end_date: formData.end_date ? format(formData.end_date, 'yyyy-MM-dd') : null,
         duration_text: formData.duration_text.trim() || null,
@@ -733,6 +737,39 @@ const AdminCourseEditor = () => {
                           onChange={(e) => setFormData(prev => ({ ...prev, price_offer: e.target.value }))}
                           placeholder="7999"
                         />
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <div>
+                        <Label htmlFor="early_bird_price">Early Bird Price ($)</Label>
+                        <Input
+                          id="early_bird_price"
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={formData.early_bird_price}
+                          onChange={(e) => setFormData(prev => ({ ...prev, early_bird_price: e.target.value }))}
+                          placeholder="e.g. 5999"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Special price for first few students
+                        </p>
+                      </div>
+                      <div>
+                        <Label htmlFor="early_bird_limit">Early Bird Seat Limit</Label>
+                        <Input
+                          id="early_bird_limit"
+                          type="number"
+                          min="0"
+                          step="1"
+                          value={formData.early_bird_limit}
+                          onChange={(e) => setFormData(prev => ({ ...prev, early_bird_limit: e.target.value }))}
+                          placeholder="e.g. 20"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Number of seats available at this price
+                        </p>
                       </div>
                     </div>
 

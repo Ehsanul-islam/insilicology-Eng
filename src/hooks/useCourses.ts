@@ -144,7 +144,18 @@ export const useCourseDetail = (slug: string | undefined) => {
         .single();
 
       if (courseError) throw courseError;
-      setCourse(courseData as unknown as Course);
+
+      // Fetch enrollment count
+      const { count: enrollmentCount } = await supabase
+        .from('enrollments')
+        .select('*', { count: 'exact', head: true })
+        .eq('course_id', courseData.id)
+        .neq('status', 'cancelled');
+
+      setCourse({
+        ...courseData,
+        participant_count: enrollmentCount || 0
+      } as unknown as Course);
 
       // Fetch lessons, enrollment, and resources in parallel
       const fetchRelatedData = async (courseId: string) => {

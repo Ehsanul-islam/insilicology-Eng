@@ -3,6 +3,7 @@ import {
   Check, ArrowRight, Flame, Users, Shield, Clock, Star, Video
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import CountdownTimer from './CountdownTimer';
 import { Tables } from '@/integrations/supabase/types';
 
@@ -14,8 +15,10 @@ interface ValueItem {
 }
 
 interface PricingSectionProps {
-  priceOffer?: number | null;
   priceRegular?: number | null;
+  priceOffer?: number | null;
+  earlyBirdPrice?: number | null;
+  earlyBirdLimit?: number | null;
   valueBreakdown?: ValueItem[];
   countdownEndDate?: string | null;
   onEnrollClick: () => void;
@@ -29,6 +32,8 @@ interface PricingSectionProps {
 const PricingSection = ({
   priceOffer,
   priceRegular,
+  earlyBirdPrice,
+  earlyBirdLimit,
   valueBreakdown,
   countdownEndDate,
   onEnrollClick,
@@ -38,7 +43,18 @@ const PricingSection = ({
   enrolledCount = 3000,
   course,
 }: PricingSectionProps) => {
-  const hasDiscount = priceRegular && priceOffer && priceOffer < priceRegular;
+  const isEarlyBirdActive = earlyBirdPrice && earlyBirdLimit && enrolledCount < earlyBirdLimit;
+  const effectivePrice = isEarlyBirdActive ? earlyBirdPrice : priceOffer;
+  const spotsLeft = isEarlyBirdActive && earlyBirdLimit ? earlyBirdLimit - enrolledCount : 0;
+
+  // Progress bar calculations
+  const totalSpots = earlyBirdLimit || 1;
+  const takenSpots = enrolledCount || 0;
+  const percentClaimed = Math.min(100, Math.round((takenSpots / totalSpots) * 100));
+  const progressWidth = `${percentClaimed}%`;
+
+
+  const hasDiscount = priceRegular && effectivePrice && effectivePrice < priceRegular;
   const totalValue = valueBreakdown?.reduce((acc, item) => acc + Number(item.original_price || 0), 0) || 0;
 
   return (
@@ -80,9 +96,9 @@ const PricingSection = ({
         viewport={{ once: true }}
         className="bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-2xl"
       >
-        {/* Card Header */}
+        {/* Card Header - Premium Design */}
         <div className="p-6 lg:p-8 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-foreground">Program Fee</h3>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Users className="w-4 h-4" />
@@ -90,21 +106,66 @@ const PricingSection = ({
             </div>
           </div>
 
-          {/* Price Display */}
-          <div className="flex items-end justify-between gap-4 mb-6">
-            <div className="flex items-baseline gap-3">
-              <span className="text-4xl lg:text-5xl font-bold vibe-gradient-text">
-                ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}
-              </span>
-              {hasDiscount && (
-                <span className="text-xl text-muted-foreground line-through">
-                  ${Number(priceRegular).toLocaleString()}
-                </span>
-              )}
-            </div>
-          </div>
+          {isEarlyBirdActive ? (
+            /* PREMIUM EARLY BIRD CARD */
+            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 rounded-lg p-5 relative overflow-hidden mb-6">
+              {/* LIMITED OFFER BADGE */}
+              <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg shadow-sm">
+                LIMITED OFFER
+              </div>
 
-          <p className="text-muted-foreground text-sm">One-time payment, lifetime access</p>
+              {/* TITLE & PRICES */}
+              <div className="flex justify-between items-end mb-4 pt-2">
+                <div>
+                  <p className="text-xs font-bold text-orange-600 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <Flame className="w-4 h-4 animate-pulse" />
+                    Early Bird Offer
+                  </p>
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">${earlyBirdPrice}</span>
+                    <span className="text-base text-gray-400 line-through font-medium translate-y-[-2px]">${priceRegular}</span>
+                  </div>
+                </div>
+                <div className="text-right pb-1">
+                  <p className="text-[11px] text-gray-500 font-medium mb-1 uppercase tracking-wide">Next Price</p>
+                  <p className="text-2xl font-bold text-gray-400 decoration-gray-300 decoration-2">${priceOffer}</p>
+                </div>
+              </div>
+
+              {/* PROGRESS BAR */}
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs font-bold">
+                  <span className="text-orange-700">Only {spotsLeft} spots left!</span>
+                  <span className="text-gray-400">{percentClaimed}% Claimed</span>
+                </div>
+                <div className="h-2.5 w-full bg-orange-100 rounded-full overflow-hidden shadow-inner">
+                  <div
+                    className="h-full bg-gradient-to-r from-orange-400 to-red-500 rounded-full transition-all duration-1000 ease-out shadow-sm"
+                    style={{ width: progressWidth }}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            /* REGULAR PRICING DISPLAY */
+            <div className="flex items-end justify-between gap-4 mb-6">
+              <div className="flex items-baseline gap-3">
+                <span className="text-4xl lg:text-5xl font-bold vibe-gradient-text">
+                  ${effectivePrice ? Number(effectivePrice).toLocaleString() : 'Free'}
+                </span>
+                {hasDiscount && (
+                  <span className="text-xl text-muted-foreground line-through">
+                    ${Number(priceRegular).toLocaleString()}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          <p className="text-muted-foreground text-sm flex items-center gap-2">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
+            One-time payment, lifetime access
+          </p>
         </div>
 
         {/* What's Included */}
@@ -176,7 +237,7 @@ const PricingSection = ({
           >
             <Button
               onClick={onEnrollClick}
-              className="w-full vibe-cta-gradient text-white py-6 text-base font-semibold rounded-xl shadow-2xl shadow-pink-500/30 hover:shadow-pink-500/50 transition-all duration-300 group"
+              className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black text-lg font-extrabold py-6 rounded-xl shadow-2xl shadow-orange-500/20 hover:shadow-orange-500/40 transition-all duration-300 group"
               size="lg"
             >
               {isEnrolled ? (
@@ -185,7 +246,7 @@ const PricingSection = ({
                 'Pre-Register Now'
               ) : (
                 <>
-                  <span>Enroll Now - ${priceOffer ? Number(priceOffer).toLocaleString() : 'Free'}</span>
+                  <span>Enroll Now - ${effectivePrice ? Number(effectivePrice).toLocaleString() : 'Free'}</span>
                   <ArrowRight className="w-6 h-6 ml-2 transition-transform group-hover:translate-x-1" />
                 </>
               )}

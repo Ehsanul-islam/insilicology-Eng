@@ -173,11 +173,25 @@ const CourseDetail = () => {
     : [];
   const modules = (course.modules as unknown as ModuleItem[] | null) || [];
 
+  // Early Bird Logic
+  const earlyBirdPrice = course.early_bird_price ? Number(course.early_bird_price) : null;
+  const earlyBirdLimit = course.early_bird_limit ? Number(course.early_bird_limit) : null;
+  const enrollmentCount = course.participant_count || 0;
+
+  const isEarlyBirdActive =
+    earlyBirdPrice !== null &&
+    earlyBirdLimit !== null &&
+    enrollmentCount < earlyBirdLimit;
+
+  const effectivePrice = isEarlyBirdActive && earlyBirdPrice !== null
+    ? earlyBirdPrice
+    : (course.price_offer ? Number(course.price_offer) : 0);
+
   return (
     <div className="min-h-screen bg-background">
       {/* SEO Head */}
       <SEOHead
-        title={`${course.title} - LearnCraft`}
+        title={`${course.title} - insilicology`}
         description={course.description || ''}
         url={`/courses/${slug}`}
         type="article"
@@ -187,7 +201,7 @@ const CourseDetail = () => {
           title: course.title,
           description: course.description || '',
           instructor: course.instructor_name || 'Expert Instructor',
-          price: Number(course.price_offer) || 0,
+          price: effectivePrice,
         }}
         tags={topics.map(String)}
       />
@@ -219,6 +233,9 @@ const CourseDetail = () => {
           priceOffer={course.price_offer ? Number(course.price_offer) : undefined}
           duration={course.duration_text || undefined}
           modulesCount={course.module_count || undefined}
+          earlyBirdPrice={earlyBirdPrice}
+          earlyBirdLimit={earlyBirdLimit}
+          enrollmentCount={enrollmentCount}
           course={course}
         />
 
@@ -373,7 +390,7 @@ const CourseDetail = () => {
                 <EverythingYoureGettingSection
                   valueBreakdown={valueBreakdown}
                   totalValue={valueBreakdown.reduce((sum, item) => sum + (item.original_price || 0), 0)}
-                  priceOffer={course.price_offer}
+                  priceOffer={effectivePrice}
                   priceRegular={course.price_regular}
                   onEnrollClick={handleEnroll}
                   isEnrolled={isEnrolled}
@@ -389,15 +406,17 @@ const CourseDetail = () => {
                   className="max-w-2xl mx-auto"
                 >
                   <PricingSection
-                    priceOffer={course.price_offer}
+                    priceOffer={Number(course.price_offer)}
                     priceRegular={course.price_regular}
+                    earlyBirdPrice={earlyBirdPrice}
+                    earlyBirdLimit={earlyBirdLimit}
                     valueBreakdown={valueBreakdown.length > 0 ? valueBreakdown : undefined}
                     countdownEndDate={course.countdown_end_date}
                     onEnrollClick={handleEnroll}
                     isEnrolled={isEnrolled}
                     upcoming={course.upcoming || false}
                     whatsIncluded={course.whats_included as string[]}
-                    enrolledCount={course.enrollment_count || undefined}
+                    enrolledCount={enrollmentCount}
                     course={course}
                   />
                 </motion.div>
@@ -432,7 +451,7 @@ const CourseDetail = () => {
           - Fixed bottom bar with price + enroll button
       ═══════════════════════════════════════════════════════════════════ */}
       <StickyFooterCTA
-        price={course.price_offer}
+        price={effectivePrice}
         priceRegular={course.price_regular}
         onEnrollClick={handleEnroll}
         isEnrolled={isEnrolled}
@@ -447,7 +466,7 @@ const CourseDetail = () => {
           course={{
             id: course.id,
             title: course.title,
-            price_offer: course.price_offer,
+            price_offer: effectivePrice,
             price_regular: course.price_regular,
             payment_methods: course.payment_methods as string[] | null,
             payment_instructions: course.payment_instructions,
@@ -456,6 +475,7 @@ const CourseDetail = () => {
           open={enrollmentOpen}
           onOpenChange={setEnrollmentOpen}
           onSuccess={refetch}
+          isEarlyBird={isEarlyBirdActive && effectivePrice === earlyBirdPrice}
         />
       )}
     </div>

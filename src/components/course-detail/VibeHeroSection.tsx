@@ -32,6 +32,9 @@ interface VibeHeroSectionProps {
   priceRegular?: number;
   priceOffer?: number;
   batch?: string;
+  earlyBirdPrice?: number | null;
+  earlyBirdLimit?: number | null;
+  enrollmentCount?: number;
 
   instructorName?: string;
   duration?: string;
@@ -95,6 +98,9 @@ const VibeHeroSection = memo(({
   priceRegular,
   priceOffer,
   batch,
+  earlyBirdPrice,
+  earlyBirdLimit,
+  enrollmentCount,
 
   instructorName,
   duration,
@@ -117,6 +123,19 @@ const VibeHeroSection = memo(({
   const discountPercent = priceRegular && priceOffer
     ? Math.round(((priceRegular - priceOffer) / priceRegular) * 100)
     : 0;
+
+  const isEarlyBirdActive = earlyBirdPrice && earlyBirdLimit && (enrollmentCount || 0) < earlyBirdLimit;
+  const effectivePrice = isEarlyBirdActive ? earlyBirdPrice : priceOffer;
+  const spotsLeft = isEarlyBirdActive && earlyBirdLimit ? earlyBirdLimit - (enrollmentCount || 0) : 0;
+
+  // Progress bar calculations
+  const totalSpots = earlyBirdLimit || 1;
+  const takenSpots = enrollmentCount || 0;
+  const percentClaimed = Math.min(100, Math.round((takenSpots / totalSpots) * 100));
+  const progressWidth = `${percentClaimed}%`;
+
+
+
 
   const scrollToContent = () => {
     window.scrollBy({ top: window.innerHeight * 0.8, behavior: 'smooth' });
@@ -325,18 +344,57 @@ const VibeHeroSection = memo(({
 
               {/* Pricing Section */}
               <div className="mb-5">
-                {priceRegular && priceOffer ? (
+                {isEarlyBirdActive ? (
+                  /* PREMIUM EARLY BIRD CARD */
+                  <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 rounded-lg p-4 relative overflow-hidden">
+                    {/* LIMITED OFFER BADGE */}
+                    <div className="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg">
+                      LIMITED OFFER
+                    </div>
+                    {/* TITLE & PRICES */}
+                    <div className="flex justify-between items-end mb-3">
+                      <div>
+                        <p className="text-xs font-bold text-orange-600 uppercase tracking-wider mb-1 flex items-center gap-1">
+                          <Flame className="w-3.5 h-3.5 animate-pulse" />
+                          Early Bird Offer
+                        </p>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-3xl font-black text-gray-900">${earlyBirdPrice}</span>
+                          <span className="text-sm text-gray-400 line-through font-medium">${priceRegular}</span>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[10px] text-gray-500 font-medium mb-0.5">Next Price</p>
+                        <p className="text-lg font-bold text-gray-400 decoration-gray-300">${priceOffer}</p>
+                      </div>
+                    </div>
+                    {/* PROGRESS BAR */}
+                    <div className="space-y-1.5">
+                      <div className="flex justify-between text-[11px] font-semibold">
+                        <span className="text-orange-700">Only {spotsLeft} spots left!</span>
+                        <span className="text-gray-400">{percentClaimed}% Claimed</span>
+                      </div>
+                      <div className="h-2 w-full bg-orange-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-orange-400 to-red-500 rounded-full transition-all duration-1000 ease-out"
+                          style={{ width: progressWidth }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* REGULAR PRICING DISPLAY */
                   <div className="text-center">
                     <div className="flex items-baseline justify-center gap-2">
                       <span className="text-gray-400 line-through text-lg font-semibold">
                         ${priceRegular}
                       </span>
                       <span className="text-[#ef4444] text-4xl font-black tracking-tight leading-none">
-                        ${priceOffer}
+                        ${effectivePrice}
                       </span>
                     </div>
                   </div>
-                ) : null}
+                )}
               </div>
 
               {/* CTA Button */}

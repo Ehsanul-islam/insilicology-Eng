@@ -34,6 +34,8 @@ export const getDefaultFormData = (): CourseFormData => ({
     certificate: true,
     price_regular: '',
     price_offer: '',
+    early_bird_price: '',
+    early_bird_limit: '',
     start_date: undefined,
     end_date: undefined,
     duration_text: '',

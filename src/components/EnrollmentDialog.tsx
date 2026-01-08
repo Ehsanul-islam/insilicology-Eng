@@ -44,6 +44,7 @@ interface EnrollmentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
+  isEarlyBird?: boolean;
 }
 
 const PAYMENT_METHOD_INFO: Record<string, { icon: React.ReactNode; label: string; description: string }> = {
@@ -64,7 +65,7 @@ const PAYMENT_METHOD_INFO: Record<string, { icon: React.ReactNode; label: string
   },
 };
 
-export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: EnrollmentDialogProps) => {
+export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess, isEarlyBird }: EnrollmentDialogProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -220,6 +221,13 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
             {course.price_offer ? `$${Number(course.price_offer).toLocaleString()}` : 'Free'}
           </span>
         </div>
+        {isEarlyBird && (
+          <div className="px-4 pb-3">
+            <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-200 w-full justify-center">
+              🎉 Early Bird Pricing Applied!
+            </Badge>
+          </div>
+        )}
         {course.price_regular && course.price_offer && course.price_offer < course.price_regular && (
           <div className="flex justify-between items-center mt-1">
             <span className="text-sm text-muted-foreground">Original Price</span>
@@ -252,8 +260,8 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
               <div
                 key={method}
                 className={`flex items-center space-x-3 p-4 rounded-lg border cursor-pointer transition-colors ${paymentMethod === method
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/50'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-primary/50'
                   }`}
                 onClick={() => setPaymentMethod(method)}
               >
@@ -521,51 +529,51 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess }: Enro
                 <div key={s} className="flex items-center">
                   <div
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-colors ${step === s
-                        ? 'bg-primary text-primary-foreground'
-                        : ['form', 'payment', 'upload', 'review'].indexOf(step) > i
+                      ? 'bg-primary text-primary-foreground'
+                      : ['form', 'payment', 'upload', 'review'].indexOf(step) > i
                         ? 'bg-primary/20 text-primary'
                         : 'bg-muted text-muted-foreground'
-                    }`}
+                      }`}
                   >
-                  {['form', 'payment', 'upload', 'review'].indexOf(step) > i ? (
-                    <CheckCircle className="w-4 h-4" />
-                  ) : (
-                    i + 1
-                  )}
-                </div>
+                    {['form', 'payment', 'upload', 'review'].indexOf(step) > i ? (
+                      <CheckCircle className="w-4 h-4" />
+                    ) : (
+                      i + 1
+                    )}
+                  </div>
                   {
-                  i< 3 && (
-                    <div
-                      className={`w-8 h-0.5 ${['form', 'payment', 'upload', 'review'].indexOf(step) > i
+                    i < 3 && (
+                      <div
+                        className={`w-8 h-0.5 ${['form', 'payment', 'upload', 'review'].indexOf(step) > i
                           ? 'bg-primary'
                           : 'bg-muted'
-                        }`}
-                    />
-                  )
-                }
+                          }`}
+                      />
+                    )
+                  }
                 </div>
               ))}
-          </div>
+            </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={step}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.2 }}
-          >
-            {step === 'form' && renderFormStep()}
-            {step === 'payment' && renderPaymentStep()}
-            {step === 'upload' && renderUploadStep()}
-            {step === 'review' && renderReviewStep()}
-          </motion.div>
-        </AnimatePresence>
-      </>
-      ) : (
-      renderExistingEnrollment()
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={step}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {step === 'form' && renderFormStep()}
+                {step === 'payment' && renderPaymentStep()}
+                {step === 'upload' && renderUploadStep()}
+                {step === 'review' && renderReviewStep()}
+              </motion.div>
+            </AnimatePresence>
+          </>
+        ) : (
+          renderExistingEnrollment()
         )}
-    </DialogContent>
+      </DialogContent>
     </Dialog >
   );
 };

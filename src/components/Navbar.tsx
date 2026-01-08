@@ -54,19 +54,20 @@ const Navbar = () => {
     .toUpperCase() || 'U';
 
   const mainNavLinks = [
+    { name: 'Home', href: '/' },
     { name: 'Academy', href: '/academy' },
     { name: 'Research', href: '/research' },
-    { name: 'Blog', href: '/blog' },
   ];
 
   const othersDropdownLinks = [
+    { name: 'Blog', href: '/blog' },
     { name: 'Portfolio', href: '/portfolio' },
     { name: 'Community', href: '/community' },
     { name: 'Contact', href: '/contact' },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 font-siliguri">
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 gap-4">
           {/* Logo */}

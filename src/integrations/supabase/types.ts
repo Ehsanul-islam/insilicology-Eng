@@ -428,6 +428,8 @@ export type Database = {
           payment_instructions: string | null
           payment_methods: Json | null
           poster_url: string | null
+          early_bird_price: number | null
+          early_bird_limit: number | null
           price_offer: number | null
           price_regular: number | null
           promo_video_url: string | null

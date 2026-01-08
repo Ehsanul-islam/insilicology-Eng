@@ -153,7 +153,7 @@ const UnifiedHero = memo(({
                                     <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
                                         <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
                                     </div>
-                                    <span className="text-sm font-semibold text-gray-700">Thesis</span>
+                                    <span className="text-sm font-semibold text-gray-700">Research</span>
                                 </div>
                                 <div className="flex items-center gap-2 bg-purple-50/50 backdrop-blur-sm px-3 py-1.5 rounded-full border border-purple-100 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 cursor-default">
                                     <div className="flex items-center justify-center w-4 h-4 bg-[#7C3AED] rounded-full flex-shrink-0">
