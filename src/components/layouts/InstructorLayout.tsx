@@ -11,7 +11,8 @@ import {
     Menu,
     X,
     GraduationCap,
-    Video
+    Video,
+    Home
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { startCase } from 'lodash';
@@ -93,6 +94,14 @@ const InstructorLayout = () => {
                         </nav>
 
                         <div className="p-4 border-t space-y-4">
+                            <Link
+                                to="/"
+                                className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+                            >
+                                <Home className="h-5 w-5 text-gray-400" />
+                                Back to Home
+                            </Link>
+
                             <div className="flex items-center gap-3 px-3 py-2">
                                 <div className="h-8 w-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold">
                                     {user?.email?.[0].toUpperCase()}
