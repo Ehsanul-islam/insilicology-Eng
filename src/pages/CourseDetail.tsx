@@ -29,12 +29,14 @@ const CourseTags = lazy(() => import('@/components/course-detail/CourseTags'));
 
 // Type definitions for JSON fields
 interface Stats {
-  students?: number;
+  students?: string;
   community?: string;
   support?: string;
   time?: string;
   capacity?: string;
   batch?: string;
+  fakeEnrollmentPadding?: string;
+  genuineThreshold?: string;
 }
 
 interface ComparisonFeature {
@@ -280,25 +282,14 @@ const CourseDetail = () => {
               SECTION 2.5: COURSE TAGS
               - Skills / Tags
           ═══════════════════════════════════════════════════════════════════ */}
-            {topics.length > 0 && (
-              <section className="w-full max-w-4xl mx-auto px-4 -mt-36 lg:-mt-56 -mb-24 lg:-mb-32">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                >
-                  <CourseTags tags={topics} />
-                </motion.div>
-              </section>
-            )}
+
 
             {/* ═══════════════════════════════════════════════════════════════════
               SECTION 3: COMPARISON TABLE
               - What we offer vs Others feature checklist
           ═══════════════════════════════════════════════════════════════════ */}
             {comparisonFeatures.length > 0 && (
-              <section className="container-custom">
+              <section className="container-custom -mt-12 lg:-mt-20">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -385,7 +376,7 @@ const CourseDetail = () => {
               SECTION 7.5 & 8: EVERYTHING YOU'RE GETTING & PRICING
               - Grouped to eliminate vertical spacing
           ═══════════════════════════════════════════════════════════════════ */}
-            <div>
+            <div className="-mt-36 lg:-mt-56">
               {valueBreakdown.length > 0 && (
                 <EverythingYoureGettingSection
                   valueBreakdown={valueBreakdown}
@@ -417,6 +408,7 @@ const CourseDetail = () => {
                     upcoming={course.upcoming || false}
                     whatsIncluded={course.whats_included as string[]}
                     enrolledCount={enrollmentCount}
+                    stats={stats}
                     course={course}
                   />
                 </motion.div>

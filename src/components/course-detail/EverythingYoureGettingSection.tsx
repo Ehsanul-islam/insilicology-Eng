@@ -30,7 +30,7 @@ const EverythingYoureGettingSection = ({
   const finalPrice = priceOffer || priceRegular || 0;
 
   return (
-    <section className="pt-16 lg:pt-24 pb-8 lg:pb-12 bg-[#f5f7ff] relative overflow-hidden">
+    <section className="pt-4 lg:pt-8 pb-8 lg:pb-12 bg-[#f5f7ff] relative overflow-hidden">
       {/* Subtle Grid Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-30" />
 

@@ -175,7 +175,10 @@ const AdminCourseEditor = () => {
             support: (data.stats as Record<string, string>)?.support || '',
             time: (data.stats as Record<string, string>)?.time || '',
             capacity: (data.stats as Record<string, string>)?.capacity || '',
+            capacity: (data.stats as Record<string, string>)?.capacity || '',
             batch: (data.stats as Record<string, string>)?.batch || '',
+            fakeEnrollmentPadding: (data.stats as Record<string, string>)?.fakeEnrollmentPadding || '',
+            genuineThreshold: (data.stats as Record<string, string>)?.genuineThreshold || '',
           },
           faq: Array.isArray(data.faq) && data.faq.length > 0
             ? data.faq as unknown as FAQItem[]
@@ -276,7 +279,10 @@ const AdminCourseEditor = () => {
           support: formData.stats.support || null,
           time: formData.stats.time || null,
           capacity: formData.stats.capacity || null,
+          capacity: formData.stats.capacity || null,
           batch: formData.stats.batch || null,
+          fakeEnrollmentPadding: formData.stats.fakeEnrollmentPadding || null,
+          genuineThreshold: formData.stats.genuineThreshold || null,
         },
         faq: formData.faq.filter(f => f.question.trim() && f.answer.trim()),
         whats_included: formData.whats_included.filter(w => w.trim()),
@@ -769,6 +775,56 @@ const AdminCourseEditor = () => {
                         />
                         <p className="text-xs text-muted-foreground mt-1">
                           Number of seats available at this price
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid gap-4 sm:grid-cols-2 pt-4 border-t">
+                      <div className="sm:col-span-2">
+                        <Label className="text-base font-semibold text-orange-600 flex items-center gap-2">
+                          <Flame className="w-4 h-4" />
+                          Scarcity Logic Configuration
+                        </Label>
+                        <p className="text-xs text-muted-foreground mb-4">
+                          Configure fake enrollment data to encourage sales.
+                        </p>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="stats.fakeEnrollmentPadding">Fake Enrollment Padding</Label>
+                        <Input
+                          id="stats.fakeEnrollmentPadding"
+                          type="number"
+                          min="0"
+                          step="1"
+                          value={formData.stats.fakeEnrollmentPadding || ''}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            stats: { ...prev.stats, fakeEnrollmentPadding: e.target.value }
+                          }))}
+                          placeholder="e.g. 10"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Added to real count when below genuine threshold.
+                        </p>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="stats.genuineThreshold">Genuine Threshold</Label>
+                        <Input
+                          id="stats.genuineThreshold"
+                          type="number"
+                          min="0"
+                          step="1"
+                          value={formData.stats.genuineThreshold || ''}
+                          onChange={(e) => setFormData(prev => ({
+                            ...prev,
+                            stats: { ...prev.stats, genuineThreshold: e.target.value }
+                          }))}
+                          placeholder="e.g. 5"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Switch to real data when enrollments reach this number.
                         </p>
                       </div>
                     </div>

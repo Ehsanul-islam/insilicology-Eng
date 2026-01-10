@@ -49,7 +49,7 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
 
   return (
     <>
-      <div className="space-y-8">
+      <div className="space-y-6">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -90,13 +90,13 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
         {/* Testimonials Carousel */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
+          className="flex gap-5 overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-4 px-4"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {testimonials.map((testimonial, index) => {
             const hasVideo = !!testimonial.video_url;
             const hasImage = !!testimonial.image_url || !!testimonial.thumbnail;
-            const thumbnail = testimonial.thumbnail || 
+            const thumbnail = testimonial.thumbnail ||
               testimonial.image_url ||
               (testimonial.video_url ? getYouTubeThumbnail(testimonial.video_url) : null);
 
@@ -128,10 +128,10 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
                           alt={`${testimonial.name}'s review`}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover/thumb:scale-110"
                         />
-                        
+
                         {/* Dark overlay on hover */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover/thumb:opacity-100 transition-opacity" />
-                        
+
                         {/* For Videos */}
                         {hasVideo && (
                           <>
@@ -144,14 +144,14 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
                                 <Play className="w-5 h-5 text-pink-600 ml-0.5" fill="currentColor" />
                               </motion.div>
                             </div>
-                            
+
                             {/* Video badge */}
                             <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/80 rounded text-[10px] text-white font-medium">
                               VIDEO
                             </div>
                           </>
                         )}
-                        
+
                         {/* For Images only - Zoom icon */}
                         {!hasVideo && (
                           <div className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity">
@@ -169,11 +169,10 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`w-3.5 h-3.5 ${
-                                i < testimonial.rating!
+                              className={`w-3.5 h-3.5 ${i < testimonial.rating!
                                   ? 'fill-amber-400 text-amber-400'
                                   : 'text-slate-200 dark:text-slate-700'
-                              }`}
+                                }`}
                             />
                           ))}
                         </div>
@@ -185,10 +184,10 @@ const VideoTestimonials = ({ testimonials }: VideoTestimonialsProps) => {
                           "{testimonial.text}"
                         </p>
                       )}
-                      
+
                       {/* "Watch Video" CTA for video reviews */}
                       {hasVideo && testimonial.video_url && (
-                        <button 
+                        <button
                           className="text-xs text-pink-600 hover:text-pink-700 dark:text-pink-400 dark:hover:text-pink-300 font-semibold mb-3 flex items-center gap-1 transition-colors"
                           onClick={() => setActiveMedia({ type: 'video', url: testimonial.video_url!, name: testimonial.name })}
                         >

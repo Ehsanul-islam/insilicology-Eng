@@ -12,6 +12,8 @@ interface Stats {
   students?: number;
   community?: string;
   support?: string;
+  fakeEnrollmentPadding?: string;
+  genuineThreshold?: string;
 }
 
 interface VibeHeroSectionProps {
@@ -124,14 +126,25 @@ const VibeHeroSection = memo(({
     ? Math.round(((priceRegular - priceOffer) / priceRegular) * 100)
     : 0;
 
-  const isEarlyBirdActive = earlyBirdPrice && earlyBirdLimit && (enrollmentCount || 0) < earlyBirdLimit;
+  // Scarcity Logic
+  const realEnrollmentCount = enrollmentCount || 0;
+  const padding = stats?.fakeEnrollmentPadding ? parseInt(stats.fakeEnrollmentPadding) : 0;
+  const threshold = stats?.genuineThreshold ? parseInt(stats.genuineThreshold) : 0;
+
+  // If we have padding configured and real count is less than threshold, show padded count
+  // Otherwise show real count
+  const displayedEnrollmentCount = (padding > 0 && realEnrollmentCount < threshold)
+    ? realEnrollmentCount + padding
+    : realEnrollmentCount;
+
+  const isEarlyBirdActive = earlyBirdPrice && earlyBirdLimit && (displayedEnrollmentCount || 0) < earlyBirdLimit;
   const effectivePrice = isEarlyBirdActive ? earlyBirdPrice : priceOffer;
-  const spotsLeft = isEarlyBirdActive && earlyBirdLimit ? earlyBirdLimit - (enrollmentCount || 0) : 0;
 
   // Progress bar calculations
   const totalSpots = earlyBirdLimit || 1;
-  const takenSpots = enrollmentCount || 0;
+  const takenSpots = displayedEnrollmentCount || 0;
   const percentClaimed = Math.min(100, Math.round((takenSpots / totalSpots) * 100));
+  const spotsLeft = Math.max(0, totalSpots - takenSpots);
   const progressWidth = `${percentClaimed}%`;
 
 

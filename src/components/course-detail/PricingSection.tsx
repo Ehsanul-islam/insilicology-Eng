@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import {
-  Check, ArrowRight, Flame, Users, Shield, Clock, Star, Video
+  Check, ArrowRight, Flame, Users, Shield, Clock, Star, Video, Zap, Gift
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,12 @@ interface ValueItem {
   original_price: number;
 }
 
+interface Stats {
+  fakeEnrollmentPadding?: string;
+  genuineThreshold?: string;
+  students?: string;
+}
+
 interface PricingSectionProps {
   priceRegular?: number | null;
   priceOffer?: number | null;
@@ -24,8 +30,10 @@ interface PricingSectionProps {
   onEnrollClick: () => void;
   isEnrolled?: boolean;
   upcoming?: boolean;
-  whatsIncluded?: string[];
+
+
   enrolledCount?: number;
+  stats?: Stats | null;
   course?: Course | null;
 }
 
@@ -40,17 +48,35 @@ const PricingSection = ({
   isEnrolled,
   upcoming,
   whatsIncluded,
-  enrolledCount = 3000,
+
+
+  stats,
   course,
+  enrolledCount,
 }: PricingSectionProps) => {
-  const isEarlyBirdActive = earlyBirdPrice && earlyBirdLimit && enrolledCount < earlyBirdLimit;
+  // Scarcity Logic
+  const realEnrollmentCount = enrolledCount || 0;
+  const padding = stats?.fakeEnrollmentPadding ? parseInt(stats.fakeEnrollmentPadding) : 0;
+  const threshold = stats?.genuineThreshold ? parseInt(stats.genuineThreshold) : 0;
+
+  // If we have padding configured and real count is less than threshold, show padded count
+  // Otherwise show real count
+  const displayedEnrollmentCount = (padding > 0 && realEnrollmentCount < threshold)
+    ? realEnrollmentCount + padding
+    : realEnrollmentCount;
+
+  // Use the total students count from stats if available, otherwise use the batch enrollment count
+  // This decoupling allows showing "12,500 Enrolled" (Social Proof) while having "8 Spots Left" (Scarcity)
+  const totalEnrolledDisplay = stats?.students || displayedEnrollmentCount.toLocaleString();
+
+  const isEarlyBirdActive = earlyBirdPrice && earlyBirdLimit && displayedEnrollmentCount < earlyBirdLimit;
   const effectivePrice = isEarlyBirdActive ? earlyBirdPrice : priceOffer;
-  const spotsLeft = isEarlyBirdActive && earlyBirdLimit ? earlyBirdLimit - enrolledCount : 0;
 
   // Progress bar calculations
   const totalSpots = earlyBirdLimit || 1;
-  const takenSpots = enrolledCount || 0;
+  const takenSpots = displayedEnrollmentCount || 0;
   const percentClaimed = Math.min(100, Math.round((takenSpots / totalSpots) * 100));
+  const spotsLeft = Math.max(0, totalSpots - takenSpots);
   const progressWidth = `${percentClaimed}%`;
 
 
@@ -94,15 +120,15 @@ const PricingSection = ({
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-2xl"
+        className="bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-2xl relative"
       >
         {/* Card Header - Premium Design */}
-        <div className="p-6 lg:p-8 border-b border-slate-100 dark:border-slate-800">
+        <div className="p-6 lg:p-8 pb-4 lg:pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-lg font-bold text-foreground">Program Fee</h3>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-blue-600 font-medium">
               <Users className="w-4 h-4" />
-              <span>{enrolledCount.toLocaleString()} Enrolled</span>
+              <span>{totalEnrolledDisplay} Enrolled</span>
             </div>
           </div>
 
@@ -169,67 +195,102 @@ const PricingSection = ({
         </div>
 
         {/* What's Included */}
-        {whatsIncluded && whatsIncluded.length > 0 && (
-          <div className="p-6 lg:p-8 border-b border-slate-100 dark:border-slate-800">
-            <div className="space-y-3">
-              {whatsIncluded.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shrink-0">
-                    <Check className="w-4 h-4 text-white" strokeWidth={3} />
-                  </div>
-                  <span className="text-foreground">{String(item)}</span>
-                </motion.div>
-              ))}
+        {
+          whatsIncluded && whatsIncluded.length > 0 && (
+            <div className="p-6 lg:p-8 py-4 lg:py-4 border-b border-slate-100 dark:border-slate-800">
+              <div className="space-y-3">
+                {whatsIncluded.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shrink-0">
+                      <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                    </div>
+                    <span className="text-foreground text-sm">{String(item)}</span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )
+        }
 
         {/* Value Breakdown */}
-        {valueBreakdown && valueBreakdown.length > 0 && (
-          <div className="p-6 lg:p-8 bg-slate-50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
-            <h4 className="font-bold text-foreground mb-4">What You're Getting</h4>
-            <div className="space-y-3">
-              {valueBreakdown.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -10 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.03 }}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-green-600 shrink-0" />
-                    <span className="text-foreground/80">{item.item}</span>
-                  </div>
-                  <span className="text-muted-foreground line-through text-sm">
-                    ${item.original_price.toLocaleString()}
-                  </span>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Total Value */}
-            {totalValue > 0 && (
-              <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
-                <span className="font-semibold text-foreground">Total Value</span>
-                <span className="text-2xl font-bold vibe-gradient-text">
-                  ${totalValue.toLocaleString()}
-                </span>
+        {
+          valueBreakdown && valueBreakdown.length > 0 && (
+            <div className="p-6 lg:p-8 pt-4 lg:pt-4 pb-4 lg:pb-4 bg-slate-50 dark:bg-slate-800/30 border-b border-slate-100 dark:border-slate-800">
+              <h4 className="font-bold text-foreground mb-4">What You're Getting</h4>
+              <div className="space-y-3">
+                {valueBreakdown.map((item, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.03 }}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-green-600 shrink-0" />
+                      <span className="text-foreground/80 text-sm">{item.item}</span>
+                    </div>
+                    <span className="text-muted-foreground line-through text-sm">
+                      ${item.original_price.toLocaleString()}
+                    </span>
+                  </motion.div>
+                ))}
               </div>
-            )}
-          </div>
-        )}
+
+              {/* Total Value */}
+              {totalValue > 0 && (
+                <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center justify-between">
+                  <span className="font-semibold text-foreground">Total Value</span>
+                  <span className="text-2xl font-bold vibe-gradient-text">
+                    ${totalValue.toLocaleString()}
+                  </span>
+                </div>
+              )}
+            </div>
+          )
+        }
+
+        {/* Savings Summary Box */}
+        {
+          totalValue > 0 && effectivePrice && (
+            <div className="px-6 lg:px-8 pb-4">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 border-2 border-green-200 dark:border-green-800 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <Gift className="w-5 h-5 text-green-600" />
+                  <h4 className="font-bold text-green-900 dark:text-green-100 uppercase tracking-wide text-sm">Your Savings Today</h4>
+                </div>
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between text-gray-700 dark:text-gray-300">
+                    <span>Total Value:</span>
+                    <span className="font-semibold">${totalValue.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-gray-700 dark:text-gray-300">
+                    <span>Pre-Registration Price:</span>
+                    <span className="font-semibold">-${Number(effectivePrice).toLocaleString()}</span>
+                  </div>
+                  <div className="h-px bg-green-200 dark:bg-green-800 my-2"></div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-bold text-green-900 dark:text-green-100 text-base">YOU SAVE:</span>
+                    <span className="font-black text-green-600 dark:text-green-400 text-xl">
+                      ${(totalValue - Number(effectivePrice)).toLocaleString()} <span className="text-sm">(96%)</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        }
 
         {/* CTA Section */}
-        <div className="p-6 lg:p-8">
+        <div className="p-6 lg:p-8 pt-4 lg:pt-4">
           {/* CTA Button */}
           <motion.div
             whileHover={{ scale: 1.02 }}
@@ -243,7 +304,7 @@ const PricingSection = ({
               {isEnrolled ? (
                 'Continue Learning'
               ) : upcoming ? (
-                'Pre-Register Now'
+                'Secure Your Spot'
               ) : (
                 <>
                   <span>Enroll Now - ${effectivePrice ? Number(effectivePrice).toLocaleString() : 'Free'}</span>
@@ -276,12 +337,14 @@ const PricingSection = ({
           {/* Social Proof */}
           <div className="mt-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-center">
             <p className="text-sm text-muted-foreground">
-              Trusted by <span className="font-semibold text-foreground">{enrolledCount.toLocaleString()}+</span> Students
+              <p className="text-sm text-muted-foreground">
+                Trusted by <span className="font-semibold text-foreground">{totalEnrolledDisplay}+</span> Students
+              </p>
             </p>
           </div>
         </div>
-      </motion.div>
-    </div>
+      </motion.div >
+    </div >
   );
 };
 

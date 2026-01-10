@@ -137,31 +137,32 @@ export const useCourseDetail = (slug: string | undefined) => {
     queryFn: async () => {
       if (!slug) throw new Error('No slug provided');
 
-      // 1. Fetch course details (full details needed here)
-      const { data: courseData, error: courseError } = await supabase
-        .from('courses')
-        .select('*')
-        .eq('slug', slug)
-        .single();
+      // Batch 1: Fetch course details and user in parallel
+      const [courseResult, userResult] = await Promise.all([
+        supabase
+          .from('courses')
+          .select('*')
+          .eq('slug', slug)
+          .single(),
+        supabase.auth.getUser()
+      ]);
+
+      const { data: courseData, error: courseError } = courseResult;
+      const { data: { user } } = userResult;
 
       if (courseError) throw courseError;
+      if (!courseData) throw new Error('Course not found');
 
-      // 2. Fetch enrollment count
-      const { count: enrollmentCount } = await supabase
+      // Batch 2: Fetch related data in parallel (depend on courseData.id)
+
+      // A. Enrollment Count
+      const enrollmentCountPromise = supabase
         .from('enrollments')
         .select('*', { count: 'exact', head: true })
         .eq('course_id', courseData.id)
         .neq('status', 'cancelled');
 
-      const courseWithCount = {
-        ...courseData,
-        participant_count: enrollmentCount || 0
-      } as unknown as Course;
-
-      // 3. Fetch lessons (optimized fields), enrollment, and resources
-      const { data: { user } } = await supabase.auth.getUser();
-
-      // OPTIMIZED: Only select necessary lesson fields, NOT content
+      // B. Lessons (Optimized)
       const lessonsPromise = supabase
         .from('lessons')
         .select('id, title, lesson_order, description, is_active, course_id')
@@ -169,9 +170,8 @@ export const useCourseDetail = (slug: string | undefined) => {
         .eq('is_active', true)
         .order('lesson_order', { ascending: true });
 
+      // C. User Enrollment (if user exists)
       let enrollmentPromise = Promise.resolve({ data: null });
-      let resourcesPromise = Promise.resolve({ data: [] as Tables<'course_resources'>[] });
-
       if (user) {
         enrollmentPromise = supabase
           .from('enrollments')
@@ -180,23 +180,33 @@ export const useCourseDetail = (slug: string | undefined) => {
           .eq('user_id', user.id)
           .eq('status', 'active')
           .maybeSingle() as any;
-
-        // Only fetch resources if enrolled (logic check inside component usually, but here is safe too)
-        // Actually, let's fetch resources if enrolled check passes later, but for now we fetch all active resources
-        // and filtered by backend RLS usually. But assuming public resources aren't a thing unless enrolled.
-        // Let's stick to the original logic: fetch resources if enrolled. 
-        // We can't know if enrolled until we fetch enrollment.
       }
 
-      const [lessonsResult, enrollmentResult] = await Promise.all([
+      // D. Resources (if enrolled - fetching all active for now as per original logic)
+      // Original logic fetched resources if enrollment existed, but logic was inside the `if (enrollment)` block later.
+      // To keep parallel, we can fetch resources unconditionally or check later. 
+      // The original code:
+      // if (enrollment) { fetch resources }
+      // Since we don't know if enrolled yet, we can't perfectly parallelize resources if strictly dependent on enrollment result.
+      // However, we can fetch them and discard if not enrolled? NO, RLS might prevent it or it's wasteful.
+      // Let's keep resources fetch dependent on enrollment result to be safe/correct, OR if we assume most users looking at details are NOT enrolled, 
+      // we shouldn't fetch resources yet.
+      // Wait, the original code had:
+      // if (enrollment) { const { data: resData } = await supabase...; resources = resData || []; }
+      // So resources fetch MUST wait for enrollment result.
+
+      const [enrollmentCountResult, lessonsResult, enrollmentResult] = await Promise.all([
+        enrollmentCountPromise,
         lessonsPromise,
         enrollmentPromise
       ]);
 
+      const enrollmentCount = enrollmentCountResult.count || 0;
       const enrollment = enrollmentResult.data;
-      let resources: Tables<'course_resources'>[] = [];
 
+      let resources: Tables<'course_resources'>[] = [];
       if (enrollment) {
+        // Fetch resources now that we know user is enrolled
         const { data: resData } = await supabase
           .from('course_resources')
           .select('*')
@@ -204,6 +214,11 @@ export const useCourseDetail = (slug: string | undefined) => {
           .eq('is_active', true);
         resources = resData || [];
       }
+
+      const courseWithCount = {
+        ...courseData,
+        participant_count: enrollmentCount
+      } as unknown as Course;
 
       return {
         course: courseWithCount,

@@ -100,6 +100,8 @@ export interface CourseFormData {
     time?: string;
     capacity?: string;
     batch?: string;
+    fakeEnrollmentPadding?: string;
+    genuineThreshold?: string;
   };
 
   // Marketing - FAQ
