@@ -67,6 +67,13 @@ const CourseDescription = ({
         );
       }
 
+      // Check if it's a horizontal line
+      if (paragraph.trim() === '---' || paragraph.trim().match(/^-{3,}$/)) {
+        return (
+          <hr key={pIndex} className="my-6 border-t-2 border-slate-300 dark:border-slate-700" />
+        );
+      }
+
       // Check if it's a list
       if (paragraph.includes('\n- ') || paragraph.startsWith('- ')) {
         const items = paragraph.split('\n').filter(item => item.startsWith('- '));
@@ -98,28 +105,61 @@ const CourseDescription = ({
     });
   };
 
-  // Handle inline formatting like **bold**, *italic*, and emojis
+  // Handle inline formatting like **bold**, [link](url), and [text]{color}
   const renderInlineFormatting = (text: string) => {
-    // Handle bold text (**text**)
-    const boldRegex = /\*\*(.*?)\*\*/g;
     const parts: (string | JSX.Element)[] = [];
-    let lastIndex = 0;
+    let currentIndex = 0;
+
+    // Combined regex to match bold, links, and colored text
+    const combinedRegex = /(\*\*.*?\*\*)|(\[([^\]]+)\]\(([^)]+)\))|(\[([^\]]+)\]\{([^}]+)\})/g;
     let match;
 
-    while ((match = boldRegex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        parts.push(text.slice(lastIndex, match.index));
+    while ((match = combinedRegex.exec(text)) !== null) {
+      // Add text before the match
+      if (match.index > currentIndex) {
+        parts.push(text.slice(currentIndex, match.index));
       }
-      parts.push(
-        <strong key={`bold-${match.index}`} className="font-semibold text-purple-600 dark:text-purple-400">
-          {match[1]}
-        </strong>
-      );
-      lastIndex = match.index + match[0].length;
+
+      if (match[1]) {
+        // Bold: **text**
+        const boldText = match[1].slice(2, -2);
+        parts.push(
+          <strong key={`bold-${match.index}`} className="font-semibold text-purple-600 dark:text-purple-400">
+            {boldText}
+          </strong>
+        );
+      } else if (match[2]) {
+        // Link: [text](url)
+        const linkText = match[3];
+        const linkUrl = match[4];
+        parts.push(
+          <a
+            key={`link-${match.index}`}
+            href={linkUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+          >
+            {linkText}
+          </a>
+        );
+      } else if (match[5]) {
+        // Custom color: [text]{color}
+        const colorText = match[6];
+        const color = match[7];
+        parts.push(
+          <span key={`color-${match.index}`} style={{ color: color, fontWeight: 500 }}>
+            {colorText}
+          </span>
+        );
+      }
+
+      currentIndex = match.index + match[0].length;
     }
 
-    if (lastIndex < text.length) {
-      parts.push(text.slice(lastIndex));
+    // Add remaining text
+    if (currentIndex < text.length) {
+      parts.push(text.slice(currentIndex));
     }
 
     return parts.length > 0 ? parts : text;
