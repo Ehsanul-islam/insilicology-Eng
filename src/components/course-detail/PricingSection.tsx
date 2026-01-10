@@ -181,23 +181,68 @@ const PricingSection = memo(({
           ) : (
             /* REGULAR PRICING DISPLAY */
             <div className="flex items-end justify-between gap-4 mb-6">
-              <div className="flex items-baseline gap-3">
-                <span className="text-4xl lg:text-5xl font-bold vibe-gradient-text">
-                  ${effectivePrice ? Number(effectivePrice).toLocaleString() : 'Free'}
-                </span>
-                {hasDiscount && (
-                  <span className="text-xl text-muted-foreground line-through">
-                    ${Number(priceRegular).toLocaleString()}
-                  </span>
-                )}
+              {/* Enhanced Pricing Box with Solid Color Background */}
+              <div className="flex-1">
+                {/* Pricing Accent Box - Solid Light Blue */}
+                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-5 relative overflow-hidden">
+                  {/* Top Badges */}
+                  {hasDiscount && (
+                    <div className="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-br-lg shadow-sm">
+                      SAVE {Math.round(((priceRegular! - effectivePrice!) / priceRegular!) * 100)}%
+                    </div>
+                  )}
+                  <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg shadow-sm flex items-center gap-1">
+                    <Flame className="w-3 h-3" />
+                    LIMITED TIME
+                  </div>
+
+                  {/* Pricing Content */}
+                  <div className="pt-6">
+                    {/* Label */}
+                    <p className="text-xs font-bold text-blue-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5" />
+                      Course Fee
+                    </p>
+
+                    {/* Price Display */}
+                    <div className="flex items-baseline gap-3 mb-4">
+                      <span className="text-5xl font-black text-gray-900">
+                        ${effectivePrice ? Number(effectivePrice).toLocaleString() : 'Free'}
+                      </span>
+                      {hasDiscount && (
+                        <>
+                          <span className="text-xl text-gray-400 line-through">
+                            ${Number(priceRegular).toLocaleString()}
+                          </span>
+                          <span className="bg-green-100 text-green-700 px-2 py-1 rounded-md text-sm font-bold">
+                            -{Math.round(((priceRegular! - effectivePrice!) / priceRegular!) * 100)}%
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Value Bullets */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 text-sm text-gray-700">
+                        <Check className="w-4 h-4 text-green-500 shrink-0" />
+                        <span className="font-medium">One-time payment, lifetime access</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-700">
+                        <Check className="w-4 h-4 text-blue-500 shrink-0" />
+                        <span className="font-medium">Certificate upon completion</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-gray-700">
+                        <Check className="w-4 h-4 text-purple-500 shrink-0" />
+                        <span className="font-medium">All future updates free</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           )}
 
-          <p className="text-muted-foreground text-sm flex items-center gap-2">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500"></span>
-            One-time payment, lifetime access
-          </p>
+          {/* Removed redundant "One-time payment, lifetime access" text that was here */}
         </div>
 
         {/* What's Included */}
