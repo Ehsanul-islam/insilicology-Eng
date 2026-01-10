@@ -175,6 +175,24 @@ All colors MUST be HSL.
   .section-off-white {
     background-color: hsl(var(--bio-off-white));
   }
+
+  /* Performance optimization utilities */
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
+  }
+
+  .will-change-scroll {
+    will-change: scroll-position;
+  }
+
+  /* Touch-friendly minimum sizes */
+  .touch-target {
+    @apply min-w-[44px] min-h-[44px];
+  }
 }
 
 @layer utilities {
@@ -302,5 +320,18 @@ All colors MUST be HSL.
 
   .clip-ribbon-right {
     clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+
+  /* Reduced motion support for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

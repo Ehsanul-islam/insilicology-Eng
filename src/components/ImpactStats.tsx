@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Users, BookOpen, Award, Briefcase, TrendingUp, Clock, Globe, Star } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 // Animated counter with decimals support
 const useCounter = (end: number, duration: number = 2000, startCounting: boolean = false) => {
@@ -32,27 +34,36 @@ const useCounter = (end: number, duration: number = 2000, startCounting: boolean
   return count;
 };
 
-// Floating orb component for background
-const FloatingOrb = ({ delay, color, size }: { delay: number; color: string; size: string }) => (
-  <motion.div
-    className={`absolute ${size} ${color} rounded-full blur-3xl opacity-20`}
-    animate={{
-      x: [0, 100, 0],
-      y: [0, -100, 0],
-      scale: [1, 1.2, 1],
-    }}
-    transition={{
-      duration: 20,
-      delay,
-      repeat: Infinity,
-      ease: "easeInOut",
-    }}
-  />
-);
+// Floating orb component for background - memoized
+const FloatingOrb = memo(({ delay, color, size }: { delay: number; color: string; size: string }) => {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) return null;
+
+  return (
+    <motion.div
+      className={`absolute ${size} ${color} rounded-full blur-3xl opacity-20`}
+      animate={{
+        x: [0, 100, 0],
+        y: [0, -100, 0],
+        scale: [1, 1.2, 1],
+      }}
+      transition={{
+        duration: 20,
+        delay,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+  );
+});
+FloatingOrb.displayName = 'FloatingOrb';
 
 const ImpactStats = () => {
   const [startCounting, setStartCounting] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const prefersReducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
 
   const stats = [
     {
@@ -108,8 +119,8 @@ const ImpactStats = () => {
       <div className="container-custom relative z-10">
         {/* Header Section */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           onViewportEnter={() => setStartCounting(true)}
           transition={{ duration: 0.6 }}
@@ -119,7 +130,7 @@ const ImpactStats = () => {
 
           {/* Live Stats Badge with pulse animation */}
           <motion.div
-            animate={{ scale: [1, 1.05, 1] }}
+            animate={prefersReducedMotion || isMobile ? {} : { scale: [1, 1.05, 1] }}
             transition={{ duration: 2, repeat: Infinity }}
             className="flex items-center justify-center gap-2 mb-6"
           >

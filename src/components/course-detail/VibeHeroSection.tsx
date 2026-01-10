@@ -194,8 +194,8 @@ const VibeHeroSection = memo(({
           </div>
         </motion.div>
 
-        {/* 65/35 Grid Layout for wider card - increased gap */}
-        <div className="grid lg:grid-cols-[65fr_35fr] gap-8 lg:gap-12 items-stretch">
+        {/* Grid Layout - Stacks on mobile, 65/35 on larger screens */}
+        <div className="grid grid-cols-1 lg:grid-cols-[65fr_35fr] gap-8 lg:gap-12 items-stretch">
           {/* Left Column (65%) - Poster Card */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, x: -20 }}
@@ -275,14 +275,14 @@ const VibeHeroSection = memo(({
             transition={{ delay: 0.5, duration: 0.8 }}
             className="relative"
           >
-            <div className="bg-white rounded-3xl p-6 border-0 ring-1 ring-gray-100 shadow-xl h-full flex flex-col w-full max-w-[350px] ml-auto">
+            <div className="bg-white rounded-3xl p-6 border-0 ring-1 ring-gray-100 shadow-xl h-full flex flex-col w-full lg:max-w-[350px] lg:ml-auto">
               {/* Section Title */}
               <h3 className="text-2xl font-bold text-blue-600 mb-5">
                 Course Details
               </h3>
 
               {/* Info Items - Optimized Grid */}
-              <div className="grid grid-cols-2 gap-x-5 gap-y-4 flex-1 mb-4">
+              <div className="grid grid-cols-2 gap-x-5 gap-y-2 flex-1 mb-3">
                 {/* Start Date */}
                 {startDate && (
                   <div className="group">
@@ -353,10 +353,10 @@ const VibeHeroSection = memo(({
               </div>
 
               {/* Divider */}
-              <div className="h-px bg-gray-100 w-full mb-5" />
+              <div className="h-px bg-gray-100 w-full mb-3" />
 
               {/* Pricing Section */}
-              <div className="mb-5">
+              <div className="mb-3">
                 {isEarlyBirdActive ? (
                   /* PREMIUM EARLY BIRD CARD */
                   <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-200 rounded-lg p-4 relative overflow-hidden">
@@ -396,15 +396,62 @@ const VibeHeroSection = memo(({
                     </div>
                   </div>
                 ) : (
-                  /* REGULAR PRICING DISPLAY */
-                  <div className="text-center">
-                    <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-gray-400 line-through text-lg font-semibold">
-                        ${priceRegular}
-                      </span>
-                      <span className="text-[#ef4444] text-4xl font-black tracking-tight leading-none">
-                        ${effectivePrice}
-                      </span>
+                  /* ENHANCED REGULAR PRICING DISPLAY */
+                  <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 border-2 border-blue-200 rounded-lg p-3 relative overflow-hidden">
+                    {/* Popular Choice Badge */}
+                    <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-bl-lg shadow-sm">
+                      POPULAR CHOICE
+                    </div>
+
+                    {/* Discount Badge - Top Left */}
+                    {discountPercent > 0 && (
+                      <div className="absolute top-0 left-0 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-2 py-1 rounded-br-lg shadow-sm">
+                        SAVE {discountPercent}%
+                      </div>
+                    )}
+
+                    {/* Pricing Content */}
+                    <div className="pt-5">
+                      {/* Label */}
+                      <p className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        Course Fee
+                      </p>
+
+                      {/* Prices */}
+                      <div className="flex items-center justify-between gap-3 mb-2">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-4xl font-black text-gray-900 tracking-tight">
+                            ${effectivePrice}
+                          </span>
+                          {priceRegular && priceRegular > (effectivePrice || 0) && (
+                            <span className="text-lg text-gray-400 line-through font-medium">
+                              ${priceRegular}
+                            </span>
+                          )}
+                        </div>
+                        {discountPercent > 0 && (
+                          <div className="bg-green-100 text-green-700 px-2 py-1 rounded-md">
+                            <span className="text-xs font-bold">-{discountPercent}%</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Value Proposition */}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs text-gray-700">
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                          <span className="font-medium">One-time payment</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-700">
+                          <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                          <span className="font-medium">Lifetime access to all content</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs text-gray-700">
+                          <div className="w-1.5 h-1.5 rounded-full bg-purple-500"></div>
+                          <span className="font-medium">Certificate upon completion</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}

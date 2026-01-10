@@ -6,6 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CountdownTimer from './CountdownTimer';
 import { Tables } from '@/integrations/supabase/types';
+import { memo } from 'react';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 type Course = Tables<'courses'>;
 
@@ -37,7 +40,7 @@ interface PricingSectionProps {
   course?: Course | null;
 }
 
-const PricingSection = ({
+const PricingSection = memo(({
   priceOffer,
   priceRegular,
   earlyBirdPrice,
@@ -54,6 +57,9 @@ const PricingSection = ({
   course,
   enrolledCount,
 }: PricingSectionProps) => {
+  const prefersReducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
+
   // Scarcity Logic
   const realEnrollmentCount = enrolledCount || 0;
   const padding = stats?.fakeEnrollmentPadding ? parseInt(stats.fakeEnrollmentPadding) : 0;
@@ -87,8 +93,8 @@ const PricingSection = ({
     <div className="space-y-8" id="checkout">
       {/* Section Header with Fire Emoji */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+        whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="text-center"
       >
@@ -103,8 +109,8 @@ const PricingSection = ({
       {/* Countdown Timer - Vibe Academy Minimalistic Style */}
       {countdownEndDate && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="bg-[#f5f7ff] rounded-2xl p-4 border-2 border-dashed border-pink-300/50 text-center"
         >
@@ -117,8 +123,8 @@ const PricingSection = ({
 
       {/* Pricing Card */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
+        initial={prefersReducedMotion ? {} : { opacity: 0, y: 30 }}
+        whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="bg-white dark:bg-slate-900/50 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-2xl relative"
       >
@@ -202,8 +208,8 @@ const PricingSection = ({
                 {whatsIncluded.map((item, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={prefersReducedMotion || isMobile ? {} : { opacity: 0, x: -10 }}
+                    whileInView={prefersReducedMotion || isMobile ? {} : { opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05 }}
                     className="flex items-center gap-3"
@@ -228,8 +234,8 @@ const PricingSection = ({
                 {valueBreakdown.map((item, index) => (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, x: -10 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    initial={prefersReducedMotion || isMobile ? {} : { opacity: 0, x: -10 }}
+                    whileInView={prefersReducedMotion || isMobile ? {} : { opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.03 }}
                     className="flex items-center justify-between"
@@ -293,12 +299,12 @@ const PricingSection = ({
         <div className="p-6 lg:p-8 pt-4 lg:pt-4">
           {/* CTA Button */}
           <motion.div
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            whileHover={prefersReducedMotion || isMobile ? {} : { scale: 1.02 }}
+            whileTap={prefersReducedMotion ? {} : { scale: 0.98 }}
           >
             <Button
               onClick={onEnrollClick}
-              className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black text-lg font-extrabold py-6 rounded-xl shadow-2xl shadow-orange-500/20 hover:shadow-orange-500/40 transition-all duration-300 group"
+              className="w-full bg-[#fbbf24] hover:bg-[#f59e0b] text-black text-lg font-extrabold py-6 rounded-xl shadow-2xl shadow-orange-500/20 hover:shadow-orange-500/40 transition-all duration-300 group touch-target"
               size="lg"
             >
               {isEnrolled ? (
@@ -346,6 +352,7 @@ const PricingSection = ({
       </motion.div >
     </div >
   );
-};
+});
+PricingSection.displayName = 'PricingSection';
 
 export default PricingSection;
