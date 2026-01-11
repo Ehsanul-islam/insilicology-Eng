@@ -112,9 +112,9 @@ const PricingSection = memo(({
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           whileInView={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-[#f5f7ff] rounded-2xl p-4 border-2 border-dashed border-pink-300/50 text-center"
+          className="bg-[#f5f7ff] rounded-2xl p-4 border-2 border-dashed border-purple-300/50 text-center"
         >
-          <p className="text-[#ec4899] mb-4 text-base font-medium">
+          <p className="text-purple-600 mb-4 text-base font-medium">
             When the offer ends, the price will go up to ${Number(priceRegular).toLocaleString()}!
           </p>
           <CountdownTimer endDate={countdownEndDate} variant="hero" />

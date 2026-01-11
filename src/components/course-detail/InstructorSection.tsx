@@ -64,7 +64,7 @@ const InstructorSection = ({
         // Bold: **text**
         const boldText = match[1].slice(2, -2);
         parts.push(
-          <strong key={`bold-${match.index}`} className="font-semibold text-pink-600 dark:text-pink-400">
+          <strong key={`bold-${match.index}`} className="font-semibold text-purple-600 dark:text-purple-400">
             {boldText}
           </strong>
         );
@@ -133,7 +133,7 @@ const InstructorSection = ({
           {/* Top Section with Photo */}
           <div className="relative pt-12 pb-8 px-6 text-center">
             {/* Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-b from-pink-50 via-purple-50 to-transparent dark:from-pink-950/20 dark:via-purple-950/20 dark:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-purple-50 via-purple-50 to-transparent dark:from-purple-950/20 dark:via-purple-950/20 dark:to-transparent" />
 
             {/* Photo Container */}
             <motion.div
@@ -144,7 +144,7 @@ const InstructorSection = ({
               className="relative mx-auto mb-6"
             >
               {/* Glow Effect */}
-              <div className="absolute -inset-2 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 rounded-full blur-xl opacity-30" />
+              <div className="absolute -inset-2 bg-gradient-to-r from-purple-400 via-purple-500 to-indigo-500 rounded-full blur-xl opacity-30" />
 
               {/* Photo */}
               <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl mx-auto">
@@ -155,7 +155,7 @@ const InstructorSection = ({
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-pink-400 to-purple-500 flex items-center justify-center">
+                  <div className="w-full h-full bg-gradient-to-br from-purple-400 to-purple-500 flex items-center justify-center">
                     <span className="text-4xl font-bold text-white">
                       {name.charAt(0).toUpperCase()}
                     </span>
@@ -186,7 +186,7 @@ const InstructorSection = ({
               {title && (
                 <Badge
                   variant="secondary"
-                  className="bg-gradient-to-r from-pink-100 to-purple-100 dark:from-pink-900/30 dark:to-purple-900/30 text-pink-700 dark:text-pink-300 border-0 px-4 py-1.5"
+                  className="bg-gradient-to-r from-purple-100 to-purple-50 dark:from-purple-900/30 dark:to-purple-900/10 text-purple-700 dark:text-purple-300 border-0 px-4 py-1.5"
                 >
                   <Briefcase className="w-3.5 h-3.5 mr-1.5" />
                   {title}
@@ -264,9 +264,9 @@ const InstructorSection = ({
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-pink-100 dark:hover:bg-pink-900/30 flex items-center justify-center transition-colors"
+                    className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-purple-100 dark:hover:bg-purple-900/30 flex items-center justify-center transition-colors"
                   >
-                    <Icon className="w-5 h-5 text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400" />
+                    <Icon className="w-5 h-5 text-slate-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400" />
                   </motion.a>
                 );
               })}

@@ -209,22 +209,22 @@ All colors MUST be HSL.
   }
 
   .vibe-gradient-text {
-    background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #c084fc 0%, #8b5cf6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .vibe-cta-gradient {
-    background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #c084fc 0%, #8b5cf6 100%);
   }
 
   .vibe-cta-gradient:hover {
-    background: linear-gradient(135deg, #db2777 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
   }
 
   .vibe-card-glow {
-    box-shadow: 0 0 40px rgba(139, 92, 246, 0.15), 0 0 80px rgba(236, 72, 153, 0.1);
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.15), 0 0 80px rgba(192, 132, 252, 0.1);
   }
 
   .vibe-glass {
@@ -276,11 +276,11 @@ All colors MUST be HSL.
 
     0%,
     100% {
-      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+      box-shadow: 0 0 20px rgba(192, 132, 252, 0.4);
     }
 
     50% {
-      box-shadow: 0 0 40px rgba(236, 72, 153, 0.6), 0 0 60px rgba(139, 92, 246, 0.4);
+      box-shadow: 0 0 40px rgba(192, 132, 252, 0.6), 0 0 60px rgba(139, 92, 246, 0.4);
     }
   }
 

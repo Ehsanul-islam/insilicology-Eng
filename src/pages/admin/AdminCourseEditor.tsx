@@ -76,6 +76,7 @@ const AdminCourseEditor = () => {
 
   const fetchInstructors = useCallback(async () => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data: roles, error: rolesError } = await (supabase as any)
         .from('user_roles')
         .select('user_id')
@@ -116,6 +117,7 @@ const AdminCourseEditor = () => {
       if (error) throw error;
 
       if (data) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const courseData = data as any;
         setFormData({
           title: data.title || '',
@@ -174,7 +176,6 @@ const AdminCourseEditor = () => {
             community: (data.stats as Record<string, string>)?.community || '',
             support: (data.stats as Record<string, string>)?.support || '',
             time: (data.stats as Record<string, string>)?.time || '',
-            capacity: (data.stats as Record<string, string>)?.capacity || '',
             capacity: (data.stats as Record<string, string>)?.capacity || '',
             batch: (data.stats as Record<string, string>)?.batch || '',
             fakeEnrollmentPadding: (data.stats as Record<string, string>)?.fakeEnrollmentPadding || '',
@@ -279,7 +280,6 @@ const AdminCourseEditor = () => {
           support: formData.stats.support || null,
           time: formData.stats.time || null,
           capacity: formData.stats.capacity || null,
-          capacity: formData.stats.capacity || null,
           batch: formData.stats.batch || null,
           fakeEnrollmentPadding: formData.stats.fakeEnrollmentPadding || null,
           genuineThreshold: formData.stats.genuineThreshold || null,
@@ -295,6 +295,7 @@ const AdminCourseEditor = () => {
       if (isEditing) {
         const { error } = await supabase
           .from('courses')
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .update(courseData as any)
           .eq('id', id);
 
@@ -303,6 +304,7 @@ const AdminCourseEditor = () => {
       } else {
         const { error } = await supabase
           .from('courses')
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           .insert([courseData] as any);
 
         if (error) throw error;
