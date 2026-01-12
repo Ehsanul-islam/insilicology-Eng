@@ -59,7 +59,7 @@ const Blog = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Blog - Latest Insights & Knowledge | insilicology"
+        title="Blog - Latest Insights & Knowledge | Zymios"
         description="Explore our blog for the latest papers, preprints, and case studies from our research team."
         url="/blog"
         type="website"

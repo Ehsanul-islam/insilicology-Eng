@@ -49,14 +49,14 @@ const CertificateVerify = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Verify Certificate - Check Authenticity | LearnCraft"
-        description="Verify the authenticity of LearnCraft certificates. Enter the certificate number to confirm legitimacy and view certificate details."
+        title="Verify Certificate - Check Authenticity | Zymios"
+        description="Verify the authenticity of Zymios certificates. Enter the certificate number to confirm legitimacy and view certificate details."
         url="/verify-certificate"
         type="website"
         tags={['certificate verification', 'verify certificate', 'certificate authenticity']}
       />
       <Navbar />
-      
+
       <main className="pt-16">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-20">
@@ -72,7 +72,7 @@ const CertificateVerify = () => {
                 Verify Certificate
               </h1>
               <p className="text-xl text-white/90">
-                Check the authenticity of LearnCraft certificates instantly
+                Check the authenticity of Zymios certificates instantly
               </p>
             </motion.div>
           </div>
@@ -157,7 +157,7 @@ const CertificateVerify = () => {
                         </h3>
                         <p className="text-muted-foreground">
                           {result.valid
-                            ? 'This certificate has been verified as authentic and was issued by LearnCraft.'
+                            ? 'This certificate has been verified as authentic and was issued by Zymios.'
                             : 'No certificate found with this number. Please check the number and try again.'}
                         </p>
                       </div>

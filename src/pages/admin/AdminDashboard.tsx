@@ -113,7 +113,7 @@ const AdminDashboard = () => {
   return (
     <AdminLayout title="Dashboard">
       <SEOHead
-        title="Admin Dashboard - LearnCraft"
+        title="Admin Dashboard - Zymios"
         description="Manage your learning platform"
         url="/admin"
       />

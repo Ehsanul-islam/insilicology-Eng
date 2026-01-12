@@ -43,7 +43,7 @@ const Research = () => {
     return (
         <div className="min-h-screen bg-background">
             <SEOHead
-                title="Research Services - Docking, MD, DFT & Bioinformatics | insilicology"
+                title="Research Services - Docking, MD, DFT & Bioinformatics | Zymios"
                 description="Expert research services including Molecular Docking, Molecular Dynamics, DFT calculations, and Bioinformatics analysis."
                 url="/research"
             />

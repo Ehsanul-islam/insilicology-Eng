@@ -212,7 +212,7 @@ const LearnPage = () => {
     return (
         <div className="min-h-screen bg-background">
             <SEOHead
-                title={`Learn ${course.title} - LearnCraft`}
+                title={`Learn ${course.title} - Zymios`}
                 description={course.description || ''}
                 url={`/learn/${slug}`}
             />
@@ -353,8 +353,8 @@ const LearnPage = () => {
                                                 key={lesson.id}
                                                 onClick={() => setCurrentLesson(lesson)}
                                                 className={`w-full text-left p-3 rounded-lg transition-colors ${isCurrent
-                                                        ? 'bg-primary text-primary-foreground'
-                                                        : 'hover:bg-secondary'
+                                                    ? 'bg-primary text-primary-foreground'
+                                                    : 'hover:bg-secondary'
                                                     }`}
                                             >
                                                 <div className="flex items-start gap-3">

@@ -50,7 +50,7 @@ const Portfolio = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Portfolio - Real-World Projects & Case Studies | insilicology"
+        title="Portfolio - Real-World Projects & Case Studies | Zymios"
         description="Explore our portfolio of successful projects across web development, mobile apps, data science, and design. See how we transform ideas into reality."
         url="/portfolio"
         type="website"

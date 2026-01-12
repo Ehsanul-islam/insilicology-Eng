@@ -64,8 +64,8 @@ const Contact = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'hello@learncraft.com',
-      link: 'mailto:hello@learncraft.com',
+      value: 'hello@zymios.com',
+      link: 'mailto:hello@zymios.com',
     },
     {
       icon: Phone,
@@ -90,8 +90,8 @@ const Contact = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Contact Us - Get in Touch | LearnCraft"
-        description="Have questions? We're here to help. Contact LearnCraft for inquiries about courses, partnerships, or support. We'd love to hear from you!"
+        title="Contact Us - Get in Touch | Zymios"
+        description="Have questions? We're here to help. Contact Zymios for inquiries about courses, partnerships, or support. We'd love to hear from you!"
         url="/contact"
         type="website"
         tags={['contact', 'support', 'get in touch', 'customer service']}

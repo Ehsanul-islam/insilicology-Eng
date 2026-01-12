@@ -11,7 +11,7 @@ const Community = () => {
     return (
         <div className="min-h-screen bg-background">
             <SEOHead
-                title="Community - Students, Collaborators & Mentors | insilicology"
+                title="Community - Students, Collaborators & Mentors | Zymios"
                 description="Join our vibrant community of students, researchers, and mentors. Collaborate, learn, and grow together."
                 url="/community"
             />

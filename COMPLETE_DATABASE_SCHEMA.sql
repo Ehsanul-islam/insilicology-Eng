@@ -1,6 +1,6 @@
 -- ============================================
 -- COMPLETE DATABASE SCHEMA
--- LearnCraft LMS Platform
+-- Zymios LMS Platform
 -- Consolidated from 14 migration files
 -- ============================================
 -- IMPORTANT: Run this ONLY on a fresh/empty database

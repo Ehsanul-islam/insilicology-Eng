@@ -104,8 +104,8 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <SEOHead
-        title="Sign In - LearnCraft"
-        description="Access your LearnCraft account to continue your learning journey"
+        title="Sign In - Zymios"
+        description="Access your Zymios account to continue your learning journey"
         url="/auth"
       />
 
@@ -131,7 +131,7 @@ const Auth = () => {
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
             </Link>
-            <h1 className="text-3xl font-bold gradient-text mb-2">Welcome to LearnCraft</h1>
+            <h1 className="text-3xl font-bold gradient-text mb-2">Welcome to Zymios</h1>
             <p className="text-muted-foreground">
               {activeTab === 'signin' ? 'Sign in to continue your learning' : 'Start your learning journey today'}
             </p>

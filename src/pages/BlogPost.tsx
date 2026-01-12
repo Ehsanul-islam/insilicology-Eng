@@ -17,7 +17,7 @@ const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { fetchBlogPostBySlug, calculateReadTime, fetchRelatedPosts } = useBlog();
-  
+
   const [post, setPost] = useState<any>(null);
   const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ const BlogPost = () => {
       const data = await fetchBlogPostBySlug(slug);
       if (data) {
         setPost(data);
-        
+
         // Fetch related posts
         if (data.category_id) {
           const related = await fetchRelatedPosts(data.category_id, data.id, 3);
@@ -97,7 +97,7 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={`${post.meta_title || post.title} | LearnCraft Blog`}
+        title={`${post.meta_title || post.title} | Zymios Blog`}
         description={post.meta_description || post.excerpt || ''}
         url={`/blog/${slug}`}
         type="article"
@@ -107,7 +107,7 @@ const BlogPost = () => {
         tags={tags}
       />
       <Navbar />
-      
+
       <main className="pt-16">
         {/* Breadcrumb */}
         <section className="bg-muted/30 py-4 border-b border-border">
@@ -119,8 +119,8 @@ const BlogPost = () => {
               <ChevronRight className="w-4 h-4" />
               {category && (
                 <>
-                  <Link 
-                    to={`/blog?category=${category.slug}`} 
+                  <Link
+                    to={`/blog?category=${category.slug}`}
                     className="hover:text-foreground transition-colors capitalize"
                   >
                     {category.name}
@@ -148,7 +148,7 @@ const BlogPost = () => {
                     {category.name}
                   </Badge>
                 )}
-                
+
                 <h1 className="text-4xl md:text-5xl font-bold leading-tight">
                   {post.title}
                 </h1>
@@ -177,9 +177,9 @@ const BlogPost = () => {
                   <div className="flex items-center justify-between pt-6 border-t border-border">
                     <div className="flex items-center gap-4">
                       {author.avatar_url ? (
-                        <img 
-                          src={author.avatar_url} 
-                          alt={author.full_name || 'Author'} 
+                        <img
+                          src={author.avatar_url}
+                          alt={author.full_name || 'Author'}
                           className="w-12 h-12 rounded-full"
                         />
                       ) : (
@@ -212,8 +212,8 @@ const BlogPost = () => {
               {/* Featured Image */}
               {post.featured_image && (
                 <div className="aspect-video rounded-2xl overflow-hidden">
-                  <img 
-                    src={post.featured_image} 
+                  <img
+                    src={post.featured_image}
                     alt={post.title}
                     className="w-full h-full object-cover"
                   />
@@ -256,9 +256,9 @@ const BlogPost = () => {
                   <CardContent className="p-8">
                     <div className="flex items-start gap-6">
                       {author.avatar_url ? (
-                        <img 
-                          src={author.avatar_url} 
-                          alt={author.full_name || 'Author'} 
+                        <img
+                          src={author.avatar_url}
+                          alt={author.full_name || 'Author'}
                           className="w-16 h-16 rounded-full"
                         />
                       ) : (

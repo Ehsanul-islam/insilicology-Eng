@@ -193,7 +193,7 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-background">
       {/* SEO Head */}
       <SEOHead
-        title={`${course.title} - insilicology`}
+        title={`${course.title} - Zymios`}
         description={course.description || ''}
         url={`/courses/${slug}`}
         type="article"

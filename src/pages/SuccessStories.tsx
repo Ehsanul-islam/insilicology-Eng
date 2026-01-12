@@ -15,7 +15,7 @@ const SuccessStories = () => {
             role: "Frontend Developer",
             company: "Tech Corp",
             image: "/placeholder.svg",
-            quote: "LearnCraft gave me the skills I needed to switch careers. I went from sales to a junior dev role in 6 months!",
+            quote: "Zymios gave me the skills I needed to switch careers. I went from sales to a junior dev role in 6 months!",
             course: "Full Stack Web Development"
         },
         {
@@ -40,8 +40,8 @@ const SuccessStories = () => {
     return (
         <div className="min-h-screen font-siliguri text-[16px]">
             <SEOHead
-                title="Success Stories - Student Results | LearnCraft"
-                description="Read inspiring stories from LearnCraft students who have transformed their careers and lives through education."
+                title="Success Stories - Student Results | Zymios"
+                description="Read inspiring stories from Zymios students who have transformed their careers and lives through education."
                 url="/stories"
                 type="website"
             />
@@ -82,7 +82,7 @@ const SuccessStories = () => {
                                 </h1>
 
                                 <p className="text-sm md:text-base text-slate-400 max-w-lg leading-relaxed font-medium">
-                                    See how thousands of learners are changing their lives with LearnCraft.
+                                    See how thousands of learners are changing their lives with Zymios.
                                 </p>
                             </motion.div>
 

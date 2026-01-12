@@ -19,7 +19,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
   },
   global: {
     headers: {
-      'x-client-info': 'learncraft-web',
+      'x-client-info': 'zymios-web',
     },
   },
 });

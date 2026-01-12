@@ -54,12 +54,12 @@ const MyCertificates = () => {
   const handleShare = async (certificate: Certificate) => {
     const code = certificate.verificationCode || certificate.verificationHash;
     const verificationUrl = `${window.location.origin}/verify-certificate?code=${code}`;
-    const shareText = `I earned a certificate for completing "${certificate.courseName}" at LearnCraft! Verify it here:`;
+    const shareText = `I earned a certificate for completing "${certificate.courseName}" at Zymios! Verify it here:`;
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `LearnCraft Certificate - ${certificate.courseName}`,
+          title: `Zymios Certificate - ${certificate.courseName}`,
           text: shareText,
           url: verificationUrl,
         });
@@ -89,7 +89,7 @@ const MyCertificates = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <SEOHead
-        title="My Certificates - LearnCraft"
+        title="My Certificates - Zymios"
         description="View and download your course completion certificates"
         url="/my-certificates"
       />
@@ -103,7 +103,7 @@ const MyCertificates = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-cyan-500 rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold gradient-text">LearnCraft</span>
+              <span className="text-lg font-bold gradient-text">Zymios</span>
             </Link>
 
             <Button variant="outline" size="sm" asChild>

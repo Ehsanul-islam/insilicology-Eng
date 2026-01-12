@@ -17,7 +17,7 @@ interface SitemapRoute {
   lastmod?: string;
 }
 
-const SITE_URL = 'https://learncraft.lovable.app';
+const SITE_URL = 'https://zymios.lovable.app';
 
 // Define your application routes
 const routes: SitemapRoute[] = [
@@ -60,15 +60,15 @@ export const generateSitemap = (): string => {
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 ${routes
-  .map(
-    (route) => `  <url>
+      .map(
+        (route) => `  <url>
     <loc>${SITE_URL}${route.path}</loc>
     ${route.lastmod ? `<lastmod>${route.lastmod}</lastmod>` : ''}
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
   </url>`
-  )
-  .join('\n')}
+      )
+      .join('\n')}
 </urlset>`;
 
   return sitemap;
@@ -79,11 +79,11 @@ export const generateDynamicSitemap = async (courses?: Array<{ id: string; updat
   // Add dynamic course routes if courses are provided
   const dynamicRoutes: SitemapRoute[] = courses
     ? courses.map(course => ({
-        path: `/courses/${course.id}`,
-        changefreq: 'weekly' as const,
-        priority: 0.8,
-        lastmod: course.updatedAt || new Date().toISOString().split('T')[0],
-      }))
+      path: `/courses/${course.id}`,
+      changefreq: 'weekly' as const,
+      priority: 0.8,
+      lastmod: course.updatedAt || new Date().toISOString().split('T')[0],
+    }))
     : [];
 
   const allRoutes = [...routes, ...dynamicRoutes];
@@ -91,15 +91,15 @@ export const generateDynamicSitemap = async (courses?: Array<{ id: string; updat
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${allRoutes
-  .map(
-    (route) => `  <url>
+      .map(
+        (route) => `  <url>
     <loc>${SITE_URL}${route.path}</loc>
     ${route.lastmod ? `<lastmod>${route.lastmod}</lastmod>` : ''}
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
   </url>`
-  )
-  .join('\n')}
+      )
+      .join('\n')}
 </urlset>`;
 
   return sitemap;
@@ -114,10 +114,10 @@ export const saveSitemap = async () => {
 
   const fs = await import('fs');
   const path = await import('path');
-  
+
   const sitemap = generateSitemap();
   const publicPath = path.join(process.cwd(), 'public', 'sitemap.xml');
-  
+
   fs.writeFileSync(publicPath, sitemap, 'utf-8');
   console.log('✅ Sitemap generated successfully at public/sitemap.xml');
 };

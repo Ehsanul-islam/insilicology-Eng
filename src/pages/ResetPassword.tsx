@@ -78,7 +78,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
     const { error } = await resetPassword(data.email);
     setIsSubmitting(false);
-    
+
     if (!error) {
       setEmailSent(true);
     }
@@ -88,7 +88,7 @@ const ResetPassword = () => {
     setIsSubmitting(true);
     const { error } = await updatePassword(data.password);
     setIsSubmitting(false);
-    
+
     if (!error) {
       navigate('/auth');
     }
@@ -97,8 +97,8 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <SEOHead
-        title="Reset Password - LearnCraft"
-        description="Reset your LearnCraft account password. Enter your email to receive password reset instructions."
+        title="Reset Password - Zymios"
+        description="Reset your Zymios account password. Enter your email to receive password reset instructions."
         url="/reset-password"
         type="website"
       />
@@ -178,8 +178,8 @@ const ResetPassword = () => {
                 {emailSent
                   ? "We've sent you instructions to reset your password. Please check your inbox."
                   : isPasswordUpdate
-                  ? 'Enter your new password below.'
-                  : 'Enter your email address and we\'ll send you instructions to reset your password.'}
+                    ? 'Enter your new password below.'
+                    : 'Enter your email address and we\'ll send you instructions to reset your password.'}
               </CardDescription>
             </CardHeader>
             <CardContent>

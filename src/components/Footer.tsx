@@ -41,7 +41,7 @@ const Footer = () => {
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-700 to-cyan-600 bg-clip-text text-transparent">
-                LearnCraft
+                Zymios
               </span>
             </Link>
             <p className="text-slate-500 leading-relaxed max-w-sm text-sm">
@@ -107,7 +107,7 @@ const Footer = () => {
         <div className="pt-4 border-t border-gray-100">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-slate-500">
-              © {new Date().getFullYear()} LearnCraft. All rights reserved.
+              © {new Date().getFullYear()} Zymios. All rights reserved.
             </p>
             <div className="flex items-center gap-1.5 text-xs text-slate-500 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100">
               <span>Made with</span>

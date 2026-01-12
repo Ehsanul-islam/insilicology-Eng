@@ -1,6 +1,6 @@
 -- ============================================
 -- STORAGE BUCKETS SETUP
--- LearnCraft LMS Platform
+-- Zymios LMS Platform
 -- Run this AFTER the main schema has been set up
 -- ============================================
 

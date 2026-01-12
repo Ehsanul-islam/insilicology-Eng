@@ -16,7 +16,7 @@ const PortfolioDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { fetchPortfolioBySlug } = usePortfolio();
-  
+
   const [project, setProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -65,7 +65,7 @@ const PortfolioDetail = () => {
     return (
       <div className="min-h-screen">
         <SEOHead
-          title="Portfolio Not Found | LearnCraft"
+          title="Portfolio Not Found | Zymios"
           description="The portfolio project you're looking for doesn't exist."
           robots="noindex,nofollow"
         />
@@ -90,7 +90,7 @@ const PortfolioDetail = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={`${project.title} - Portfolio Case Study | LearnCraft`}
+        title={`${project.title} - Portfolio Case Study | Zymios`}
         description={project.summary}
         url={`/portfolio/${slug}`}
         type="article"
@@ -98,7 +98,7 @@ const PortfolioDetail = () => {
         tags={[project.category, 'case study', ...(project.technologies || [])]}
       />
       <Navbar />
-      
+
       <main className="pt-16">
         {/* Hero Section */}
         <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-16">

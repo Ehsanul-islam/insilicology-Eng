@@ -57,7 +57,7 @@ const CookiePolicy = () => {
       content: `
         <p>If you have any questions about our use of cookies, please contact us:</p>
         <ul>
-          <li>Email: privacy@learncraft.com</li>
+          <li>Email: privacy@zymios.com</li>
           <li>Address: 123 Learning Street, Education City, EC 12345</li>
         </ul>
       `,
@@ -67,8 +67,8 @@ const CookiePolicy = () => {
   return (
     <div className="min-h-screen font-siliguri text-[16px]">
       <SEOHead
-        title="Cookie Policy - How We Use Cookies | LearnCraft"
-        description="Understand how LearnCraft uses cookies to improve your learning experience. Read our detailed Cookie Policy."
+        title="Cookie Policy - How We Use Cookies | Zymios"
+        description="Understand how Zymios uses cookies to improve your learning experience. Read our detailed Cookie Policy."
         url="/cookies"
         type="website"
         tags={['cookie policy', 'cookies', 'tracking', 'privacy']}
@@ -108,7 +108,7 @@ const CookiePolicy = () => {
               <Card>
                 <CardContent className="p-8">
                   <p className="text-lg text-foreground/80 leading-relaxed">
-                    This Cookie Policy explains how LearnCraft ("we", "us", and "our") uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
+                    This Cookie Policy explains how Zymios ("we", "us", and "our") uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
                   </p>
                 </CardContent>
               </Card>

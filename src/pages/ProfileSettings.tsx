@@ -202,7 +202,7 @@ const ProfileSettings = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <SEOHead
-        title="Profile Settings - LearnCraft"
+        title="Profile Settings - Zymios"
         description="Manage your account settings and preferences"
         url="/profile/settings"
       />
@@ -216,7 +216,7 @@ const ProfileSettings = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-cyan-500 rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold gradient-text">LearnCraft</span>
+              <span className="text-lg font-bold gradient-text">Zymios</span>
             </Link>
 
             <Button variant="outline" size="sm" asChild>
@@ -499,7 +499,7 @@ const ProfileSettings = () => {
                 <CardHeader>
                   <CardTitle>Display Preferences</CardTitle>
                   <CardDescription>
-                    Customize how LearnCraft looks and feels
+                    Customize how Zymios looks and feels
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
