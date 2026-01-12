@@ -59,6 +59,195 @@ const FloatingOrb = memo(({ delay, color, size }: { delay: number; color: string
 });
 FloatingOrb.displayName = 'FloatingOrb';
 
+const StatCard = ({ stat, index, startCounting, hoveredIndex, setHoveredIndex }: {
+  stat: any;
+  index: number;
+  startCounting: boolean;
+  hoveredIndex: number | null;
+  setHoveredIndex: (index: number | null) => void
+}) => {
+  const Icon = stat.icon;
+  const count = useCounter(stat.count, 2500, startCounting);
+  const progress = (stat.milestone.current / stat.milestone.target) * 100;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      onHoverStart={() => setHoveredIndex(index)}
+      onHoverEnd={() => setHoveredIndex(null)}
+      className={`relative group bg-card rounded-2xl border-t-4 ${stat.borderColor} border-x border-b border-border overflow-hidden hover:shadow-2xl shadow-lg transition-all duration-300 cursor-pointer w-full sm:w-[calc(50%-0.5rem)] lg:w-[220px]`}
+    >
+      {/* Gradient overlay on hover */}
+      <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
+
+      {/* Shimmer effect */}
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+        animate={hoveredIndex === index ? {
+          x: ['-100%', '100%'],
+        } : {}}
+        transition={{ duration: 1.5 }}
+      />
+
+      <div className="relative p-3">
+        {/* Icon */}
+        <motion.div
+          animate={hoveredIndex === index ? { rotate: [0, -10, 10, 0] } : {}}
+          transition={{ duration: 0.5 }}
+          className={`relative w-10 h-10 ${stat.bgColor} rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300`}
+        >
+          <Icon className={`w-5 h-5 ${stat.iconColor}`} />
+          {/* Glow effect */}
+          <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-300`}></div>
+        </motion.div>
+
+        {/* Count */}
+        <div className="relative mb-1">
+          <motion.div
+            className={`text-4xl font-black mb-1 bg-gradient-to-br ${stat.gradient} bg-clip-text text-transparent`}
+            animate={hoveredIndex === index ? { scale: [1, 1.05, 1] } : {}}
+            transition={{ duration: 0.3 }}
+          >
+            {count}+
+          </motion.div>
+
+          {/* Growth badge */}
+          <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-500/10 border border-green-500/30 rounded-full mb-2`}>
+            <TrendingUp className="w-2.5 h-2.5 text-green-600" />
+            <span className="text-xs font-bold text-green-600">{stat.growth}</span>
+          </div>
+        </div>
+
+        {/* Labels */}
+        <p className="text-xs text-muted-foreground font-medium mb-0.5">
+          {stat.sublabel}
+        </p>
+        <p className="text-sm font-bold mb-2">
+          {stat.label}
+        </p>
+
+        {/* Mini sparkline chart - Different styles for each card */}
+        <div className="h-12 mb-2 relative">
+          {/* Bar Chart - First Card (Active Learners) */}
+          {index === 0 && (
+            <div className="flex items-end gap-1 h-full">
+              {stat.sparkline.map((value: number, i: number) => (
+                <motion.div
+                  key={i}
+                  initial={{ height: 0 }}
+                  whileInView={{ height: `${value}%` }}
+                  transition={{ duration: 0.5, delay: startCounting ? i * 0.1 : 0 }}
+                  className={`flex-1 bg-gradient-to-t ${stat.gradient} rounded-md opacity-50 group-hover:opacity-80 transition-all duration-300 shadow-sm`}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Line Chart - Second Card (Instructors) */}
+          {index === 1 && (
+            <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id={`lineGrad-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" className="text-purple-500" stopColor="currentColor" />
+                  <stop offset="50%" className="text-purple-600" stopColor="currentColor" />
+                  <stop offset="100%" className="text-pink-500" stopColor="currentColor" />
+                </linearGradient>
+              </defs>
+              <motion.polyline
+                points={stat.sparkline.map((value: number, i: number) =>
+                  `${(i / (stat.sparkline.length - 1)) * 100},${50 - (value / 2)}`
+                ).join(' ')}
+                fill="none"
+                stroke={`url(#lineGrad-${index})`}
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                whileInView={{ pathLength: 1, opacity: 0.7 }}
+                transition={{ duration: 1.5, delay: 0.2 }}
+                className="group-hover:opacity-100 transition-opacity duration-300"
+              />
+              {/* Data points */}
+              {stat.sparkline.map((value: number, i: number) => (
+                <motion.circle
+                  key={i}
+                  cx={(i / (stat.sparkline.length - 1)) * 100}
+                  cy={50 - (value / 2)}
+                  r="2"
+                  fill={`url(#lineGrad-${index})`}
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  transition={{ duration: 0.3, delay: 0.2 + (i * 0.1) }}
+                  className="group-hover:scale-150 transition-transform"
+                />
+              ))}
+            </svg>
+          )}
+
+          {/* Area Chart - Third Card (Workshops) */}
+          {index === 2 && (
+            <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id={`areaGrad-${index}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" className="text-blue-500" stopColor="currentColor" stopOpacity="0.6" />
+                  <stop offset="100%" className="text-cyan-500" stopColor="currentColor" stopOpacity="0.1" />
+                </linearGradient>
+                <linearGradient id={`areaStroke-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" className="text-blue-500" stopColor="currentColor" />
+                  <stop offset="50%" className="text-blue-600" stopColor="currentColor" />
+                  <stop offset="100%" className="text-cyan-500" stopColor="currentColor" />
+                </linearGradient>
+              </defs>
+              <motion.path
+                d={`M 0,50 ${stat.sparkline.map((value: number, i: number) =>
+                  `L ${(i / (stat.sparkline.length - 1)) * 100},${50 - (value / 2)}`
+                ).join(' ')} L 100,50 Z`}
+                fill={`url(#areaGrad-${index})`}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="group-hover:opacity-90 transition-opacity duration-300"
+              />
+              <motion.polyline
+                points={stat.sparkline.map((value: number, i: number) =>
+                  `${(i / (stat.sparkline.length - 1)) * 100},${50 - (value / 2)}`
+                ).join(' ')}
+                fill="none"
+                stroke={`url(#areaStroke-${index})`}
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                transition={{ duration: 1.5, delay: 0.2 }}
+              />
+            </svg>
+          )}
+        </div>
+
+        {/* Progress bar to milestone */}
+        <div className="space-y-0.5">
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span className="text-[10px]">Progress to {stat.milestone.target}</span>
+            <span className="font-semibold text-[10px]">{Math.round(progress)}%</span>
+          </div>
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden shadow-inner">
+            <motion.div
+              initial={{ width: 0 }}
+              whileInView={{ width: `${progress}%` }}
+              transition={{ duration: 1.5, delay: 0.5 }}
+              className={`h-full bg-gradient-to-r ${stat.gradient} rounded-full shadow-sm`}
+            />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
 const ImpactStats = () => {
   const [startCounting, setStartCounting] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -146,189 +335,16 @@ const ImpactStats = () => {
 
         {/* Main Stats Grid - Compact & Centered */}
         <div className="flex flex-wrap justify-center gap-4 lg:gap-5 mb-6 max-w-5xl mx-auto">
-          {stats.slice(0, 3).map((stat, index) => {
-            const Icon = stat.icon;
-            const count = useCounter(stat.count, 2500, startCounting);
-            const progress = (stat.milestone.current / stat.milestone.target) * 100;
-
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                onHoverStart={() => setHoveredIndex(index)}
-                onHoverEnd={() => setHoveredIndex(null)}
-                className={`relative group bg-card rounded-2xl border-t-4 ${stat.borderColor} border-x border-b border-border overflow-hidden hover:shadow-2xl shadow-lg transition-all duration-300 cursor-pointer w-full sm:w-[calc(50%-0.5rem)] lg:w-[220px]`}
-              >
-                {/* Gradient overlay on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
-
-                {/* Shimmer effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                  animate={hoveredIndex === index ? {
-                    x: ['-100%', '100%'],
-                  } : {}}
-                  transition={{ duration: 1.5 }}
-                />
-
-                <div className="relative p-3">
-                  {/* Icon */}
-                  <motion.div
-                    animate={hoveredIndex === index ? { rotate: [0, -10, 10, 0] } : {}}
-                    transition={{ duration: 0.5 }}
-                    className={`relative w-10 h-10 ${stat.bgColor} rounded-xl flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300`}
-                  >
-                    <Icon className={`w-5 h-5 ${stat.iconColor}`} />
-                    {/* Glow effect */}
-                    <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${stat.gradient} opacity-0 group-hover:opacity-20 blur-lg transition-opacity duration-300`}></div>
-                  </motion.div>
-
-                  {/* Count */}
-                  <div className="relative mb-1">
-                    <motion.div
-                      className={`text-4xl font-black mb-1 bg-gradient-to-br ${stat.gradient} bg-clip-text text-transparent`}
-                      animate={hoveredIndex === index ? { scale: [1, 1.05, 1] } : {}}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {count}+
-                    </motion.div>
-
-                    {/* Growth badge */}
-                    <div className={`inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-500/10 border border-green-500/30 rounded-full mb-2`}>
-                      <TrendingUp className="w-2.5 h-2.5 text-green-600" />
-                      <span className="text-xs font-bold text-green-600">{stat.growth}</span>
-                    </div>
-                  </div>
-
-                  {/* Labels */}
-                  <p className="text-xs text-muted-foreground font-medium mb-0.5">
-                    {stat.sublabel}
-                  </p>
-                  <p className="text-sm font-bold mb-2">
-                    {stat.label}
-                  </p>
-
-                  {/* Mini sparkline chart - Different styles for each card */}
-                  <div className="h-12 mb-2 relative">
-                    {/* Bar Chart - First Card (Active Learners) */}
-                    {index === 0 && (
-                      <div className="flex items-end gap-1 h-full">
-                        {stat.sparkline.map((value, i) => (
-                          <motion.div
-                            key={i}
-                            initial={{ height: 0 }}
-                            whileInView={{ height: `${value}%` }}
-                            transition={{ duration: 0.5, delay: startCounting ? i * 0.1 : 0 }}
-                            className={`flex-1 bg-gradient-to-t ${stat.gradient} rounded-md opacity-50 group-hover:opacity-80 transition-all duration-300 shadow-sm`}
-                          />
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Line Chart - Second Card (Instructors) */}
-                    {index === 1 && (
-                      <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
-                        <defs>
-                          <linearGradient id={`lineGrad-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" className="text-purple-500" stopColor="currentColor" />
-                            <stop offset="50%" className="text-purple-600" stopColor="currentColor" />
-                            <stop offset="100%" className="text-pink-500" stopColor="currentColor" />
-                          </linearGradient>
-                        </defs>
-                        <motion.polyline
-                          points={stat.sparkline.map((value, i) =>
-                            `${(i / (stat.sparkline.length - 1)) * 100},${50 - (value / 2)}`
-                          ).join(' ')}
-                          fill="none"
-                          stroke={`url(#lineGrad-${index})`}
-                          strokeWidth="3"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          initial={{ pathLength: 0, opacity: 0 }}
-                          whileInView={{ pathLength: 1, opacity: 0.7 }}
-                          transition={{ duration: 1.5, delay: 0.2 }}
-                          className="group-hover:opacity-100 transition-opacity duration-300"
-                        />
-                        {/* Data points */}
-                        {stat.sparkline.map((value, i) => (
-                          <motion.circle
-                            key={i}
-                            cx={(i / (stat.sparkline.length - 1)) * 100}
-                            cy={50 - (value / 2)}
-                            r="2"
-                            fill={`url(#lineGrad-${index})`}
-                            initial={{ scale: 0 }}
-                            whileInView={{ scale: 1 }}
-                            transition={{ duration: 0.3, delay: 0.2 + (i * 0.1) }}
-                            className="group-hover:scale-150 transition-transform"
-                          />
-                        ))}
-                      </svg>
-                    )}
-
-                    {/* Area Chart - Third Card (Workshops) */}
-                    {index === 2 && (
-                      <svg className="w-full h-full" viewBox="0 0 100 50" preserveAspectRatio="none">
-                        <defs>
-                          <linearGradient id={`areaGrad-${index}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" className="text-blue-500" stopColor="currentColor" stopOpacity="0.6" />
-                            <stop offset="100%" className="text-cyan-500" stopColor="currentColor" stopOpacity="0.1" />
-                          </linearGradient>
-                          <linearGradient id={`areaStroke-${index}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" className="text-blue-500" stopColor="currentColor" />
-                            <stop offset="50%" className="text-blue-600" stopColor="currentColor" />
-                            <stop offset="100%" className="text-cyan-500" stopColor="currentColor" />
-                          </linearGradient>
-                        </defs>
-                        <motion.path
-                          d={`M 0,50 ${stat.sparkline.map((value, i) =>
-                            `L ${(i / (stat.sparkline.length - 1)) * 100},${50 - (value / 2)}`
-                          ).join(' ')} L 100,50 Z`}
-                          fill={`url(#areaGrad-${index})`}
-                          initial={{ opacity: 0 }}
-                          whileInView={{ opacity: 1 }}
-                          transition={{ duration: 1 }}
-                          className="group-hover:opacity-90 transition-opacity duration-300"
-                        />
-                        <motion.polyline
-                          points={stat.sparkline.map((value, i) =>
-                            `${(i / (stat.sparkline.length - 1)) * 100},${50 - (value / 2)}`
-                          ).join(' ')}
-                          fill="none"
-                          stroke={`url(#areaStroke-${index})`}
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          initial={{ pathLength: 0 }}
-                          whileInView={{ pathLength: 1 }}
-                          transition={{ duration: 1.5, delay: 0.2 }}
-                        />
-                      </svg>
-                    )}
-                  </div>
-
-                  {/* Progress bar to milestone */}
-                  <div className="space-y-0.5">
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span className="text-[10px]">Progress to {stat.milestone.target}</span>
-                      <span className="font-semibold text-[10px]">{Math.round(progress)}%</span>
-                    </div>
-                    <div className="h-1.5 bg-muted rounded-full overflow-hidden shadow-inner">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${progress}%` }}
-                        transition={{ duration: 1.5, delay: 0.5 }}
-                        className={`h-full bg-gradient-to-r ${stat.gradient} rounded-full shadow-sm`}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+          {stats.slice(0, 3).map((stat, index) => (
+            <StatCard
+              key={index}
+              stat={stat}
+              index={index}
+              startCounting={startCounting}
+              hoveredIndex={hoveredIndex}
+              setHoveredIndex={setHoveredIndex}
+            />
+          ))}
 
           {/* Client Satisfaction Card - Portfolio Design */}
           <motion.div
@@ -488,4 +504,3 @@ const ImpactStats = () => {
 };
 
 export default ImpactStats;
-

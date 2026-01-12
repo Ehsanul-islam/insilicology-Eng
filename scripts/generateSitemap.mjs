@@ -17,15 +17,8 @@ const supabase = createClient(
     process.env.VITE_SUPABASE_ANON_KEY || ''
 );
 
-interface SitemapRoute {
-    path: string;
-    changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
-    priority: number;
-    lastmod?: string;
-}
-
 // Static routes
-const staticRoutes: SitemapRoute[] = [
+const staticRoutes = [
     {
         path: '/',
         changefreq: 'daily',
@@ -70,8 +63,8 @@ const staticRoutes: SitemapRoute[] = [
     },
 ];
 
-async function fetchDynamicRoutes(): Promise<SitemapRoute[]> {
-    const routes: SitemapRoute[] = [];
+async function fetchDynamicRoutes() {
+    const routes = [];
 
     try {
         // Fetch published courses
@@ -138,7 +131,7 @@ async function fetchDynamicRoutes(): Promise<SitemapRoute[]> {
     return routes;
 }
 
-function generateSitemapXML(routes: SitemapRoute[]): string {
+function generateSitemapXML(routes) {
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"

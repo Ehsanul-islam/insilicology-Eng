@@ -76,7 +76,7 @@ const AdminCourseEditor = () => {
 
   const fetchInstructors = useCallback(async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       const { data: roles, error: rolesError } = await (supabase as any)
         .from('user_roles')
         .select('user_id')
@@ -117,7 +117,7 @@ const AdminCourseEditor = () => {
       if (error) throw error;
 
       if (data) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const courseData = data as any;
         setFormData({
           title: data.title || '',
@@ -295,7 +295,7 @@ const AdminCourseEditor = () => {
       if (isEditing) {
         const { error } = await supabase
           .from('courses')
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           .update(courseData as any)
           .eq('id', id);
 
@@ -304,7 +304,7 @@ const AdminCourseEditor = () => {
       } else {
         const { error } = await supabase
           .from('courses')
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+           
           .insert([courseData] as any);
 
         if (error) throw error;
