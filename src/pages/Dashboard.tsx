@@ -3,7 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   BookOpen,
   Award,
@@ -26,6 +26,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const { loading, stats, enrolledCourses, certificates, recentActivity } = useDashboardData();
   const [showCoupon, setShowCoupon] = useState(false);
 
@@ -115,7 +116,7 @@ const Dashboard = () => {
                   <Settings className="w-4 h-4" />
                 </Link>
               </Button>
-              <Button variant="ghost" size="icon" onClick={signOut}>
+              <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
                 <LogOut className="w-4 h-4" />
               </Button>
             </nav>
@@ -229,39 +230,64 @@ const Dashboard = () => {
                     </Button>
                   </div>
                 ) : (
-                  enrolledCourses.map((course) => (
-                    <div
-                      key={course.id}
-                      className="flex gap-4 p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
-                    >
-                      <img
-                        src={course.thumbnail || '/placeholder.svg'}
-                        alt={course.title}
-                        className="w-24 h-24 object-cover rounded-lg"
-                      />
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <h4 className="font-semibold">{course.title}</h4>
+                  enrolledCourses.map((course) => {
+                    const isLiveFuture = course.course_type === 'live' && course.start_date && new Date(course.start_date) > new Date();
+
+                    return (
+                      <div
+                        key={course.id}
+                        className="flex gap-4 p-4 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
+                      >
+                        <img
+                          src={course.thumbnail || '/placeholder.svg'}
+                          alt={course.title}
+                          className="w-24 h-24 object-cover rounded-lg"
+                        />
+                        <div className="flex-1 space-y-2">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h4 className="font-semibold">{course.title}</h4>
+                            </div>
+                            {!isLiveFuture && (
+                              <span className="text-sm font-medium text-primary">
+                                {course.progress}%
+                              </span>
+                            )}
                           </div>
-                          <span className="text-sm font-medium text-primary">
-                            {course.progress}%
-                          </span>
-                        </div>
-                        <Progress value={course.progress} className="h-2" />
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm text-muted-foreground">
-                            {course.progress === 100 ? 'Completed!' : 'In Progress'}
-                          </p>
-                          <Button size="sm" asChild>
-                            <Link to={`/learn/${course.slug}`}>
-                              {course.progress === 100 ? 'Review' : 'Continue'}
-                            </Link>
-                          </Button>
+
+                          {isLiveFuture ? (
+                            <div className="space-y-3 mt-2">
+                              <div className="bg-primary/10 text-primary px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+                                <Clock className="w-4 h-4" />
+                                Starts Soon: {new Date(course.start_date!).toLocaleDateString()}
+                              </div>
+                              {course.whatsapp_group_link && (
+                                <Button className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white h-8" asChild>
+                                  <a href={course.whatsapp_group_link} target="_blank" rel="noopener noreferrer">
+                                    Join WhatsApp Group
+                                  </a>
+                                </Button>
+                              )}
+                            </div>
+                          ) : (
+                            <>
+                              <Progress value={course.progress} className="h-2" />
+                              <div className="flex items-center justify-between">
+                                <p className="text-sm text-muted-foreground">
+                                  {course.progress === 100 ? 'Completed!' : 'In Progress'}
+                                </p>
+                                <Button size="sm" asChild>
+                                  <Link to={`/learn/${course.slug}`}>
+                                    {course.progress === 100 ? 'Review' : 'Continue'}
+                                  </Link>
+                                </Button>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </CardContent>
             </Card>

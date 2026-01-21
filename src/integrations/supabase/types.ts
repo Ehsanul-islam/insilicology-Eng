@@ -448,6 +448,7 @@ export type Database = {
           value_breakdown: Json | null
           whats_included: Json | null
           why_join: Json | null
+          whatsapp_group_link: string | null
         }
         Insert: {
           certificate?: boolean | null
@@ -492,6 +493,7 @@ export type Database = {
           value_breakdown?: Json | null
           whats_included?: Json | null
           why_join?: Json | null
+          whatsapp_group_link?: string | null
         }
         Update: {
           certificate?: boolean | null
@@ -536,6 +538,7 @@ export type Database = {
           value_breakdown?: Json | null
           whats_included?: Json | null
           why_join?: Json | null
+          whatsapp_group_link?: string | null
         }
         Relationships: []
       }

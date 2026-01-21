@@ -3,13 +3,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
-interface EnrolledCourse {
+export interface EnrolledCourse {
   id: string;
   title: string;
   progress: number;
   thumbnail: string | null;
   slug: string;
   courseId: string;
+  course_type?: 'live' | 'recorded' | 'hybrid' | null;
+  start_date?: string | null;
+  whatsapp_group_link?: string | null;
 }
 
 interface Certificate {
@@ -58,8 +61,8 @@ export const useDashboardData = () => {
     try {
       setLoading(true);
 
-      // Fetch enrollments with course data
-      const { data: enrollments, error: enrollError } = await supabase
+      // Fetch enrollments with course details
+      const { data: enrollments, error: enrollmentsError } = await supabase
         .from('enrollments')
         .select(`
           id,
@@ -70,13 +73,19 @@ export const useDashboardData = () => {
             id,
             title,
             slug,
-            poster_url
+            poster_url,
+            course_type,
+            start_date,
+            whatsapp_group_link
           )
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
-      if (enrollError) throw enrollError;
+      if (enrollmentsError) {
+        console.error('Error fetching enrollments:', enrollmentsError);
+        throw enrollmentsError;
+      }
 
       // Fetch certificates
       const { data: certsData, error: certsError } = await supabase
@@ -86,7 +95,10 @@ export const useDashboardData = () => {
         .eq('is_active', true)
         .order('completion_date', { ascending: false });
 
-      if (certsError) throw certsError;
+      if (certsError) {
+        console.error('Error fetching certificates:', certsError);
+        throw certsError;
+      }
 
       // Fetch lesson progress to calculate total hours
       const { data: progressData, error: progressError } = await supabase
@@ -118,6 +130,9 @@ export const useDashboardData = () => {
         progress: enrollment.progress_percentage || 0,
         thumbnail: enrollment.courses?.poster_url,
         slug: enrollment.courses?.slug || '',
+        course_type: enrollment.courses?.course_type,
+        start_date: enrollment.courses?.start_date,
+        whatsapp_group_link: enrollment.courses?.whatsapp_group_link
       })) || [];
 
       // Process certificates
