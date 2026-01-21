@@ -112,7 +112,18 @@ export const useEnrollment = (courseId: string) => {
           return false;
         }
 
-
+        // Send enrollment submitted email
+        try {
+          await supabase.functions.invoke('send-enrollment-notification', {
+            body: {
+              enrollmentId: existing.id,
+              type: 'submitted'
+            }
+          });
+        } catch (emailError) {
+          console.error('Failed to send enrollment email:', emailError);
+          // Don't fail the enrollment if email fails
+        }
 
         toast.success('Enrollment submitted! We will review and confirm shortly.');
         await checkExistingEnrollment();
@@ -147,7 +158,18 @@ export const useEnrollment = (courseId: string) => {
         return false;
       }
 
-
+      // Send enrollment submitted email
+      try {
+        await supabase.functions.invoke('send-enrollment-notification', {
+          body: {
+            enrollmentId: enrollment.id,
+            type: 'submitted'
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send enrollment email:', emailError);
+        // Don't fail the enrollment if email fails
+      }
 
       toast.success('Enrollment submitted! We will review and confirm shortly.');
       await checkExistingEnrollment();

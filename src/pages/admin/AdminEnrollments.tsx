@@ -66,6 +66,20 @@ const AdminEnrollments = () => {
     setProcessing(true);
     try {
       await updateEnrollmentStatus(selectedEnrollment.id, 'active');
+
+      // Send approval email
+      try {
+        await supabase.functions.invoke('send-enrollment-notification', {
+          body: {
+            enrollmentId: selectedEnrollment.id,
+            type: 'approved'
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send approval email:', emailError);
+        // Don't fail the approval if email fails
+      }
+
       toast.success('Enrollment approved successfully');
       setActionDialog(null);
       loadEnrollments();
@@ -87,6 +101,20 @@ const AdminEnrollments = () => {
     setProcessing(true);
     try {
       await updateEnrollmentStatus(selectedEnrollment.id, 'cancelled', rejectionReason);
+
+      // Send rejection email
+      try {
+        await supabase.functions.invoke('send-enrollment-notification', {
+          body: {
+            enrollmentId: selectedEnrollment.id,
+            type: 'rejected'
+          }
+        });
+      } catch (emailError) {
+        console.error('Failed to send rejection email:', emailError);
+        // Don't fail the rejection if email fails
+      }
+
       toast.success('Enrollment rejected');
       setActionDialog(null);
       loadEnrollments();
