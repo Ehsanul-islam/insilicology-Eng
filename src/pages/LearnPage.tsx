@@ -70,7 +70,6 @@ const LearnPage = () => {
                 .from('courses')
                 .select('id, title, slug, description')
                 .eq('slug', slug)
-                .eq('slug', slug)
                 .maybeSingle();
 
             if (courseError) throw courseError;
