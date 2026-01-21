@@ -115,8 +115,6 @@ export const useEnrollment = (courseId: string) => {
         // Send email notification (fire and forget)
         supabase.functions.invoke('send-enrollment-notification', {
           body: { enrollmentId: existing.id, type: 'submitted' }
-        }).then(({ error }) => {
-          if (error) console.error('Failed to trigger notification:', error);
         }).catch(err => {
           console.error('Failed to trigger notification:', err);
         });
@@ -155,11 +153,8 @@ export const useEnrollment = (courseId: string) => {
       }
 
       // Send email notification (fire and forget)
-      // We don't await this because we don't want to block the UI
       supabase.functions.invoke('send-enrollment-notification', {
         body: { enrollmentId: enrollment.id, type: 'submitted' }
-      }).then(({ error }) => {
-        if (error) console.error('Failed to trigger notification:', error);
       }).catch(err => {
         console.error('Failed to trigger notification:', err);
       });
