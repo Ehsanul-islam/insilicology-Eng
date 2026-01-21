@@ -1,4 +1,4 @@
-# Email Notification Fix - January 21, 2026
+# Email Notification Fix - CORRECT IMPLEMENTATION
 
 ## Problem Summary
 
@@ -15,14 +15,111 @@ Users were only receiving **welcome emails** but not receiving **enrollment noti
 2. **Enrollment Approved Email** - Not sent when admin approves an enrollment
 3. **Enrollment Rejected Email** - Not sent when admin rejects an enrollment
 
-## Technical Details
+## Correct Implementation (Following insilicology-bangla Pattern)
 
-### Issue 1: Missing Email on Re-submission
-**File:** `src/hooks/useEnrollment.ts` (Lines 94-118)
+### Key Insight
+The email notifications should be called **directly from the admin page** (`AdminEnrollments.tsx`), NOT from the `useAdminData.ts` hook. This is the pattern used in the working insilicology-bangla repository.
 
-**Problem:** When a user re-submits a cancelled enrollment, the code updates the enrollment status but doesn't trigger the email notification.
+### Files Modified
 
-**Fix:** Added email notification call after successful update:
+#### 1. `src/pages/admin/AdminEnrollments.tsx`
+
+**handleApprove function** (Lines ~64-104):
+```typescript
+const handleApprove = async () => {
+  if (!selectedEnrollment) return;
+  setProcessing(true);
+  try {
+    await updateEnrollmentStatus(selectedEnrollment.id, 'active');
+
+    // Trigger email notification (independent try-catch)
+    try {
+      console.log('Triggering enrollment notification email for:', selectedEnrollment.user_email);
+
+      const { error: funcError } = await supabase.functions.invoke('send-enrollment-notification', {
+        body: {
+          enrollmentId: selectedEnrollment.id,
+          type: 'approved',
+          recipientEmail: selectedEnrollment.user_email,
+          recipientName: selectedEnrollment.user_name,
+          courseName: selectedEnrollment.course_title,
+        },
+      });
+
+      if (funcError) {
+        console.error('Failed to trigger email function:', funcError);
+        toast.error('Approval successful, but email notification failed.');
+      } else {
+        toast.success('Enrollment approved & email sent!');
+      }
+    } catch (emailErr) {
+      console.error('Error calling email function:', emailErr);
+      toast.error('Approval successful, but email notification failed.');
+    }
+
+    setActionDialog(null);
+    loadEnrollments();
+  } catch (error: any) {
+    console.error('Enrollment approval error:', error);
+    const errorMessage = error?.message || 'Failed to approve enrollment';
+    toast.error(`Failed to approve enrollment: ${errorMessage}`);
+  } finally {
+    setProcessing(false);
+  }
+};
+```
+
+**handleReject function** (Lines ~81-123):
+```typescript
+const handleReject = async () => {
+  if (!selectedEnrollment) return;
+  if (!rejectionReason.trim()) {
+    toast.error('Please provide a rejection reason');
+    return;
+  }
+  setProcessing(true);
+  try {
+    await updateEnrollmentStatus(selectedEnrollment.id, 'cancelled', rejectionReason);
+
+    // Trigger email notification (independent try-catch)
+    try {
+      console.log('Triggering rejection notification email for:', selectedEnrollment.user_email);
+
+      const { error: funcError } = await supabase.functions.invoke('send-enrollment-notification', {
+        body: {
+          enrollmentId: selectedEnrollment.id,
+          type: 'rejected',
+          recipientEmail: selectedEnrollment.user_email,
+          recipientName: selectedEnrollment.user_name,
+          courseName: selectedEnrollment.course_title,
+          rejectionReason: rejectionReason,
+        },
+      });
+
+      if (funcError) {
+        console.error('Failed to trigger rejection email:', funcError);
+        toast.error('Rejection successful, but email notification failed.');
+      } else {
+        toast.success('Enrollment rejected & email sent!');
+      }
+    } catch (emailErr) {
+      console.error('Error calling rejection email function:', emailErr);
+      toast.error('Rejection successful, but email notification failed.');
+    }
+
+    setActionDialog(null);
+    loadEnrollments();
+  } catch (error) {
+    toast.error('Failed to reject enrollment');
+  } finally {
+    setProcessing(false);
+  }
+};
+```
+
+#### 2. `src/hooks/useEnrollment.ts`
+
+**Re-submission email** (Lines ~115-122):
 ```typescript
 // Send email notification (fire and forget)
 supabase.functions.invoke('send-enrollment-notification', {
@@ -34,65 +131,64 @@ supabase.functions.invoke('send-enrollment-notification', {
 });
 ```
 
-### Issue 2: Missing Emails on Admin Actions
-**File:** `src/hooks/useAdminData.ts` (Lines 173-204)
-
-**Problem:** The `updateEnrollmentStatus` function updates the database but doesn't trigger email notifications when admin approves or rejects enrollments.
-
-**Fix:** Added conditional email notifications based on status change:
-```typescript
-// Send email notification based on status change
-if (status === 'active') {
-  // Send approval email
-  supabase.functions.invoke('send-enrollment-notification', {
-    body: { 
-      enrollmentId, 
-      type: 'approved'
-    }
-  }).then(({ error }) => {
-    if (error) console.error('Failed to send approval email:', error);
-  }).catch(err => {
-    console.error('Failed to send approval email:', err);
-  });
-} else if (status === 'cancelled' && rejectionReason) {
-  // Send rejection email
-  supabase.functions.invoke('send-enrollment-notification', {
-    body: { 
-      enrollmentId, 
-      type: 'rejected',
-      rejectionReason
-    }
-  }).then(({ error }) => {
-    if (error) console.error('Failed to send rejection email:', error);
-  }).catch(err => {
-    console.error('Failed to send rejection email:', err);
-  });
-}
-```
-
-## Files Modified
-
-1. **`src/hooks/useEnrollment.ts`**
-   - Added email notification for re-submitted enrollments
-   - Line ~115: Added `send-enrollment-notification` call with type 'submitted'
-
-2. **`src/hooks/useAdminData.ts`**
-   - Added email notifications for admin approval/rejection
-   - Lines ~203-231: Added conditional email triggers based on status
-
 ## Email Flow After Fix
 
-### User Journey
+### Complete User Journey
 1. **User Signs Up** → Welcome Email ✅ (via database trigger)
 2. **User Submits Enrollment** → Submitted Email ✅ (via `useEnrollment.ts`)
-3. **Admin Approves** → Approved Email ✅ (via `useAdminData.ts` - **FIXED**)
-4. **Admin Rejects** → Rejected Email ✅ (via `useAdminData.ts` - **FIXED**)
+3. **Admin Approves** → Approved Email ✅ (via `AdminEnrollments.tsx` - **FIXED**)
+4. **Admin Rejects** → Rejected Email ✅ (via `AdminEnrollments.tsx` - **FIXED**)
 5. **User Re-submits After Rejection** → Submitted Email ✅ (via `useEnrollment.ts` - **FIXED**)
+
+## Why This Pattern Works
+
+### Separation of Concerns
+- **`useAdminData.ts`**: Handles database operations only
+- **`AdminEnrollments.tsx`**: Handles UI logic AND email notifications
+- **`useEnrollment.ts`**: Handles user enrollment submissions AND email notifications
+
+### Benefits
+1. **Better Error Handling**: Email errors don't block database operations
+2. **User Feedback**: Admin sees specific success/failure messages for emails
+3. **Independent Try-Catch**: Email failures are logged but don't affect enrollment status updates
+4. **Follows Working Pattern**: Matches the proven insilicology-bangla implementation
 
 ## Testing Instructions
 
-### Prerequisites
-Ensure these environment variables are set in Supabase Edge Functions:
+### Test Case 1: Enrollment Approval Email
+1. Log in as admin
+2. Go to Admin → Enrollments
+3. Find a pending enrollment
+4. Click "Approve"
+5. **Expected**: 
+   - Enrollment status changes to "active"
+   - Toast shows "Enrollment approved & email sent!"
+   - User receives "Enrollment Approved" email
+
+### Test Case 2: Enrollment Rejection Email
+1. Log in as admin
+2. Go to Admin → Enrollments
+3. Find a pending enrollment
+4. Click "Reject"
+5. Enter rejection reason
+6. Click "Reject Enrollment"
+7. **Expected**:
+   - Enrollment status changes to "cancelled"
+   - Toast shows "Enrollment rejected & email sent!"
+   - User receives "Enrollment Not Approved" email with reason
+
+### Test Case 3: Re-submission Email
+1. Have an enrollment that was previously rejected
+2. Log in as that user
+3. Re-submit the enrollment
+4. **Expected**:
+   - Enrollment status changes to "pending"
+   - User receives "Enrollment Submitted" email
+
+## Environment Variables Required
+
+Ensure these are set in **Supabase Edge Functions**:
+
 ```env
 BREVO_API_KEY=your_brevo_api_key
 SENDER_EMAIL=info@insilicology.com
@@ -101,138 +197,62 @@ SUPABASE_URL=your_supabase_url
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
-### Test Cases
-
-#### Test 1: New User Welcome Email
-1. Create a new user account
-2. **Expected:** User receives welcome email with WELCOME100 coupon
-
-#### Test 2: Enrollment Submitted Email
-1. Log in as a user
-2. Submit an enrollment for a course
-3. **Expected:** User receives "Enrollment Submitted" email
-
-#### Test 3: Enrollment Approved Email (NEW FIX)
-1. Log in as admin
-2. Go to Admin → Enrollments
-3. Approve a pending enrollment
-4. **Expected:** User receives "Enrollment Approved" email with dashboard link
-
-#### Test 4: Enrollment Rejected Email (NEW FIX)
-1. Log in as admin
-2. Go to Admin → Enrollments
-3. Reject a pending enrollment with a reason
-4. **Expected:** User receives "Enrollment Not Approved" email with rejection reason
-
-#### Test 5: Re-submission Email (NEW FIX)
-1. Have an enrollment that was previously rejected
-2. Log in as that user
-3. Re-submit the enrollment
-4. **Expected:** User receives "Enrollment Submitted" email again
-
-### Verification Steps
-
-1. **Check Supabase Edge Function Logs:**
-   - Go to Supabase Dashboard → Edge Functions → `send-enrollment-notification`
-   - Check logs for successful invocations
-   - Look for any error messages
-
-2. **Check Brevo Dashboard:**
-   - Log in to Brevo
-   - Go to Campaigns → Transactional
-   - Verify emails are being sent
-   - Check delivery status
-
-3. **Check Browser Console:**
-   - Open browser developer tools
-   - Look for any error messages related to email sending
-   - Successful calls should show no errors
-
-4. **Check Email Inbox:**
-   - Verify all test emails are received
-   - Check spam folder if not in inbox
-   - Verify email content matches templates
-
-## Deployment Checklist
-
-- [x] Code changes committed
-- [ ] Deploy to Vercel (frontend changes)
-- [ ] Verify Supabase Edge Functions are deployed
-- [ ] Test all email flows in production
-- [ ] Monitor Brevo dashboard for delivery rates
-- [ ] Check Supabase logs for any errors
-
-## Environment Variables Checklist
-
-Ensure these are set in **Supabase Edge Functions** (not Vercel):
-
-- [ ] `BREVO_API_KEY` - Your Brevo API key
-- [ ] `SENDER_EMAIL` - info@insilicology.com
-- [ ] `SITE_URL` - https://insilicology.com
-- [ ] `SUPABASE_URL` - Your Supabase project URL
-- [ ] `SUPABASE_SERVICE_ROLE_KEY` - Your service role key
-
 ## Troubleshooting
 
 ### Emails Still Not Sending?
 
-1. **Check Edge Function Deployment:**
-   ```bash
-   supabase functions list
-   ```
-   Ensure `send-enrollment-notification` is deployed
+1. **Check Browser Console**:
+   - Look for "Triggering enrollment notification email for:" logs
+   - Check for any error messages from the Edge Function call
 
-2. **Check Edge Function Logs:**
+2. **Check Supabase Edge Function Logs**:
    ```bash
    supabase functions logs send-enrollment-notification
    ```
 
-3. **Verify Environment Variables:**
-   - Go to Supabase Dashboard → Settings → Edge Functions
-   - Ensure all required variables are set
-
-4. **Test Edge Function Directly:**
+3. **Verify Edge Function Deployment**:
    ```bash
-   curl -X POST 'https://YOUR_PROJECT.supabase.co/functions/v1/send-enrollment-notification' \
-     -H 'Authorization: Bearer YOUR_ANON_KEY' \
-     -H 'Content-Type: application/json' \
-     -d '{"enrollmentId": "test-id", "type": "submitted"}'
+   supabase functions list
    ```
 
-5. **Check Brevo API Status:**
-   - Visit https://status.brevo.com/
-   - Ensure service is operational
+4. **Test Edge Function Directly**:
+   - Use Supabase Dashboard → Edge Functions
+   - Test with sample payload:
+   ```json
+   {
+     "enrollmentId": "test-id",
+     "type": "approved",
+     "recipientEmail": "test@example.com",
+     "recipientName": "Test User",
+     "courseName": "Test Course"
+   }
+   ```
 
 ### Common Issues
 
-**Issue:** "BREVO_API_KEY not configured"
-- **Solution:** Set the environment variable in Supabase Edge Functions settings
+**Issue**: "Failed to trigger email function"
+- **Solution**: Check that `BREVO_API_KEY` is set in Supabase Edge Functions
 
-**Issue:** "No recipient email found"
-- **Solution:** Ensure user profile has email address populated
+**Issue**: Email sent but not received
+- **Solution**: 
+  - Check Brevo dashboard for delivery status
+  - Verify sender email is verified in Brevo
+  - Check spam folder
 
-**Issue:** Emails going to spam
-- **Solution:** 
-  - Verify sender domain in Brevo
-  - Add SPF/DKIM records to DNS
-  - Test with mail-tester.com
+**Issue**: "Approval successful, but email notification failed"
+- **Solution**: 
+  - Enrollment was approved successfully
+  - Check Edge Function logs for email error details
+  - Verify all environment variables are set
 
 ## Related Documentation
 
 - [Email Templates Documentation](./email-templates.md)
 - [Vercel Environment Setup](./VERCEL_ENV_SETUP.md)
 - [Supabase Edge Functions Guide](https://supabase.com/docs/guides/functions)
-- [Brevo API Documentation](https://developers.brevo.com/)
-
-## Notes
-
-- Email sending is "fire and forget" - it doesn't block the UI
-- Errors are logged to console but don't prevent enrollment operations
-- All emails use Brevo (consolidated from previous Resend setup)
-- Email templates are defined in `supabase/functions/send-enrollment-notification/index.ts`
 
 ---
 
 **Last Updated:** January 21, 2026  
-**Fixed By:** AI Assistant  
+**Implementation Pattern:** Based on insilicology-bangla repository  
 **Status:** ✅ Fixed and Ready for Testing
