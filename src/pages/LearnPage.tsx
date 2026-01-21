@@ -70,9 +70,18 @@ const LearnPage = () => {
                 .from('courses')
                 .select('id, title, slug, description')
                 .eq('slug', slug)
-                .single();
+                .eq('slug', slug)
+                .maybeSingle();
 
             if (courseError) throw courseError;
+
+            if (!courseData) {
+                console.error('Course not found:', slug);
+                toast.error('Course not found');
+                navigate('/academy');
+                return;
+            }
+
             setCourse(courseData);
 
             // Check enrollment
