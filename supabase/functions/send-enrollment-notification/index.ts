@@ -1,3 +1,4 @@
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.86.0";
 
@@ -91,7 +92,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p>We have received your enrollment request and payment proof. Our team will review it within 24-48 hours.</p>
             <p>You'll receive another email once your enrollment has been approved.</p>
             <br>
-            <p>Best regards,<br>The Team</p>
+            <p>Best regards,<br>The Zymios Team</p>
           </div>
         `;
         break;
@@ -107,7 +108,7 @@ const handler = async (req: Request): Promise<Response> => {
             <p><a href="${Deno.env.get('SITE_URL') || ''}/dashboard" style="display: inline-block; background: #6366f1; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; margin: 16px 0;">Go to Dashboard</a></p>
             <p>Happy learning!</p>
             <br>
-            <p>Best regards,<br>The Team</p>
+            <p>Best regards,<br>The Zymios Team</p>
           </div>
         `;
         break;
@@ -122,14 +123,13 @@ const handler = async (req: Request): Promise<Response> => {
             ${rejectionReason ? `<p><strong>Reason:</strong> ${rejectionReason}</p>` : ''}
             <p>If you believe this is an error or would like to try again, please contact our support team or submit a new enrollment.</p>
             <br>
-            <p>Best regards,<br>The Team</p>
+            <p>Best regards,<br>The Zymios Team</p>
           </div>
         `;
         break;
     }
 
     // Send email via Brevo
-    const brevoApiKey = Deno.env.get("BREVO_API_KEY");
     if (!brevoApiKey) {
       throw new Error("BREVO_API_KEY not configured");
     }
