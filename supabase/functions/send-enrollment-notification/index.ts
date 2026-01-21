@@ -99,9 +99,9 @@ const handler = async (req: Request): Promise<Response> => {
         const url = "https://api.brevo.com/v3/smtp/email";
 
         // Sender configuration
-        const senderEmail = Deno.env.get("SENDER_EMAIL") || "info@insilicology.com";
-        const senderName = "Insilicology";
-        const siteUrl = Deno.env.get("SITE_URL") || "https://insilicology.com";
+        const senderEmail = Deno.env.get("SENDER_EMAIL") || "noreply@zymios.com";
+        const senderName = "Zymios";
+        const siteUrl = Deno.env.get("SITE_URL") || "https://zymios.com";
 
         // Email content based on type
         let subject = "";
@@ -143,12 +143,12 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="color: #333; font-size: 16px; line-height: 1.6; margin-top: 30px;">
                 Best regards,<br>
-                <strong>The Insilicology Team</strong>
+                <strong>The Zymios Team</strong>
               </p>
             </div>
             
             <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-              <p style="margin: 5px 0;">© 2026 Insilicology. All rights reserved.</p>
+              <p style="margin: 5px 0;">© 2026 Zymios. All rights reserved.</p>
             </div>
           </div>
         `;
@@ -190,12 +190,12 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="color: #333; font-size: 16px; line-height: 1.6; margin-top: 20px;">
                 Best regards,<br>
-                <strong>The Insilicology Team</strong>
+                <strong>The Zymios Team</strong>
               </p>
             </div>
             
             <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-              <p style="margin: 5px 0;">© 2026 Insilicology. All rights reserved.</p>
+              <p style="margin: 5px 0;">© 2026 Zymios. All rights reserved.</p>
             </div>
           </div>
         `;
@@ -246,12 +246,12 @@ const handler = async (req: Request): Promise<Response> => {
               
               <p style="color: #333; font-size: 16px; line-height: 1.6; margin-top: 20px;">
                 Best regards,<br>
-                <strong>The Insilicology Team</strong>
+                <strong>The Zymios Team</strong>
               </p>
             </div>
             
             <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-              <p style="margin: 5px 0;">© 2026 Insilicology. All rights reserved.</p>
+              <p style="margin: 5px 0;">© 2026 Zymios. All rights reserved.</p>
             </div>
           </div>
         `;
@@ -318,3 +318,4 @@ const handler = async (req: Request): Promise<Response> => {
 };
 
 serve(handler);
+

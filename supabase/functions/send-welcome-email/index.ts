@@ -1,93 +1,93 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers":
-        "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
 
 interface WebhookPayload {
-    type: string;
-    table: string;
-    schema: string;
-    record: {
-        id: string;
-        email: string;
-        raw_user_meta_data?: {
-            full_name?: string;
-            name?: string;
-        };
+  type: string;
+  table: string;
+  schema: string;
+  record: {
+    id: string;
+    email: string;
+    raw_user_meta_data?: {
+      full_name?: string;
+      name?: string;
     };
-    old_record: null | Record<string, unknown>;
+  };
+  old_record: null | Record<string, unknown>;
 }
 
 const handler = async (req: Request): Promise<Response> => {
-    // Handle CORS preflight requests
-    if (req.method === "OPTIONS") {
-        return new Response(null, { headers: corsHeaders });
+  // Handle CORS preflight requests
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const brevoApiKey = Deno.env.get("BREVO_API_KEY");
+
+    if (!brevoApiKey) {
+      console.error("BREVO_API_KEY not configured");
+      return new Response(
+        JSON.stringify({ error: "Configuration Error: BREVO_API_KEY missing" }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
 
-    try {
-        const brevoApiKey = Deno.env.get("BREVO_API_KEY");
+    const payload: WebhookPayload = await req.json();
+    console.log("Received webhook payload:", JSON.stringify(payload, null, 2));
 
-        if (!brevoApiKey) {
-            console.error("BREVO_API_KEY not configured");
-            return new Response(
-                JSON.stringify({ error: "Configuration Error: BREVO_API_KEY missing" }),
-                { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-            );
-        }
+    // Extract email and name from the payload
+    const userEmail = payload.record.email;
+    const userName =
+      payload.record.raw_user_meta_data?.full_name ||
+      payload.record.raw_user_meta_data?.name ||
+      "Learner";
 
-        const payload: WebhookPayload = await req.json();
-        console.log("Received webhook payload:", JSON.stringify(payload, null, 2));
+    if (!userEmail) {
+      console.error("No email found in payload");
+      return new Response(
+        JSON.stringify({ error: "No email found in payload" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
 
-        // Extract email and name from the payload
-        const userEmail = payload.record.email;
-        const userName =
-            payload.record.raw_user_meta_data?.full_name ||
-            payload.record.raw_user_meta_data?.name ||
-            "Learner";
+    console.log(`Sending welcome email to: ${userEmail} (${userName})`);
 
-        if (!userEmail) {
-            console.error("No email found in payload");
-            return new Response(
-                JSON.stringify({ error: "No email found in payload" }),
-                { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
-            );
-        }
+    // Brevo API Endpoint
+    const url = "https://api.brevo.com/v3/smtp/email";
 
-        console.log(`Sending welcome email to: ${userEmail} (${userName})`);
+    // Sender configuration
+    const senderEmail = Deno.env.get("SENDER_EMAIL") || "noreply@zymios.com";
+    const senderName = "Zymios";
 
-        // Brevo API Endpoint
-        const url = "https://api.brevo.com/v3/smtp/email";
-
-        // Sender configuration
-        const senderEmail = Deno.env.get("SENDER_EMAIL") || "info@insilicology.com";
-        const senderName = "Insilicology";
-
-        const emailPayload = {
-            sender: {
-                name: senderName,
-                email: senderEmail,
-            },
-            to: [
-                {
-                    email: userEmail,
-                    name: userName,
-                },
-            ],
-            subject: "Welcome to Insilicology - Start Your Learning Journey!",
-            htmlContent: `
+    const emailPayload = {
+      sender: {
+        name: senderName,
+        email: senderEmail,
+      },
+      to: [
+        {
+          email: userEmail,
+          name: userName,
+        },
+      ],
+      subject: "Welcome to Zymios - Start Your Learning Journey!",
+      htmlContent: `
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8f9fa; padding: 20px;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 20px; text-align: center; border-radius: 10px 10px 0 0;">
-            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">Welcome to Insilicology! 🎉</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700;">Welcome to Zymios! 🎉</h1>
           </div>
           
           <div style="background-color: white; padding: 40px 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">Hi ${userName},</p>
             
             <p style="color: #333; font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
-              Thank you for joining <strong>Insilicology</strong> - your gateway to mastering bioinformatics and computational biology!
+              Thank you for joining <strong>Zymios</strong> - your gateway to mastering bioinformatics and computational biology!
             </p>
             
             <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 25px; border-radius: 10px; margin: 30px 0; text-align: center;">
@@ -104,7 +104,7 @@ const handler = async (req: Request): Promise<Response> => {
             </p>
             
             <div style="text-align: center; margin: 35px 0;">
-              <a href="${Deno.env.get('SITE_URL') || 'https://insilicology.com'}/courses" 
+              <a href="${Deno.env.get('SITE_URL') || 'https://zymios.com'}/courses" 
                  style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 40px; text-decoration: none; border-radius: 50px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); transition: all 0.3s ease;">
                 Explore Courses
               </a>
@@ -128,57 +128,57 @@ const handler = async (req: Request): Promise<Response> => {
             
             <p style="color: #333; font-size: 16px; line-height: 1.6; margin-top: 20px;">
               Best regards,<br>
-              <strong>The Insilicology Team</strong>
+              <strong>The Zymios Team</strong>
             </p>
           </div>
           
           <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-            <p style="margin: 5px 0;">© 2026 Insilicology. All rights reserved.</p>
+            <p style="margin: 5px 0;">© 2026 Zymios. All rights reserved.</p>
             <p style="margin: 5px 0;">
-              <a href="${Deno.env.get('SITE_URL') || 'https://insilicology.com'}" style="color: #667eea; text-decoration: none;">Visit Website</a> | 
-              <a href="${Deno.env.get('SITE_URL') || 'https://insilicology.com'}/contact" style="color: #667eea; text-decoration: none;">Contact Us</a>
+              <a href="${Deno.env.get('SITE_URL') || 'https://zymios.com'}" style="color: #667eea; text-decoration: none;">Visit Website</a> | 
+              <a href="${Deno.env.get('SITE_URL') || 'https://zymios.com'}/contact" style="color: #667eea; text-decoration: none;">Contact Us</a>
             </p>
           </div>
         </div>
       `,
-        };
+    };
 
-        console.log("Sending email via Brevo to:", userEmail);
+    console.log("Sending email via Brevo to:", userEmail);
 
-        const res = await fetch(url, {
-            method: "POST",
-            headers: {
-                "accept": "application/json",
-                "api-key": brevoApiKey,
-                "content-type": "application/json",
-            },
-            body: JSON.stringify(emailPayload),
-        });
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "accept": "application/json",
+        "api-key": brevoApiKey,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(emailPayload),
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!res.ok) {
-            console.error("Brevo API error:", data);
-            return new Response(
-                JSON.stringify({ error: "Failed to send email via Brevo", details: data }),
-                { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-            );
-        }
-
-        console.log("Brevo email sent successfully:", data);
-
-        return new Response(
-            JSON.stringify({ success: true, messageId: data.messageId }),
-            { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
-
-    } catch (error: any) {
-        console.error("Error in send-welcome-email:", error);
-        return new Response(
-            JSON.stringify({ error: error.message }),
-            { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
+    if (!res.ok) {
+      console.error("Brevo API error:", data);
+      return new Response(
+        JSON.stringify({ error: "Failed to send email via Brevo", details: data }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
     }
+
+    console.log("Brevo email sent successfully:", data);
+
+    return new Response(
+      JSON.stringify({ success: true, messageId: data.messageId }),
+      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+
+  } catch (error: any) {
+    console.error("Error in send-welcome-email:", error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  }
 };
 
 serve(handler);
