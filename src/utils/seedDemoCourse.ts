@@ -216,7 +216,7 @@ After payment, upload your payment screenshot during enrollment. Your enrollment
 
   console.log('✅ Lessons created:', lessons.length);
   console.log('🎉 Demo course seeded successfully!');
-  console.log(`📍 View at: /courses/${courseData.slug}`);
+  console.log(`📍 View at: /academy/${courseData.slug}`);
 
   return course;
 };

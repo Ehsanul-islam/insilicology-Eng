@@ -212,7 +212,7 @@ const StudentLiveSessions = () => {
 
                         <nav className="flex items-center gap-4">
                             <Button variant="ghost" size="sm" asChild className="hidden sm:flex">
-                                <Link to="/courses">Browse Courses</Link>
+                                <Link to="/academy">Browse Courses</Link>
                             </Button>
                             <Button variant="ghost" size="icon" asChild>
                                 <Link to="/profile/settings">
@@ -276,7 +276,7 @@ const StudentLiveSessions = () => {
                                         <h3 className="text-lg font-semibold mb-2 text-gray-900 dark:text-gray-100">No scheduled sessions</h3>
                                         <p className="mb-6 max-w-sm text-center">You don't have any upcoming live sessions for your enrolled courses.</p>
                                         <Button asChild>
-                                            <Link to="/courses">Browse Courses</Link>
+                                            <Link to="/academy">Browse Courses</Link>
                                         </Button>
                                     </CardContent>
                                 </Card>

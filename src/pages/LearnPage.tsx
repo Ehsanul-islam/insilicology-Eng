@@ -86,7 +86,7 @@ const LearnPage = () => {
 
             if (!enrollmentData) {
                 toast.error('You need to enroll in this course first');
-                navigate(`/courses/${slug}`);
+                navigate(`/academy/${slug}`);
                 return;
             }
             setIsEnrolled(true);

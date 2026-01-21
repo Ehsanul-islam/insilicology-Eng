@@ -93,7 +93,7 @@ const FeaturedCourses = () => {
             className="bg-bio-teal hover:opacity-90 text-white font-semibold px-8"
             asChild
           >
-            <Link to="/courses">
+            <Link to="/academy">
               View All Courses
               <ArrowRight className="ml-2 w-5 h-5" />
             </Link>

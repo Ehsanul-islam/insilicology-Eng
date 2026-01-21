@@ -108,7 +108,7 @@ const Dashboard = () => {
 
             <nav className="flex items-center gap-4">
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/courses">Browse Courses</Link>
+                <Link to="/academy">Browse Courses</Link>
               </Button>
               <Button variant="ghost" size="icon" asChild>
                 <Link to="/profile/settings">
@@ -161,7 +161,7 @@ const Dashboard = () => {
                   WELCOME100
                 </div>
                 <Button asChild className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-0 shadow-lg shadow-pink-500/20">
-                  <Link to="/courses">Redeem Now</Link>
+                  <Link to="/academy">Redeem Now</Link>
                 </Button>
               </div>
             </div>
@@ -225,7 +225,7 @@ const Dashboard = () => {
                       You haven't enrolled in any courses yet
                     </p>
                     <Button asChild>
-                      <Link to="/courses">Browse Courses</Link>
+                      <Link to="/academy">Browse Courses</Link>
                     </Button>
                   </div>
                 ) : (
@@ -392,7 +392,7 @@ const Dashboard = () => {
                   </Link>
                 </Button>
                 <Button variant="ghost" className="w-full justify-start" asChild>
-                  <Link to="/courses">
+                  <Link to="/academy">
                     <BookOpen className="w-4 h-4 mr-2" />
                     Browse Courses
                   </Link>

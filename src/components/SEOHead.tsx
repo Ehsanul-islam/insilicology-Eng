@@ -66,7 +66,7 @@ const SEOHead = ({
   const courseStructuredData = course ? {
     "@context": "https://schema.org",
     "@type": "Course",
-    "@id": `${siteUrl}/courses/${course.id}`,
+    "@id": `${siteUrl}/academy/${course.id}`,
     "name": course.title,
     "description": course.description || description,
     "provider": {
@@ -99,7 +99,7 @@ const SEOHead = ({
         "price": course.price,
         "priceCurrency": course.currency || "USD",
         "availability": "https://schema.org/InStock",
-        "url": `${siteUrl}/courses/${course.id}`
+        "url": `${siteUrl}/academy/${course.id}`
       }
     })
   } : null;
@@ -177,7 +177,7 @@ const SEOHead = ({
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": `${siteUrl}/courses?search={search_term_string}`
+        "urlTemplate": `${siteUrl}/academy?search={search_term_string}`
       },
       "query-input": "required name=search_term_string"
     }

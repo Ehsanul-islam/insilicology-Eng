@@ -9,28 +9,28 @@ const CourseCategories = () => {
       name: 'Genomics',
       count: 12,
       color: 'from-bio-teal to-bio-cyan',
-      link: '/courses?category=genomics',
+      link: '/academy?category=genomics',
     },
     {
       icon: Pill,
       name: 'CADD',
       count: 8,
       color: 'from-bio-purple to-purple-400',
-      link: '/courses?category=cadd',
+      link: '/academy?category=cadd',
     },
     {
       icon: LineChart,
       name: 'ML/AI',
       count: 6,
       color: 'from-bio-gold to-yellow-400',
-      link: '/courses?category=ml-ai',
+      link: '/academy?category=ml-ai',
     },
     {
       icon: Microscope,
       name: 'Research',
       count: 10,
       color: 'from-blue-500 to-bio-teal',
-      link: '/courses?category=research',
+      link: '/academy?category=research',
     },
   ];
 
@@ -81,10 +81,10 @@ const CourseCategories = () => {
                   {/* Hover Arrow */}
                   <div className="mt-4 flex items-center text-bio-teal opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <span className="text-sm font-medium">Explore</span>
-                    <svg 
-                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
+                    <svg
+                      className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

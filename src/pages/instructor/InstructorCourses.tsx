@@ -134,7 +134,7 @@ const InstructorCourses = () => {
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => window.open(`/courses/${course.slug}`, '_blank')}>
+                                            <DropdownMenuItem onClick={() => window.open(`/academy/${course.slug}`, '_blank')}>
                                                 <Eye className="mr-2 h-4 w-4" /> View
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>

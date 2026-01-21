@@ -155,12 +155,12 @@ export const useCourseDetail = (slug: string | undefined) => {
 
       // Batch 2: Fetch related data in parallel (depend on courseData.id)
 
-      // A. Enrollment Count
+      // A. Enrollment Count (only approved/active enrollments)
       const enrollmentCountPromise = supabase
         .from('enrollments')
         .select('*', { count: 'exact', head: true })
         .eq('course_id', courseData.id)
-        .neq('status', 'cancelled');
+        .in('status', ['approved', 'active']);
 
       // B. Lessons (Optimized)
       const lessonsPromise = supabase

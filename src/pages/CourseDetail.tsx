@@ -99,7 +99,7 @@ const CourseDetail = () => {
   // Handle enrollment button click
   const handleEnroll = () => {
     if (!user) {
-      navigate('/auth', { state: { returnTo: `/courses/${slug}` } });
+      navigate('/auth', { state: { returnTo: `/academy/${slug}` } });
     } else if (isEnrolled) {
       navigate(`/learn/${course?.slug}`);
     } else {
@@ -160,7 +160,7 @@ const CourseDetail = () => {
                 The course you're looking for doesn't exist or has been removed.
               </p>
               <Button asChild size="lg">
-                <Link to="/courses">Browse All Courses</Link>
+                <Link to="/academy">Browse All Courses</Link>
               </Button>
             </motion.div>
           </div>
@@ -205,7 +205,7 @@ const CourseDetail = () => {
       <SEOHead
         title={`${course.title} - Zymios`}
         description={course.description || ''}
-        url={`/courses/${slug}`}
+        url={`/academy/${slug}`}
         type="article"
         image={course.poster_url || ''}
         course={{

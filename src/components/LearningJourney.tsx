@@ -39,7 +39,7 @@ const LearningJourney = () => {
     <section className="py-20 relative overflow-hidden">
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-cyan-50 via-blue-50 to-yellow-50"></div>
-      
+
       <div className="container-custom relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -99,17 +99,17 @@ const LearningJourney = () => {
                 {/* Connector Arrow (desktop only) */}
                 {index < steps.length - 1 && (
                   <div className="hidden lg:block absolute top-24 -right-4 z-20">
-                    <svg 
-                      className="w-8 h-8 text-bio-teal" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
+                    <svg
+                      className="w-8 h-8 text-bio-teal"
+                      fill="none"
+                      viewBox="0 0 24 24"
                       stroke="currentColor"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M13 7l5 5m0 0l-5 5m5-5H6" 
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
                       />
                     </svg>
                   </div>
@@ -127,24 +127,24 @@ const LearningJourney = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center mt-12"
         >
-          <Button 
-            asChild 
-            size="lg" 
+          <Button
+            asChild
+            size="lg"
             className="bg-gradient-to-r from-bio-teal to-bio-gold hover:from-bio-teal/90 hover:to-bio-gold/90 text-white font-semibold px-10 py-6 text-lg shadow-xl"
           >
-            <Link to="/courses">
+            <Link to="/academy">
               Start Your Journey
-              <svg 
-                className="ml-2 w-5 h-5" 
-                fill="none" 
-                viewBox="0 0 24 24" 
+              <svg
+                className="ml-2 w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={2} 
-                  d="M13 7l5 5m0 0l-5 5m5-5H6" 
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
                 />
               </svg>
             </Link>

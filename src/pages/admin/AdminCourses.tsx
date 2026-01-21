@@ -45,7 +45,7 @@ const AdminCourses = () => {
     setSelectedCourse(course);
 
     if (action === 'view') {
-      window.open(`/courses/${course.slug}`, '_blank');
+      window.open(`/academy/${course.slug}`, '_blank');
     } else if (action === 'edit') {
       navigate(`/admin/courses/${course.id}/edit`);
     } else if (action === 'publish') {
