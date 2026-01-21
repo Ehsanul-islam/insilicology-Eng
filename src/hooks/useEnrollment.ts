@@ -130,6 +130,28 @@ export const useEnrollment = (courseId: string) => {
         return true;
       }
 
+      // Ensure profile exists before proceeding
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!profile) {
+        console.log('Profile missing, creating one...');
+        const { error: profileError } = await supabase.from('profiles').insert({
+          id: user.id,
+          email: user.email,
+          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Student',
+        });
+
+        if (profileError) {
+          console.error('Error creating profile:', profileError);
+          // Continue anyway and let the foreign key constraint fail if it must, 
+          // but usually this insert should fix it.
+        }
+      }
+
       // Create new enrollment
       const { data: enrollment, error } = await supabase
         .from('enrollments')
