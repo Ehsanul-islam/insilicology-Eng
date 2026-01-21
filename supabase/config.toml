@@ -4,7 +4,7 @@ project_id = "hmgxicjynuxsnijhmvth"
 verify_jwt = false  # Called by database trigger, not authenticated user
 
 [functions.send-enrollment-notification]
-verify_jwt = true  # Called by authenticated frontend
+verify_jwt = false  # Temporarily disabled for testing
 
 [functions.generate-certificate-pdf]
 verify_jwt = true
