@@ -200,6 +200,34 @@ export const useAdminData = () => {
       throw error;
     }
 
+    // Send email notification based on status change
+    if (status === 'active') {
+      // Send approval email
+      supabase.functions.invoke('send-enrollment-notification', {
+        body: {
+          enrollmentId,
+          type: 'approved'
+        }
+      }).then(({ error }) => {
+        if (error) console.error('Failed to send approval email:', error);
+      }).catch(err => {
+        console.error('Failed to send approval email:', err);
+      });
+    } else if (status === 'cancelled' && rejectionReason) {
+      // Send rejection email
+      supabase.functions.invoke('send-enrollment-notification', {
+        body: {
+          enrollmentId,
+          type: 'rejected',
+          rejectionReason
+        }
+      }).then(({ error }) => {
+        if (error) console.error('Failed to send rejection email:', error);
+      }).catch(err => {
+        console.error('Failed to send rejection email:', err);
+      });
+    }
+
     await fetchAdminStats();
   };
 
