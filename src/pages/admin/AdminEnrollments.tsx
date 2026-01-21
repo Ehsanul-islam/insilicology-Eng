@@ -66,32 +66,7 @@ const AdminEnrollments = () => {
     setProcessing(true);
     try {
       await updateEnrollmentStatus(selectedEnrollment.id, 'active');
-
-      // Trigger email notification (independent try-catch)
-      try {
-        console.log('Triggering enrollment notification email for:', selectedEnrollment.user_email);
-
-        const { error: funcError } = await supabase.functions.invoke('send-enrollment-notification', {
-          body: {
-            enrollmentId: selectedEnrollment.id,
-            type: 'approved',
-            recipientEmail: selectedEnrollment.user_email,
-            recipientName: selectedEnrollment.user_name,
-            courseName: selectedEnrollment.course_title,
-          },
-        });
-
-        if (funcError) {
-          console.error('Failed to trigger email function:', funcError);
-          toast.error('Approval successful, but email notification failed.');
-        } else {
-          toast.success('Enrollment approved & email sent!');
-        }
-      } catch (emailErr) {
-        console.error('Error calling email function:', emailErr);
-        toast.error('Approval successful, but email notification failed.');
-      }
-
+      toast.success('Enrollment approved successfully');
       setActionDialog(null);
       loadEnrollments();
     } catch (error: any) {
@@ -112,33 +87,7 @@ const AdminEnrollments = () => {
     setProcessing(true);
     try {
       await updateEnrollmentStatus(selectedEnrollment.id, 'cancelled', rejectionReason);
-
-      // Trigger email notification (independent try-catch)
-      try {
-        console.log('Triggering rejection notification email for:', selectedEnrollment.user_email);
-
-        const { error: funcError } = await supabase.functions.invoke('send-enrollment-notification', {
-          body: {
-            enrollmentId: selectedEnrollment.id,
-            type: 'rejected',
-            recipientEmail: selectedEnrollment.user_email,
-            recipientName: selectedEnrollment.user_name,
-            courseName: selectedEnrollment.course_title,
-            rejectionReason: rejectionReason,
-          },
-        });
-
-        if (funcError) {
-          console.error('Failed to trigger rejection email:', funcError);
-          toast.error('Rejection successful, but email notification failed.');
-        } else {
-          toast.success('Enrollment rejected & email sent!');
-        }
-      } catch (emailErr) {
-        console.error('Error calling rejection email function:', emailErr);
-        toast.error('Rejection successful, but email notification failed.');
-      }
-
+      toast.success('Enrollment rejected');
       setActionDialog(null);
       loadEnrollments();
     } catch (error) {
