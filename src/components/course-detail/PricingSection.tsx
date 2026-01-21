@@ -1,12 +1,13 @@
+import { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import {
-  Check, ArrowRight, Flame, Users, Shield, Clock, Star, Video, Zap, Gift
+  Check, ArrowRight, Flame, Users, Shield, Clock, Star, Video, Zap, Gift, Tag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import CountdownTimer from './CountdownTimer';
 import { Tables } from '@/integrations/supabase/types';
-import { memo } from 'react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { useIsMobile } from '@/hooks/useMediaQuery';
 
@@ -17,7 +18,7 @@ interface ValueItem {
   original_price: number;
 }
 
-interface Stats {
+export interface PricingStats {
   fakeEnrollmentPadding?: string;
   genuineThreshold?: string;
   students?: string;
@@ -33,11 +34,15 @@ interface PricingSectionProps {
   onEnrollClick: () => void;
   isEnrolled?: boolean;
   upcoming?: boolean;
-
+  whatsIncluded?: string[];
 
   enrolledCount?: number;
-  stats?: Stats | null;
+  stats?: PricingStats | null;
   course?: Course | null;
+
+  // Coupon Props
+  couponDiscount?: number;
+  onCouponApply?: (code: string) => boolean;
 }
 
 const PricingSection = memo(({
@@ -52,13 +57,46 @@ const PricingSection = memo(({
   upcoming,
   whatsIncluded,
 
-
   stats,
   course,
   enrolledCount,
+  couponDiscount,
+  onCouponApply
 }: PricingSectionProps) => {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
+
+  const [localCouponCode, setLocalCouponCode] = useState('');
+  const [couponMessage, setCouponMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+  const handleApplyCoupon = async () => {
+    // Verify against backend to ensure one-time usage
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+
+      // @ts-ignore
+      const { data: isValid, error } = await supabase.rpc('validate_coupon_usage', {
+        check_coupon_code: localCouponCode
+      });
+
+      if (error) {
+        console.error('Coupon check error:', error);
+        // Fallback to local check if RPC fails (e.g. function not found or network error)
+      } else if (isValid === false) {
+        setCouponMessage({ type: 'error', text: 'You have already used this coupon.' });
+        return;
+      }
+    } catch (err) {
+      console.error("Validation error:", err);
+    }
+
+    const success = onCouponApply(localCouponCode);
+    if (success) {
+      setCouponMessage({ type: 'success', text: 'Coupon applied successfully! $5 OFF' });
+    } else {
+      setCouponMessage({ type: 'error', text: 'Invalid coupon code' });
+    }
+  };
 
   // Scarcity Logic
   const realEnrollmentCount = enrolledCount || 0;
@@ -76,7 +114,8 @@ const PricingSection = memo(({
   const totalEnrolledDisplay = stats?.students || displayedEnrollmentCount.toLocaleString();
 
   const isEarlyBirdActive = earlyBirdPrice && earlyBirdLimit && displayedEnrollmentCount < earlyBirdLimit;
-  const effectivePrice = isEarlyBirdActive ? earlyBirdPrice : priceOffer;
+  const basePrice = isEarlyBirdActive ? earlyBirdPrice : priceOffer;
+  const effectivePrice = Math.max(0, (basePrice || 0) - (couponDiscount || 0));
 
   // Progress bar calculations
   const totalSpots = earlyBirdLimit || 1;
@@ -154,7 +193,7 @@ const PricingSection = memo(({
                     Early Bird Offer
                   </p>
                   <div className="flex items-baseline gap-3">
-                    <span className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">${earlyBirdPrice}</span>
+                    <span className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">${effectivePrice}</span>
                     <span className="text-base text-gray-400 line-through font-medium translate-y-[-2px]">${priceRegular}</span>
                   </div>
                 </div>
@@ -236,9 +275,44 @@ const PricingSection = memo(({
                         <span className="font-medium">All future updates free</span>
                       </div>
                     </div>
+
+
+
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* Coupon Code Input - Moved Here */}
+          {onCouponApply && (
+            <div className="mt-6 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+              <label className="text-sm font-medium text-foreground mb-2 block flex items-center gap-2">
+                <Tag className="w-4 h-4 text-primary" />
+                Have a coupon code?
+              </label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter coupon code"
+                  value={localCouponCode}
+                  onChange={(e) => setLocalCouponCode(e.target.value)}
+                  className="bg-white dark:bg-slate-900"
+                  disabled={couponDiscount ? couponDiscount > 0 : false}
+                />
+                <Button
+                  variant={couponDiscount && couponDiscount > 0 ? "outline" : "secondary"}
+                  onClick={handleApplyCoupon}
+                  disabled={couponDiscount ? couponDiscount > 0 : false}
+                  className={couponDiscount && couponDiscount > 0 ? "text-green-600 border-green-200 bg-green-50" : ""}
+                >
+                  {couponDiscount && couponDiscount > 0 ? "Applied" : "Apply"}
+                </Button>
+              </div>
+              {couponMessage && (
+                <p className={`text-xs mt-2 font-medium ${couponMessage.type === 'success' ? 'text-green-600' : 'text-red-500'}`}>
+                  {couponMessage.text}
+                </p>
+              )}
             </div>
           )}
 

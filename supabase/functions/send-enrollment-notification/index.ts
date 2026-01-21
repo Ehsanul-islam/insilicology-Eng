@@ -23,23 +23,23 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const resendApiKey = Deno.env.get("RESEND_API_KEY");
-    
-    if (!resendApiKey) {
-      console.log("RESEND_API_KEY not configured - skipping email");
+    const brevoApiKey = Deno.env.get("BREVO_API_KEY");
+
+    if (!brevoApiKey) {
+      console.log("BREVO_API_KEY not configured - skipping email");
       return new Response(
         JSON.stringify({ success: true, message: "Email skipped - no API key" }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
-    const { 
-      enrollmentId, 
-      type, 
-      recipientEmail, 
-      courseName, 
+    const {
+      enrollmentId,
+      type,
+      recipientEmail,
+      courseName,
       userName,
-      rejectionReason 
+      rejectionReason
     }: EnrollmentNotificationRequest = await req.json();
 
     // Get enrollment details if not provided
@@ -128,32 +128,41 @@ const handler = async (req: Request): Promise<Response> => {
         break;
     }
 
-    // Send email via Resend
-    const res = await fetch("https://api.resend.com/emails", {
+    // Send email via Brevo
+    const brevoApiKey = Deno.env.get("BREVO_API_KEY");
+    if (!brevoApiKey) {
+      throw new Error("BREVO_API_KEY not configured");
+    }
+
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${resendApiKey}`,
+        "accept": "application/json",
+        "api-key": brevoApiKey,
+        "content-type": "application/json",
       },
       body: JSON.stringify({
-        from: "noreply@resend.dev",
-        to: [email],
-        subject,
-        html,
+        sender: {
+          name: "Zymios", // Or fetch from env if needed
+          email: Deno.env.get("SENDER_EMAIL") || "contact@zymios.com"
+        },
+        to: [{ email: email, name: name }],
+        subject: subject,
+        htmlContent: html,
       }),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      console.error("Resend error:", data);
+      console.error("Brevo error:", data);
       return new Response(
-        JSON.stringify({ error: "Failed to send email", details: data }),
+        JSON.stringify({ error: "Failed to send email via Brevo", details: data }),
         { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
-    console.log("Email sent successfully:", data);
+    console.log("Email sent successfully via Brevo:", data);
 
     return new Response(
       JSON.stringify({ success: true, data }),

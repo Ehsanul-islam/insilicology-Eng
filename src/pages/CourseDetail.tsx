@@ -85,6 +85,16 @@ const CourseDetail = () => {
   const { user } = useAuth();
   const { course, lessons, loading, error, isEnrolled, refetch } = useCourseDetail(slug);
   const [enrollmentOpen, setEnrollmentOpen] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+
+  // Handle coupon application
+  const handleCouponApply = (code: string) => {
+    if (code.toUpperCase() === 'WELCOME100') {
+      setCouponDiscount(5);
+      return true; // Success
+    }
+    return false; // Invalid code
+  };
 
   // Handle enrollment button click
   const handleEnroll = () => {
@@ -161,7 +171,7 @@ const CourseDetail = () => {
   }
 
   // Parse JSON fields with type safety
-  const stats = course.stats as Stats | null;
+  const stats = course.stats as unknown as Stats | null;
   const comparisonFeatures = (course.comparison_features as unknown as ComparisonFeature[] | null) || [];
   const targetAudience = (course.target_audience as unknown as TargetAudienceItem[] | null) || [];
   const valueBreakdown = (course.value_breakdown as unknown as ValueBreakdownItem[] | null) || [];
@@ -410,6 +420,8 @@ const CourseDetail = () => {
                     enrolledCount={enrollmentCount}
                     stats={stats}
                     course={course}
+                    couponDiscount={couponDiscount}
+                    onCouponApply={handleCouponApply}
                   />
                 </motion.div>
               </section>
@@ -443,7 +455,7 @@ const CourseDetail = () => {
           - Fixed bottom bar with price + enroll button
       ═══════════════════════════════════════════════════════════════════ */}
       <StickyFooterCTA
-        price={effectivePrice}
+        price={Math.max(0, effectivePrice - couponDiscount)}
         priceRegular={course.price_regular}
         onEnrollClick={handleEnroll}
         isEnrolled={isEnrolled}
@@ -458,7 +470,7 @@ const CourseDetail = () => {
           course={{
             id: course.id,
             title: course.title,
-            price_offer: effectivePrice,
+            price_offer: Math.max(0, effectivePrice - couponDiscount),
             price_regular: course.price_regular,
             payment_methods: course.payment_methods as string[] | null,
             payment_instructions: course.payment_instructions,
@@ -468,6 +480,7 @@ const CourseDetail = () => {
           onOpenChange={setEnrollmentOpen}
           onSuccess={refetch}
           isEarlyBird={isEarlyBirdActive && effectivePrice === earlyBirdPrice}
+          couponCode={couponDiscount > 0 ? 'WELCOME100' : null}
         />
       )}
     </div>

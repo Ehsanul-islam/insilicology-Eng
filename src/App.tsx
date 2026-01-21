@@ -99,6 +99,9 @@ const MetaPixelProvider = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+import { WelcomeModal } from './components/WelcomeModal';
+import { GuestCouponNotification } from './components/GuestCouponNotification';
+
 const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
@@ -108,6 +111,8 @@ const App = () => (
         <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <AuthProvider>
             <MetaPixelProvider>
+              <WelcomeModal />
+              <GuestCouponNotification />
               <Suspense fallback={<LoadingFallback variant="page" />}>
                 <Routes>
                   {/* Public Routes */}

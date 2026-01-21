@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ import {
   Loader2,
   ExternalLink,
   Video,
+  Gift,
 } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { useDashboardData } from '@/hooks/useDashboardData';
@@ -25,6 +27,30 @@ import { Skeleton } from '@/components/ui/skeleton';
 const Dashboard = () => {
   const { user, signOut } = useAuth();
   const { loading, stats, enrolledCourses, certificates, recentActivity } = useDashboardData();
+  const [showCoupon, setShowCoupon] = useState(false);
+
+  useEffect(() => {
+    const checkCoupon = async () => {
+      if (!user) return;
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        const { data: usageData } = await supabase
+          .from('coupon_usages' as any)
+          .select('*')
+          .eq('user_id', user.id)
+          .eq('coupon_code', 'WELCOME100')
+          .maybeSingle();
+
+        if (!usageData) {
+          setShowCoupon(true);
+        }
+      } catch (err) {
+        console.error("Error checking coupon:", err);
+      }
+    };
+
+    checkCoupon();
+  }, [user]);
 
   const statsCards = [
     {
@@ -107,6 +133,40 @@ const Dashboard = () => {
             Continue your learning journey where you left off
           </p>
         </div>
+
+        {/* Special Welcome Gift Coupon */}
+        {showCoupon && (
+          <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-pink-500/10 to-purple-500/10 border-2 border-pink-500/20 animate-fade-in relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Gift className="w-24 h-24 rotate-12" />
+            </div>
+            <div className="relative z-10">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-pink-500/20 rounded-lg">
+                  <Gift className="w-6 h-6 text-pink-500" />
+                </div>
+                <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-purple-600">
+                  Special Welcome Gift!
+                </h2>
+              </div>
+              <p className="text-muted-foreground mb-4 max-w-xl">
+                As a new student, here's a special gift to get you started. Use this coupon code for <strong>$5 OFF</strong> your first course enrollment!
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="bg-background border-2 border-dashed border-pink-300 rounded-lg px-4 py-2 font-mono text-lg font-bold tracking-wider text-pink-600 select-all cursor-pointer hover:bg-pink-50 transition-colors"
+                  onClick={() => {
+                    navigator.clipboard.writeText('WELCOME100');
+                    // Could add toast here if sonner was imported
+                  }}>
+                  WELCOME100
+                </div>
+                <Button asChild className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-0 shadow-lg shadow-pink-500/20">
+                  <Link to="/courses">Redeem Now</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 animate-slide-up">

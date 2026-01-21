@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, memo } from 'react';
 import { motion } from 'framer-motion';
-import { Users, MessageCircle, Headphones, ChevronDown, Play, Calendar, Clock, BookOpen } from 'lucide-react';
+import { Users, MessageCircle, Headphones, ChevronDown, Play, Calendar, Clock, BookOpen, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tables } from '@/integrations/supabase/types';
@@ -9,7 +9,7 @@ import { Sparkles, Flame } from 'lucide-react';
 type Course = Tables<'courses'>;
 
 interface Stats {
-  students?: number;
+  students?: string;
   community?: string;
   support?: string;
   fakeEnrollmentPadding?: string;
@@ -185,7 +185,7 @@ const VibeHeroSection = memo(({
 
             {instructorName && (
               <div className="flex items-center text-gray-900 font-medium">
-                <span className="text-gray-500 mr-1.5">Speaker:</span>
+                <span className="text-gray-500 mr-1.5">Instructor:</span>
                 <span className='font-semibold text-[#6d28d9]'>{instructorName}</span>
               </div>
             )}
@@ -261,7 +261,7 @@ const VibeHeroSection = memo(({
                 <div className="px-4 py-2 rounded-full bg-emerald-50/90 backdrop-blur-md border border-emerald-100 shadow-sm">
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-emerald-700 text-sm font-semibold">Premium Contents</span>
+                    <span className="text-emerald-700 text-sm font-semibold">Premium Content</span>
                   </div>
                 </div>
               </motion.div>
@@ -456,6 +456,19 @@ const VibeHeroSection = memo(({
                   </div>
                 )}
               </div>
+
+              {/* Coupon Code Scroll Link */}
+              {!isEnrolled && (
+                <div className="mb-3 flex justify-center">
+                  <button
+                    onClick={() => document.getElementById('checkout')?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+                    className="flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700 transition-colors group"
+                  >
+                    <Tag className="w-3.5 h-3.5 group-hover:-rotate-12 transition-transform duration-300" />
+                    <span className="border-b border-blue-200 group-hover:border-blue-600">Have a coupon code?</span>
+                  </button>
+                </div>
+              )}
 
               {/* CTA Button */}
               <Button

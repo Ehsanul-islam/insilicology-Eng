@@ -45,6 +45,7 @@ interface EnrollmentDialogProps {
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
   isEarlyBird?: boolean;
+  couponCode?: string | null;
 }
 
 const PAYMENT_METHOD_INFO: Record<string, { icon: React.ReactNode; label: string; description: string }> = {
@@ -65,7 +66,7 @@ const PAYMENT_METHOD_INFO: Record<string, { icon: React.ReactNode; label: string
   },
 };
 
-export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess, isEarlyBird }: EnrollmentDialogProps) => {
+export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess, isEarlyBird, couponCode }: EnrollmentDialogProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -132,15 +133,34 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess, isEarl
       }
     }
 
+    // Append coupon code to customFormData if present
+    const finalFormData = { ...formData };
+    if (couponCode) {
+      finalFormData['Coupon Code'] = couponCode;
+    }
+
     const success = await submitEnrollment({
       paymentMethod,
       paymentProofUrl,
-      customFormData: formData,
+      customFormData: finalFormData,
     });
 
     setUploading(false);
 
     if (success) {
+      // Record coupon usage if applicable
+      if (couponCode && user) {
+        try {
+          const { supabase } = await import('@/integrations/supabase/client');
+          await supabase.from('coupon_usages').insert({
+            user_id: user.id,
+            coupon_code: couponCode
+          });
+        } catch (err) {
+          console.error("Failed to record coupon usage:", err);
+        }
+      }
+
       onSuccess?.();
       onOpenChange(false);
     }

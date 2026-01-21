@@ -76,7 +76,7 @@ const AdminCourseEditor = () => {
 
   const fetchInstructors = useCallback(async () => {
     try {
-       
+
       const { data: roles, error: rolesError } = await (supabase as any)
         .from('user_roles')
         .select('user_id')
@@ -117,7 +117,7 @@ const AdminCourseEditor = () => {
       if (error) throw error;
 
       if (data) {
-         
+
         const courseData = data as any;
         setFormData({
           title: data.title || '',
@@ -295,7 +295,7 @@ const AdminCourseEditor = () => {
       if (isEditing) {
         const { error } = await supabase
           .from('courses')
-           
+
           .update(courseData as any)
           .eq('id', id);
 
@@ -304,7 +304,7 @@ const AdminCourseEditor = () => {
       } else {
         const { error } = await supabase
           .from('courses')
-           
+
           .insert([courseData] as any);
 
         if (error) throw error;
@@ -781,55 +781,7 @@ const AdminCourseEditor = () => {
                       </div>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2 pt-4 border-t">
-                      <div className="sm:col-span-2">
-                        <Label className="text-base font-semibold text-orange-600 flex items-center gap-2">
-                          <Flame className="w-4 h-4" />
-                          Scarcity Logic Configuration
-                        </Label>
-                        <p className="text-xs text-muted-foreground mb-4">
-                          Configure fake enrollment data to encourage sales.
-                        </p>
-                      </div>
 
-                      <div>
-                        <Label htmlFor="stats.fakeEnrollmentPadding">Fake Enrollment Padding</Label>
-                        <Input
-                          id="stats.fakeEnrollmentPadding"
-                          type="number"
-                          min="0"
-                          step="1"
-                          value={formData.stats.fakeEnrollmentPadding || ''}
-                          onChange={(e) => setFormData(prev => ({
-                            ...prev,
-                            stats: { ...prev.stats, fakeEnrollmentPadding: e.target.value }
-                          }))}
-                          placeholder="e.g. 10"
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Added to real count when below genuine threshold.
-                        </p>
-                      </div>
-
-                      <div>
-                        <Label htmlFor="stats.genuineThreshold">Genuine Threshold</Label>
-                        <Input
-                          id="stats.genuineThreshold"
-                          type="number"
-                          min="0"
-                          step="1"
-                          value={formData.stats.genuineThreshold || ''}
-                          onChange={(e) => setFormData(prev => ({
-                            ...prev,
-                            stats: { ...prev.stats, genuineThreshold: e.target.value }
-                          }))}
-                          placeholder="e.g. 5"
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Switch to real data when enrollments reach this number.
-                        </p>
-                      </div>
-                    </div>
 
                   </CardContent>
                 </Card>
@@ -2228,16 +2180,16 @@ const AdminCourseEditor = () => {
               </Card>
             </div>
           </TabsContent>
-        </Tabs>
+        </Tabs >
 
         {/* Bottom Save Button (mobile) */}
-        <div className="lg:hidden sticky bottom-4">
+        < div className="lg:hidden sticky bottom-4" >
           <Button type="submit" disabled={saving} className="w-full shadow-lg">
             <Save className="w-4 h-4 mr-2" />
             {saving ? 'Saving...' : 'Save Course'}
           </Button>
-        </div>
-      </form>
+        </div >
+      </form >
     </AdminLayout >
   );
 };
