@@ -79,11 +79,12 @@ const Auth = () => {
     setIsLoading(false);
 
     if (error) {
-      // Check if error is related to email confirmation
+      // Check if error is related to email confirmation (keep this for the resend email feature)
       const errorMessage = error.message.toLowerCase();
       if (errorMessage.includes('email') && (errorMessage.includes('confirm') || errorMessage.includes('verified') || errorMessage.includes('not confirmed'))) {
         setEmailConfirmationError(data.email);
       }
+      // All other errors (NO_ACCOUNT_FOUND, WRONG_PASSWORD) are handled via toast in AuthContext
     } else {
       navigate('/dashboard');
     }

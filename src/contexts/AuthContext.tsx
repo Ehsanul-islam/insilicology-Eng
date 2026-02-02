@@ -89,10 +89,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           toast.error('Please confirm your email before signing in. Check your inbox for the confirmation link.', {
             duration: 5000,
           });
+          throw error;
+        } else if (errorMessage.includes('invalid') && errorMessage.includes('credentials')) {
+          // Check if user exists in the database
+          const { data: userExists } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle();
+
+          if (!userExists) {
+            // User doesn't exist - create a custom error
+            const noAccountError = new Error('NO_ACCOUNT_FOUND');
+            toast.error('No account found with this email. Please sign up first.');
+            throw noAccountError;
+          } else {
+            // User exists but wrong password
+            const wrongPasswordError = new Error('WRONG_PASSWORD');
+            toast.error('Incorrect password. Please try again or reset your password.');
+            throw wrongPasswordError;
+          }
         } else {
           toast.error(error.message);
+          throw error;
         }
-        throw error;
       }
 
       return { error: null };
