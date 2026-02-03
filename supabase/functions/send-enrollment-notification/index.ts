@@ -116,11 +116,12 @@ Deno.serve(async (req) => {
                 htmlContent = buildApprovedEmail(userName, courseTitle, dashboardUrl, SENDER_EMAIL, SITE_URL);
                 break;
 
-            case "rejected":
+            case "rejected": {
                 subject = `Enrollment Update - ${courseTitle}`;
                 const rejectionReason = enrollment.rejection_reason || "Please contact support for more details.";
                 htmlContent = buildRejectedEmail(userName, courseTitle, rejectionReason, courseUrl, SENDER_EMAIL, SITE_URL);
                 break;
+            }
 
             default:
                 return new Response(
