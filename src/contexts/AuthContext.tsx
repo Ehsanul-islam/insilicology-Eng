@@ -44,10 +44,61 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Self-healing: Check if profile exists for this user, if not create it
+      if (session?.user) {
+        ensureProfileExists(session.user);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const ensureProfileExists = async (user: User) => {
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!profile) {
+        console.log('Profile missing for existing user. Attempting to recreate...');
+        const { error } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            full_name: user.user_metadata?.full_name || user.email?.split('@')[0],
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
+
+        if (error) {
+          console.error('Failed to recreate profile:', error);
+        } else {
+          console.log('Profile successfully recreated via self-healing.');
+          // Ensure role exists too
+          const { data: role } = await supabase
+            .from('user_roles')
+            .select('id')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+          if (!role) {
+            await supabase
+              .from('user_roles')
+              .insert({
+                user_id: user.id,
+                role: 'student'
+              });
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error in profile self-healing:', error);
+    }
+  };
 
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
@@ -91,24 +142,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           });
           throw error;
         } else if (errorMessage.includes('invalid') && errorMessage.includes('credentials')) {
-          // Check if user exists in the database
-          const { data: userExists } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('email', email)
-            .maybeSingle();
+          // Generic error message for security and consistency
+          // We do NOT check for profile existence here to avoid the "No account" vs "Already registered" loop
+          // If the user exists in Auth but not in Profiles, the standard "Invalid login credentials" is correct behavior from a security standpoint
+          // until they sign in correctly and our self-healing kicks in, OR they should just try to sign up again (which might fail if Auth exists)
+          // But telling them "No account found" causes them to go to Sign Up, which fails.
 
-          if (!userExists) {
-            // User doesn't exist - create a custom error
-            const noAccountError = new Error('NO_ACCOUNT_FOUND');
-            toast.error('No account found with this email. Please sign up first.');
-            throw noAccountError;
-          } else {
-            // User exists but wrong password
-            const wrongPasswordError = new Error('WRONG_PASSWORD');
-            toast.error('Incorrect password. Please try again or reset your password.');
-            throw wrongPasswordError;
-          }
+          // To be helpful but secure:
+          const invalidCredsError = new Error('INVALID_LOGIN_CREDENTIALS');
+          toast.error('Invalid login credentials. Please check your email and password.');
+          throw invalidCredsError;
         } else {
           toast.error(error.message);
           throw error;
