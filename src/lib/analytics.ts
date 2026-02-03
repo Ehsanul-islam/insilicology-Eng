@@ -46,7 +46,7 @@ export const initMetaPixel = (pixelId: string = META_PIXEL_ID): void => {
     }
 
     // Meta Pixel base code
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, prefer-rest-params, prefer-spread
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, prefer-rest-params
     (function (f: any, b: any, e: any, v: any, n?: any, t?: any, s?: any) {
         if (f.fbq) return;
         n = f.fbq = function (...args: any[]) {
