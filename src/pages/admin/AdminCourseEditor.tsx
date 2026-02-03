@@ -195,6 +195,8 @@ const AdminCourseEditor = () => {
           enrollment_form_fields: Array.isArray(data.enrollment_form_fields)
             ? data.enrollment_form_fields as unknown as EnrollmentFormField[]
             : [],
+          payment_link: data.payment_link || '',
+          payment_qr_code_url: data.payment_qr_code_url || '',
         });
       }
     } catch (error) {
@@ -290,6 +292,8 @@ const AdminCourseEditor = () => {
         payment_methods: formData.payment_methods,
         payment_instructions: formData.payment_instructions.trim() || null,
         enrollment_form_fields: formData.enrollment_form_fields,
+        payment_link: formData.payment_link?.trim() || null,
+        payment_qr_code_url: formData.payment_qr_code_url?.trim() || null,
       };
 
       if (isEditing) {
@@ -783,6 +787,128 @@ const AdminCourseEditor = () => {
 
 
 
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Payment Configuration</CardTitle>
+                    <CardDescription>Configure manual payment options for enrollment</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Payment Link */}
+                    <div>
+                      <Label htmlFor="payment_link">Payment Link (Razorpay/Payment Gateway)</Label>
+                      <Input
+                        id="payment_link"
+                        type="url"
+                        value={formData.payment_link || ''}
+                        onChange={(e) => setFormData(prev => ({ ...prev, payment_link: e.target.value }))}
+                        placeholder="https://razorpay.me/@yourlink or https://pages.razorpay.com/..."
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Users will use this link to make payment during enrollment
+                      </p>
+                    </div>
+
+                    {/* QR Code Upload */}
+                    <div>
+                      <Label htmlFor="payment_qr_code">Payment QR Code</Label>
+                      <div className="space-y-3">
+                        <div className="flex gap-2">
+                          <Input
+                            id="payment_qr_code"
+                            type="url"
+                            value={formData.payment_qr_code_url || ''}
+                            onChange={(e) => setFormData(prev => ({ ...prev, payment_qr_code_url: e.target.value }))}
+                            placeholder="Or enter QR code image URL"
+                            className="flex-1"
+                          />
+                          <input
+                            type="file"
+                            id="qr-upload"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+
+                              // Validate
+                              const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                              if (!validTypes.includes(file.type)) {
+                                toast.error('Please upload a valid image file');
+                                return;
+                              }
+                              if (file.size > 5 * 1024 * 1024) {
+                                toast.error('Image size must be less than 5MB');
+                                return;
+                              }
+
+                              toast.info('Uploading QR code...');
+
+                              try {
+                                const fileExt = file.name.split('.').pop();
+                                const fileName = `qr-${Date.now()}.${fileExt}`;
+
+                                const { error: uploadError } = await supabase.storage
+                                  .from('course-posters')
+                                  .upload(fileName, file, {
+                                    cacheControl: '3600',
+                                    upsert: false,
+                                  });
+
+                                if (uploadError) throw uploadError;
+
+                                const { data: { publicUrl } } = supabase.storage
+                                  .from('course-posters')
+                                  .getPublicUrl(fileName);
+
+                                setFormData(prev => ({ ...prev, payment_qr_code_url: publicUrl }));
+                                toast.success('QR code uploaded successfully!');
+                              } catch (error) {
+                                toast.error('Failed to upload QR code');
+                                console.error(error);
+                              }
+                              e.target.value = '';
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => document.getElementById('qr-upload')?.click()}
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Upload QR
+                          </Button>
+                          {formData.payment_qr_code_url && (
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setFormData(prev => ({ ...prev, payment_qr_code_url: '' }))}
+                              title="Remove QR code"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          Upload QR code for UPI/mobile payment option
+                        </p>
+                      </div>
+                      {formData.payment_qr_code_url && (
+                        <div className="mt-3 relative w-40 h-40 rounded-lg overflow-hidden border">
+                          <img
+                            src={formData.payment_qr_code_url}
+                            alt="Payment QR Code Preview"
+                            className="object-contain w-full h-full"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/placeholder.svg';
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
@@ -2045,6 +2171,129 @@ const AdminCourseEditor = () => {
                     placeholder="e.g., Send payment to 01XXXXXXXXX (bKash/Nagad) or Bank: ABC Bank, Account: 1234567890"
                     rows={4}
                   />
+                </CardContent>
+              </Card>
+
+              {/* Payment Configuration */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Payment Configuration</CardTitle>
+                  <CardDescription>Configure manual payment options for enrollment</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Payment Link */}
+                  <div>
+                    <Label htmlFor="payment_link">Payment Link (Razorpay/Payment Gateway)</Label>
+                    <Input
+                      id="payment_link"
+                      type="url"
+                      value={formData.payment_link || ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, payment_link: e.target.value }))}
+                      placeholder="https://razorpay.me/@yourlink or https://pages.razorpay.com/..."
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Users will use this link to make payment during enrollment
+                    </p>
+                  </div>
+
+                  {/* QR Code Upload */}
+                  <div>
+                    <Label htmlFor="payment_qr_code">Payment QR Code</Label>
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <Input
+                          id="payment_qr_code"
+                          type="url"
+                          value={formData.payment_qr_code_url || ''}
+                          onChange={(e) => setFormData(prev => ({ ...prev, payment_qr_code_url: e.target.value }))}
+                          placeholder="Or enter QR code image URL"
+                          className="flex-1"
+                        />
+                        <input
+                          type="file"
+                          id="qr-upload"
+                          className="hidden"
+                          accept="image/*"
+                          onChange={async (e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+
+                            // Validate
+                            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                            if (!validTypes.includes(file.type)) {
+                              toast.error('Please upload a valid image file');
+                              return;
+                            }
+                            if (file.size > 5 * 1024 * 1024) {
+                              toast.error('Image size must be less than 5MB');
+                              return;
+                            }
+
+                            toast.info('Uploading QR code...');
+
+                            try {
+                              const fileExt = file.name.split('.').pop();
+                              const fileName = `qr-${Date.now()}.${fileExt}`;
+
+                              const { error: uploadError } = await supabase.storage
+                                .from('course-posters')
+                                .upload(fileName, file, {
+                                  cacheControl: '3600',
+                                  upsert: false,
+                                });
+
+                              if (uploadError) throw uploadError;
+
+                              const { data: { publicUrl } } = supabase.storage
+                                .from('course-posters')
+                                .getPublicUrl(fileName);
+
+                              setFormData(prev => ({ ...prev, payment_qr_code_url: publicUrl }));
+                              toast.success('QR code uploaded successfully!');
+                            } catch (error) {
+                              toast.error('Failed to upload QR code');
+                              console.error(error);
+                            }
+                            e.target.value = '';
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => document.getElementById('qr-upload')?.click()}
+                        >
+                          <Upload className="w-4 h-4 mr-2" />
+                          Upload QR
+                        </Button>
+                        {formData.payment_qr_code_url && (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setFormData(prev => ({ ...prev, payment_qr_code_url: '' }))}
+                            title="Remove QR code"
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Upload QR code for UPI/mobile payment option
+                      </p>
+                    </div>
+                    {formData.payment_qr_code_url && (
+                      <div className="mt-3 relative w-40 h-40 rounded-lg overflow-hidden border">
+                        <img
+                          src={formData.payment_qr_code_url}
+                          alt="Payment QR Code Preview"
+                          className="object-contain w-full h-full"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = '/placeholder.svg';
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
 

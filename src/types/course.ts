@@ -115,4 +115,6 @@ export interface CourseFormData {
   payment_methods: string[];
   payment_instructions: string;
   enrollment_form_fields: EnrollmentFormField[];
+  payment_link?: string;
+  payment_qr_code_url?: string;
 }

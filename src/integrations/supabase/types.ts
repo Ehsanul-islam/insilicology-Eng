@@ -272,6 +272,35 @@ export type Database = {
         }
         Relationships: []
       }
+      coupon_usages: {
+        Row: {
+          coupon_code: string
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          coupon_code: string
+          created_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          coupon_code?: string
+          created_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupon_usages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       course_batches: {
         Row: {
           course_id: string | null

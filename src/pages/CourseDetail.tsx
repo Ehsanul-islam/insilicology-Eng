@@ -475,6 +475,8 @@ const CourseDetail = () => {
             payment_methods: course.payment_methods as string[] | null,
             payment_instructions: course.payment_instructions,
             enrollment_form_fields: course.enrollment_form_fields as unknown as { id: string; label: string; type: 'text' | 'email' | 'phone' | 'select' | 'textarea'; required: boolean; placeholder?: string; options?: string[] }[] | null,
+            payment_link: course.payment_link,
+            payment_qr_code_url: course.payment_qr_code_url,
           }}
           open={enrollmentOpen}
           onOpenChange={setEnrollmentOpen}

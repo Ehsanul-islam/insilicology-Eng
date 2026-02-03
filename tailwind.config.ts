@@ -26,7 +26,7 @@ export default {
       },
       colors: {
         "vibe-bg": "#f5f7ff",
-        "vibe-navy": "#0a2463",
+        "vibe-navy": "#6c3cff",
         "vibe-purple": "#6c3cff",
         "vibe-purple-light": "#8b5cf6",
         "vibe-green": "#10b981",

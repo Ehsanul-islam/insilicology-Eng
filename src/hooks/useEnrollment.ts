@@ -15,6 +15,7 @@ export interface EnrollmentFormField {
 export interface EnrollmentData {
   paymentMethod: string;
   paymentProofUrl?: string;
+  transactionId?: string;
   customFormData: Record<string, string>;
 }
 
@@ -100,6 +101,7 @@ export const useEnrollment = (courseId: string) => {
             payment_status: 'pending',
             payment_method: data.paymentMethod,
             payment_proof_url: data.paymentProofUrl,
+            transaction_id: data.transactionId,
             custom_form_data: data.customFormData,
             rejection_reason: null,
           })
@@ -162,6 +164,7 @@ export const useEnrollment = (courseId: string) => {
           payment_status: 'pending',
           payment_method: data.paymentMethod,
           payment_proof_url: data.paymentProofUrl,
+          transaction_id: data.transactionId,
           custom_form_data: data.customFormData,
         })
         .select()
