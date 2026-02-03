@@ -79,14 +79,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         } else {
           console.log('Profile successfully recreated via self-healing.');
           // Ensure role exists too
-          const { data: role } = await supabase
+          // Use any cast because user_roles is missing from current generated types
+          const { data: role } = await (supabase as any)
             .from('user_roles')
             .select('id')
             .eq('user_id', user.id)
             .maybeSingle();
 
           if (!role) {
-            await supabase
+            await (supabase as any)
               .from('user_roles')
               .insert({
                 user_id: user.id,
