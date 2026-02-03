@@ -74,7 +74,7 @@ const PricingSection = memo(({
     try {
       const { supabase } = await import('@/integrations/supabase/client');
 
-      // @ts-ignore
+      // @ts-expect-error - RPC function validate_coupon_usage may not be in type definitions
       const { data: isValid, error } = await supabase.rpc('validate_coupon_usage', {
         check_coupon_code: localCouponCode
       });

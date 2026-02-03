@@ -46,10 +46,15 @@ export const initMetaPixel = (pixelId: string = META_PIXEL_ID): void => {
     }
 
     // Meta Pixel base code
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, prefer-rest-params
     (function (f: any, b: any, e: any, v: any, n?: any, t?: any, s?: any) {
         if (f.fbq) return;
-        n = f.fbq = function () {
-            n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        n = f.fbq = function (...args: any[]) {
+            if (n.callMethod) {
+                n.callMethod(...args);
+            } else {
+                n.queue.push(args);
+            }
         };
         if (!f._fbq) f._fbq = n;
         n.push = n;
