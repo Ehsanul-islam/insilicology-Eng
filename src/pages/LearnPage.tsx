@@ -26,10 +26,10 @@ interface Lesson {
     title: string;
     description: string | null;
     video_url: string | null;
-    duration: number | null;
-    order_index: number;
-    is_free: boolean;
-    resources: any;
+    duration_minutes: number | null;
+    lesson_order: number;
+    is_preview: boolean;
+    resources?: any;
 }
 
 interface Course {
@@ -37,6 +37,7 @@ interface Course {
     title: string;
     slug: string;
     description: string | null;
+    status: string | null;
 }
 
 interface LessonProgress {
@@ -56,6 +57,8 @@ const LearnPage = () => {
     const [progress, setProgress] = useState<Record<string, LessonProgress>>({});
     const [loading, setLoading] = useState(true);
     const [isEnrolled, setIsEnrolled] = useState(false);
+    const [isArchived, setIsArchived] = useState(false);
+
 
     useEffect(() => {
         if (slug && user) {
@@ -68,7 +71,7 @@ const LearnPage = () => {
             // Fetch course
             const { data: courseData, error: courseError } = await supabase
                 .from('courses')
-                .select('id, title, slug, description')
+                .select('id, title, slug, description, status')
                 .eq('slug', slug)
                 .maybeSingle();
 
@@ -82,6 +85,13 @@ const LearnPage = () => {
             }
 
             setCourse(courseData);
+
+            // Note if course is archived — enrolled students still get access,
+            // we just show them a banner. Non-enrolled users are gated below
+            // by the enrollment check (and blocked at DB level via RLS).
+            if ((courseData as any).status === 'archived') {
+                setIsArchived(true);
+            }
 
             // Check enrollment
             const { data: enrollmentData } = await supabase
@@ -254,6 +264,14 @@ const LearnPage = () => {
                 </div>
             </header>
 
+            {/* Archived course notice — enrolled students keep full access */}
+            {isArchived && (
+                <div className="bg-amber-500/10 border-b border-amber-500/20 text-amber-700 dark:text-amber-400 text-sm px-4 py-2 flex items-center gap-2">
+                    <Lock className="w-4 h-4 shrink-0" />
+                    <span>This course has been archived. As an enrolled student, you still have full access to all lessons and resources.</span>
+                </div>
+            )}
+
             <main className="container-custom py-6">
                 <div className="grid lg:grid-cols-4 gap-6">
                     {/* Main Content */}
@@ -377,9 +395,9 @@ const LearnPage = () => {
                                                     </div>
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-sm font-medium line-clamp-2">{lesson.title}</p>
-                                                        {lesson.duration && (
+                                                        {lesson.duration_minutes && (
                                                             <p className="text-xs opacity-70 mt-1">
-                                                                {Math.floor(lesson.duration / 60)} min
+                                                                {Math.floor(lesson.duration_minutes / 60)}h {lesson.duration_minutes % 60}m
                                                             </p>
                                                         )}
                                                     </div>
