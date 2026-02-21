@@ -23,6 +23,7 @@ import {
 import SEOHead from '@/components/SEOHead';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { Skeleton } from '@/components/ui/skeleton';
+import NotificationBell from '@/components/NotificationBell';
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
@@ -111,6 +112,7 @@ const Dashboard = () => {
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/academy">Browse Courses</Link>
               </Button>
+              <NotificationBell />
               <Button variant="ghost" size="icon" asChild>
                 <Link to="/profile/settings">
                   <Settings className="w-4 h-4" />
