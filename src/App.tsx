@@ -42,6 +42,7 @@ const StudentLiveSessions = lazy(() => import("./pages/StudentLiveSessions"));
 const LearnPage = lazy(() => import("./pages/LearnPage"));
 const Research = lazy(() => import("./pages/Research"));
 const Community = lazy(() => import("./pages/Community"));
+const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 
 // Lazy load instructor pages
 const InstructorLayout = lazy(() => import("./components/layouts/InstructorLayout"));
@@ -180,6 +181,14 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <LearnPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/payment/:slug"
+                    element={
+                      <ProtectedRoute>
+                        <PaymentPage />
                       </ProtectedRoute>
                     }
                   />

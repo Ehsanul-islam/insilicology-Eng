@@ -103,7 +103,8 @@ const CourseDetail = () => {
     } else if (isEnrolled) {
       navigate(`/learn/${course?.slug}`);
     } else {
-      setEnrollmentOpen(true);
+      // Navigate to the new full-page payment flow
+      navigate(`/payment/${slug}`);
     }
   };
 
