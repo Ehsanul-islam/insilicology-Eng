@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Play, PlayCircle, Users, BookOpen, Star, Award, Check, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import UpcomingPrograms from '@/components/UpcomingPrograms';
+import FannedCourseCards from '@/components/common/FannedCourseCards';
 
 type HeroVariant = 'default' | 'skilltori' | 'bio' | 'vibe';
 
@@ -218,10 +219,15 @@ const UnifiedHero = memo(({
                             </div>
                         </motion.div>
 
-                        {/* Right Column - Upcoming Programs */}
-                        <div className="w-full lg:col-span-4 flex items-center justify-center min-h-[400px]">
-                            <UpcomingPrograms />
-                        </div>
+                        {/* Right Column - Fanned Course Cards */}
+                        <motion.div
+                            initial={{ opacity: 0, x: 40 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.8, delay: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                            className="w-full lg:col-span-4 flex items-center justify-center min-h-[400px]"
+                        >
+                            <FannedCourseCards />
+                        </motion.div>
                     </div>
                 </div>
             </section>
