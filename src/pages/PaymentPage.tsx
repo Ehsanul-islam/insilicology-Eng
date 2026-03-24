@@ -248,7 +248,19 @@ const PaymentPage = () => {
     );
   }
 
-  const effectivePrice = course.price_offer ? Number(course.price_offer) : 0;
+  // Early Bird Logic (mirrors CourseDetail.tsx)
+  const earlyBirdPrice = course.early_bird_price ? Number(course.early_bird_price) : null;
+  const earlyBirdLimit = course.early_bird_limit ? Number(course.early_bird_limit) : null;
+  const enrollmentCount = course.participant_count || 0;
+
+  const isEarlyBirdActive =
+    earlyBirdPrice !== null &&
+    earlyBirdLimit !== null &&
+    enrollmentCount < earlyBirdLimit;
+
+  const effectivePrice = isEarlyBirdActive && earlyBirdPrice !== null
+    ? earlyBirdPrice
+    : (course.price_offer ? Number(course.price_offer) : 0);
 
   return (
     <div className="min-h-screen bg-[#f8f9fb] flex flex-col">
