@@ -117,8 +117,8 @@ const App = () => (
                 <Routes>
                   {/* Public Routes */}
                   <Route path="/" element={<Index />} />
-                  <Route path="/academy" element={<Courses />} />
-                  <Route path="/academy/:slug" element={<CourseDetail />} />
+                  <Route path="/courses" element={<Courses />} />
+                  <Route path="/courses/:slug" element={<CourseDetail />} />
                   <Route path="/research" element={<Research />} />
                   <Route path="/research" element={<Research />} />
                   <Route path="/blog" element={<Blog />} />

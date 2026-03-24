@@ -92,7 +92,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
         </div>
 
         <div>
-          <Link to={`/academy/${course.slug}`}>
+          <Link to={`/courses/${course.slug}`}>
             <h3 className="text-lg font-bold mb-1 group-hover:text-primary transition-colors line-clamp-2">
               {course.title}
             </h3>
@@ -135,7 +135,7 @@ const CourseCard = ({ course }: CourseCardProps) => {
             )}
           </div>
           <Button className="btn-primary" asChild>
-            <Link to={`/academy/${course.slug}`}>View Details</Link>
+            <Link to={`/courses/${course.slug}`}>View Details</Link>
           </Button>
         </div>
       </CardFooter>

@@ -10,7 +10,7 @@ const Footer = () => {
       { name: 'Contact', href: '/contact' },
     ],
     Resources: [
-      { name: 'Academy', href: '/academy' },
+      { name: 'Courses', href: '/courses' },
       { name: 'Blog', href: '/blog' },
       { name: 'Community', href: '/community' },
       { name: 'Verify Certificate', href: '/verify-certificate' },

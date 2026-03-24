@@ -175,7 +175,7 @@ const UnifiedHero = memo(({
                                     asChild
                                     className="bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-semibold px-8 rounded-lg shadow-lg hover:shadow-xl transition-all"
                                 >
-                                    <Link to={ctaPrimary?.href || '/academy'}>
+                                    <Link to={ctaPrimary?.href || '/courses'}>
                                         {ctaPrimary?.text || 'Explore Courses'}
                                     </Link>
                                 </Button>
@@ -282,7 +282,7 @@ const UnifiedHero = memo(({
                                     size="lg"
                                     className="bg-bio-gold hover:opacity-90 text-white font-semibold px-8 py-6 text-lg shadow-lg hover:shadow-xl transition-all"
                                 >
-                                    <Link to={ctaPrimary?.href || '/academy'}>
+                                    <Link to={ctaPrimary?.href || '/courses'}>
                                         {ctaPrimary?.text || 'Explore Courses'}
                                         <ArrowRight className="ml-2 w-5 h-5" />
                                     </Link>
@@ -364,7 +364,7 @@ const UnifiedHero = memo(({
                                 className="group rounded-full bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-6 text-lg font-semibold text-white shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-300"
                                 asChild
                             >
-                                <Link to={ctaPrimary?.href || '/academy'}>
+                                <Link to={ctaPrimary?.href || '/courses'}>
                                     {ctaPrimary?.text || 'Explore Courses'}
                                     <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                                 </Link>

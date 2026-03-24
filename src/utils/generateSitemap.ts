@@ -28,7 +28,7 @@ const routes: SitemapRoute[] = [
     lastmod: new Date().toISOString().split('T')[0],
   },
   {
-    path: '/academy',
+    path: '/courses',
     changefreq: 'daily',
     priority: 0.9,
     lastmod: new Date().toISOString().split('T')[0],
@@ -79,7 +79,7 @@ export const generateDynamicSitemap = async (courses?: Array<{ id: string; updat
   // Add dynamic course routes if courses are provided
   const dynamicRoutes: SitemapRoute[] = courses
     ? courses.map(course => ({
-      path: `/academy/${course.id}`,
+      path: `/courses/${course.id}`,
       changefreq: 'weekly' as const,
       priority: 0.8,
       lastmod: course.updatedAt || new Date().toISOString().split('T')[0],

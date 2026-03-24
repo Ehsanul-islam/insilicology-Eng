@@ -66,7 +66,7 @@ const FinalCTA = () => {
                 size="lg"
                 className="bg-white text-bio-teal hover:opacity-90 font-semibold px-10 py-6 text-lg shadow-xl hover:shadow-2xl transition-all"
               >
-                <Link to="/academy">
+                <Link to="/courses">
                   Get Started for Free
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
@@ -78,7 +78,7 @@ const FinalCTA = () => {
                 size="lg"
                 className="border-2 border-white text-white hover:bg-white hover:text-bio-teal font-semibold px-10 py-6 text-lg backdrop-blur-sm bg-white bg-opacity-10 transition-all"
               >
-                <Link to="/academy">View All Courses</Link>
+                <Link to="/courses">View All Courses</Link>
               </Button>
             </motion.div>
 

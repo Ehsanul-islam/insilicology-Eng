@@ -9,28 +9,28 @@ const CourseCategories = () => {
       name: 'Genomics',
       count: 12,
       color: 'from-bio-teal to-bio-cyan',
-      link: '/academy?category=genomics',
+      link: '/courses?category=genomics',
     },
     {
       icon: Pill,
       name: 'CADD',
       count: 8,
       color: 'from-bio-purple to-purple-400',
-      link: '/academy?category=cadd',
+      link: '/courses?category=cadd',
     },
     {
       icon: LineChart,
       name: 'ML/AI',
       count: 6,
       color: 'from-bio-gold to-yellow-400',
-      link: '/academy?category=ml-ai',
+      link: '/courses?category=ml-ai',
     },
     {
       icon: Microscope,
       name: 'Research',
       count: 10,
       color: 'from-blue-500 to-bio-teal',
-      link: '/academy?category=research',
+      link: '/courses?category=research',
     },
   ];
 

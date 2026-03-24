@@ -305,7 +305,7 @@ const MyCertificates = () => {
                       Complete a course to earn your first certificate
                     </p>
                     <Button asChild>
-                      <Link to="/academy">Browse Courses</Link>
+                      <Link to="/courses">Browse Courses</Link>
                     </Button>
                   </div>
                 )}
@@ -327,7 +327,7 @@ const MyCertificates = () => {
                   inProgressCourses.map((course) => (
                     <Link
                       key={course.id}
-                      to={`/academy/${course.slug}`}
+                      to={`/courses/${course.slug}`}
                       className="block p-4 rounded-lg bg-secondary/50 space-y-2 hover:bg-secondary/70 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-2">

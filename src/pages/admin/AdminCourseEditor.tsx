@@ -195,8 +195,8 @@ const AdminCourseEditor = () => {
           enrollment_form_fields: Array.isArray(data.enrollment_form_fields)
             ? data.enrollment_form_fields as unknown as EnrollmentFormField[]
             : [],
-          payment_link: data.payment_link || '',
-          payment_qr_code_url: data.payment_qr_code_url || '',
+          payment_link: courseData.payment_link || '',
+          payment_qr_code_url: courseData.payment_qr_code_url || '',
         });
       }
     } catch (error) {
@@ -451,7 +451,7 @@ const AdminCourseEditor = () => {
           <div className="flex items-center gap-2">
             {isEditing && formData.status === 'published' && (
               <Button type="button" variant="outline" asChild>
-                <a href={`/academy/${formData.slug}`} target="_blank" rel="noopener noreferrer">
+                <a href={`/courses/${formData.slug}`} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="w-4 h-4 mr-2" />
                   View Course
                 </a>
@@ -525,7 +525,7 @@ const AdminCourseEditor = () => {
                       <div className="sm:col-span-2">
                         <Label htmlFor="slug">URL Slug *</Label>
                         <div className="flex items-center gap-2">
-                          <span className="text-sm text-muted-foreground">/academy/</span>
+                          <span className="text-sm text-muted-foreground">/courses/</span>
                           <Input
                             id="slug"
                             value={formData.slug}

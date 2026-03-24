@@ -132,7 +132,7 @@ const LearningJourney = () => {
             size="lg"
             className="bg-gradient-to-r from-bio-teal to-bio-gold hover:from-bio-teal/90 hover:to-bio-gold/90 text-white font-semibold px-10 py-6 text-lg shadow-xl"
           >
-            <Link to="/academy">
+            <Link to="/courses">
               Start Your Journey
               <svg
                 className="ml-2 w-5 h-5"

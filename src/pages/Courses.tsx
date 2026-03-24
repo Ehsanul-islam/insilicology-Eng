@@ -67,7 +67,7 @@ const Courses = () => {
             <SEOHead
                 title="Academy"
                 description="Master in-demand skills with expert-curated courses for modern researchers."
-                url="/academy"
+                url="/courses"
                 tags={['online courses', 'web development', 'data science', 'research training']}
             />
             <Navbar />

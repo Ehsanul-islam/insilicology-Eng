@@ -102,7 +102,7 @@ export const WelcomeModal = () => {
                                 className="w-3/4 mx-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-md font-semibold"
                                 size="default"
                             >
-                                <a href="/academy">
+                                <a href="/courses">
                                     Browse Courses
                                 </a>
                             </Button>

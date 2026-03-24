@@ -80,7 +80,7 @@ const LearnPage = () => {
             if (!courseData) {
                 console.error('Course not found:', slug);
                 toast.error('Course not found');
-                navigate('/academy');
+                navigate('/courses');
                 return;
             }
 
@@ -104,7 +104,7 @@ const LearnPage = () => {
 
             if (!enrollmentData) {
                 toast.error('You need to enroll in this course first');
-                navigate(`/academy/${slug}`);
+                navigate(`/courses/${slug}`);
                 return;
             }
             setIsEnrolled(true);
