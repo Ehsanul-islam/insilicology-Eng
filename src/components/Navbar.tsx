@@ -55,7 +55,7 @@ const Navbar = () => {
 
   const mainNavLinks = [
     { name: 'Home', href: '/' },
-    { name: 'Academy', href: '/academy' },
+    { name: 'Courses', href: '/courses' },
     { name: 'Research', href: '/research' },
   ];
 
