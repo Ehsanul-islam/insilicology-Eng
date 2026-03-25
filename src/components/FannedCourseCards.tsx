@@ -60,7 +60,7 @@ export function FannedCourseCards() {
     queryFn: fetchUpcomingPrograms,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
-    placeholderData: LOCAL_HERO_CARDS, // INSTANT Render while fetching real data background!
+    placeholderData: LOCAL_HERO_CARDS as any, // INSTANT Render while fetching real data background!
   });
 
   const cards = fetchedCards ?? [];
