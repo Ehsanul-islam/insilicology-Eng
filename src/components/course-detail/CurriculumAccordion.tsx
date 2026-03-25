@@ -188,7 +188,7 @@ const CurriculumAccordion = ({
       </motion.div>
 
       {/* Module Cards */}
-      <div className="space-y-4 w-[75%] mx-auto">
+      <div className="space-y-4 w-full px-4 md:px-0 md:w-[85%] lg:w-[75%] mx-auto">
         {groupedModules.map((module, moduleIndex) => {
           const moduleId = `module-${moduleIndex}`;
           const isExpanded = expandedModules.has(moduleId);

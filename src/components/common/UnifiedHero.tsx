@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Play, PlayCircle, Users, BookOpen, Star, Award, Check, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import UpcomingPrograms from '@/components/UpcomingPrograms';
+import FannedCourseCards from '@/components/FannedCourseCards';
 
 type HeroVariant = 'default' | 'skilltori' | 'bio' | 'vibe';
 
@@ -220,7 +220,7 @@ const UnifiedHero = memo(({
 
                         {/* Right Column - Upcoming Programs */}
                         <div className="w-full lg:col-span-4 flex items-center justify-center min-h-[400px]">
-                            <UpcomingPrograms />
+                            <FannedCourseCards />
                         </div>
                     </div>
                 </div>

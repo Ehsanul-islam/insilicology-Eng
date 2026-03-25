@@ -42,14 +42,14 @@ const ComparisonTable = ({ features, courseTitle = 'We are' }: ComparisonTablePr
           style={{ width: '700.4px', maxWidth: '100%' }}
         >
           {/* Table Header - Dark Purple */}
-          <div className="grid grid-cols-[1fr_180px_180px] gap-3 p-3 bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white">
-            <div className="text-xs font-semibold uppercase tracking-wide">
+          <div className="grid grid-cols-[1fr_105px_70px] md:grid-cols-[1fr_180px_180px] gap-2 md:gap-3 p-2 md:p-3 bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white">
+            <div className="text-[11px] md:text-xs font-semibold uppercase tracking-wide flex items-center">
               Features
             </div>
-            <div className="text-center text-xs font-semibold uppercase tracking-wide px-2">
+            <div className="text-center text-[11px] md:text-xs font-semibold uppercase tracking-wide px-1 md:px-2 flex items-center justify-center">
               {courseTitle}
             </div>
-            <div className="text-center text-xs font-semibold uppercase tracking-wide px-2">
+            <div className="text-center text-[11px] md:text-xs font-semibold uppercase tracking-wide px-1 md:px-2 flex items-center justify-center">
               Others
             </div>
           </div>
@@ -59,14 +59,14 @@ const ComparisonTable = ({ features, courseTitle = 'We are' }: ComparisonTablePr
             {features.map((item, index) => (
               <motion.div
                 key={index}
-                className="grid grid-cols-[1fr_180px_180px] gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
+                className="grid grid-cols-[1fr_105px_70px] md:grid-cols-[1fr_180px_180px] gap-2 md:gap-3 p-2 md:p-3 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
               >
                 {/* Feature Name */}
-                <div className="font-medium text-foreground flex items-center text-sm">
+                <div className="font-medium text-foreground flex items-center text-[11px] md:text-sm leading-tight">
                   {item.feature}
                 </div>
                 
