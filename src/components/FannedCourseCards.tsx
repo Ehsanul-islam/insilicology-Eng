@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useUpcomingPrograms } from '@/hooks/useUpcomingPrograms';
 import { useQuery } from '@tanstack/react-query';
-import { LOCAL_HERO_CARDS } from '@/data/heroCards';
 
 // --- 1. STYLING & CONSTANTS ---
 const GRADIENTS = [
@@ -60,7 +59,6 @@ export function FannedCourseCards() {
     queryFn: fetchUpcomingPrograms,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
-    placeholderData: LOCAL_HERO_CARDS as any, // INSTANT Render while fetching real data background!
   });
 
   const cards = fetchedCards ?? [];
@@ -78,8 +76,9 @@ export function FannedCourseCards() {
     return () => clearInterval(timer);
   }, [total]);
   
-  const showSkeleton = isLoading && total === 0;
-  const isReady = !showSkeleton;
+  if (isLoading) return null;
+
+  const isReady = true;
 
   // Render placeholders if we lack sufficient static items
   const itemsToRender = total < 3 
