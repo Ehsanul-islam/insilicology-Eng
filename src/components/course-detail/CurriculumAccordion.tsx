@@ -178,17 +178,17 @@ const CurriculumAccordion = ({
         viewport={{ once: true }}
         className="text-center"
       >
-        <h2 className="text-2xl lg:text-[30px] font-bold mb-3 text-foreground">
+        <h2 className="text-xl md:text-2xl lg:text-[30px] font-bold mb-2 md:mb-3 text-foreground">
           Course Modules
         </h2>
-        <p className="text-muted-foreground text-base">
+        <p className="text-muted-foreground text-sm md:text-base px-2 md:px-0 max-w-2xl mx-auto">
           <span className="italic">Season 1</span> of {courseTitle} has{' '}
           <span className="font-semibold text-foreground">{groupedModules.length}</span> detailed modules designed to help you master the course content.
         </p>
       </motion.div>
 
       {/* Module Cards */}
-      <div className="space-y-4 w-full px-4 md:px-0 md:w-[85%] lg:w-[75%] mx-auto">
+      <div className="space-y-3 md:space-y-4 w-full px-4 md:px-0 md:w-[85%] lg:w-[75%] mx-auto">
         {groupedModules.map((module, moduleIndex) => {
           const moduleId = `module-${moduleIndex}`;
           const isExpanded = expandedModules.has(moduleId);
@@ -207,24 +207,24 @@ const CurriculumAccordion = ({
               {/* Module Card Header - Gradient */}
               <button
                 onClick={() => toggleModule(moduleId)}
-                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 p-5 text-left flex items-start gap-4 transition-all hover:brightness-110"
+                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 p-3.5 md:p-5 text-left flex items-start gap-3 md:gap-4 transition-all hover:brightness-110"
               >
                 {/* Module Icon Container */}
-                <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center shrink-0 border border-white/20">
-                  <IconComponent className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center shrink-0 border border-white/20">
+                  <IconComponent className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 </div>
 
                 {/* Module Info */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-white text-base leading-tight mb-1">
+                <div className="flex-1 min-w-0 flex flex-col justify-center min-h-[40px] md:min-h-[48px]">
+                  <h3 className="font-bold text-white text-sm md:text-base leading-snug mb-0.5 md:mb-1">
                     {module.name}
                   </h3>
                   {module.subtitle ? (
-                    <p className="text-white/80 text-sm font-normal">
+                    <p className="text-white/80 text-xs md:text-sm font-normal leading-snug line-clamp-2 md:line-clamp-none">
                       {module.subtitle}
                     </p>
                   ) : (
-                    <p className="text-white/80 text-sm font-normal uppercase tracking-wide">
+                    <p className="text-white/80 text-xs md:text-sm font-normal uppercase tracking-wide">
                       Module {moduleIndex + 1}
                     </p>
                   )}
@@ -234,9 +234,9 @@ const CurriculumAccordion = ({
                 <motion.div
                   animate={{ rotate: isExpanded ? 90 : 0 }}
                   transition={{ duration: 0.2 }}
-                  className="shrink-0 mt-1"
+                  className="shrink-0 mt-0.5 md:mt-1"
                 >
-                  <ChevronRight className="w-6 h-6 text-white" />
+                  <ChevronRight className="w-5 h-5 md:w-6 md:h-6 text-white" />
                 </motion.div>
               </button>
 
@@ -250,7 +250,7 @@ const CurriculumAccordion = ({
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="bg-white dark:bg-slate-900 border-x border-b border-gray-100 dark:border-slate-800"
                   >
-                    <div className="px-6 pt-5 pb-2">
+                    <div className="px-4 md:px-6 pt-4 md:pt-5 pb-2">
                       {/* Module Description with Bullet Logic */}
                       {module.description && (
                         <div className={hasLessons ? "mb-4 border-b border-gray-100 dark:border-slate-800 pb-4" : ""}>
@@ -259,14 +259,14 @@ const CurriculumAccordion = ({
                               {module.description.split('•').filter(Boolean).map((item, idx) => (
                                 <li key={idx} className="flex items-start gap-3">
                                   <span className="w-1.5 h-1.5 bg-slate-400 rounded-full mt-2 shrink-0" />
-                                  <span className="text-muted-foreground text-sm font-normal leading-relaxed">
+                                  <span className="text-muted-foreground text-xs md:text-sm font-normal leading-relaxed">
                                     {item.trim()}
                                   </span>
                                 </li>
                               ))}
                             </ul>
                           ) : (
-                            <p className="text-muted-foreground text-sm font-normal leading-relaxed">
+                            <p className="text-muted-foreground text-xs md:text-sm font-normal leading-relaxed">
                               {module.description}
                             </p>
                           )}
@@ -275,7 +275,7 @@ const CurriculumAccordion = ({
 
                       {/* Lesson List */}
                       {hasLessons && (
-                        <ul className="space-y-3 pb-4">
+                        <ul className="space-y-2 md:space-y-3 pb-3 md:pb-4">
                           {module.lessons.map((lesson, lessonIndex) => (
                             <motion.li
                               key={lesson.id}
@@ -285,10 +285,10 @@ const CurriculumAccordion = ({
                               className="flex items-start gap-3 group/lesson"
                             >
                               {/* Blue Bullet Point */}
-                              <span className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0 group-hover/lesson:scale-125 transition-transform" />
+                              <span className="w-2 h-2 rounded-full bg-blue-500 mt-1.5 md:mt-2 shrink-0 group-hover/lesson:scale-125 transition-transform" />
 
                               {/* Title */}
-                              <span className="text-gray-700 dark:text-gray-300 font-normal text-base group-hover/lesson:text-blue-600 dark:group-hover/lesson:text-blue-400 transition-colors">
+                              <span className="text-gray-700 dark:text-gray-300 font-normal text-sm md:text-base leading-snug group-hover/lesson:text-blue-600 dark:group-hover/lesson:text-blue-400 transition-colors">
                                 {lesson.title}
                               </span>
                             </motion.li>
