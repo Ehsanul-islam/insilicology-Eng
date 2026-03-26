@@ -327,8 +327,8 @@ const PricingSection = memo(({
                 {whatsIncluded.map((item, index) => (
                   <motion.div
                     key={index}
-                    initial={prefersReducedMotion || isMobile ? {} : { opacity: 0, x: -10 }}
-                    whileInView={prefersReducedMotion || isMobile ? {} : { opacity: 1, x: 0 }}
+                    initial={{ opacity: prefersReducedMotion || isMobile ? 1 : 0, x: prefersReducedMotion || isMobile ? 0 : -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05 }}
                     className="flex items-center gap-3"
@@ -353,8 +353,8 @@ const PricingSection = memo(({
                 {valueBreakdown.map((item, index) => (
                   <motion.div
                     key={index}
-                    initial={prefersReducedMotion || isMobile ? {} : { opacity: 0, x: -10 }}
-                    whileInView={prefersReducedMotion || isMobile ? {} : { opacity: 1, x: 0 }}
+                    initial={{ opacity: prefersReducedMotion || isMobile ? 1 : 0, x: prefersReducedMotion || isMobile ? 0 : -10 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.03 }}
                     className="flex items-center justify-between"
