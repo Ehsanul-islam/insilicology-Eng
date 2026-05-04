@@ -120,7 +120,7 @@ const SEOHead = ({
       "name": siteName,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteUrl}/placeholder.svg`
+        "url": `${siteUrl}/favicon.svg`
       }
     },
     "datePublished": article.publishedTime,
@@ -159,7 +159,7 @@ const SEOHead = ({
     "@type": "Organization",
     "name": siteName,
     "url": siteUrl,
-    "logo": `${siteUrl}/placeholder.svg`,
+    "logo": `${siteUrl}/favicon.svg`,
     "description": "Professional skills development platform with expert-led courses",
     "sameAs": [
       "https://twitter.com/insilicology",
