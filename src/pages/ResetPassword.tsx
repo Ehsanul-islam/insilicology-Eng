@@ -97,8 +97,8 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
       <SEOHead
-        title="Reset Password - Zymios"
-        description="Reset your Zymios account password. Enter your email to receive password reset instructions."
+        title="Reset Password - insilicology"
+        description="Reset your insilicology account password. Enter your email to receive password reset instructions."
         url="/reset-password"
         type="website"
       />

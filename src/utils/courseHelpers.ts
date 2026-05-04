@@ -56,7 +56,7 @@ export const getDefaultFormData = (): CourseFormData => ({
     stats: { students: '', community: '', support: '', time: '', capacity: '', batch: '' },
     faq: [{ question: '', answer: '' }],
     whats_included: [''],
-    modules: [{ title: '', subtitle: '', description: '', icon: 'Database' }],
+    modules: [{ title: '', subtitle: '', description: '', icon: 'Database', early_bird_only: false }],
     payment_methods: [],
     payment_instructions: '',
     enrollment_form_fields: [],

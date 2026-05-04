@@ -107,8 +107,8 @@ const Career = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Careers - Join Our Team | Zymios"
-        description="Join Zymios and help shape the future of online education. Explore exciting career opportunities in a dynamic, innovative environment."
+        title="Careers - Join Our Team | insilicology"
+        description="Join insilicology and help shape the future of online education. Explore exciting career opportunities in a dynamic, innovative environment."
         url="/career"
         type="website"
         tags={['careers', 'jobs', 'hiring', 'work with us', 'team']}
@@ -191,7 +191,7 @@ const Career = () => {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl font-bold mb-4">Why Join Zymios?</h2>
+              <h2 className="text-4xl font-bold mb-4">Why Join insilicology?</h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 We're building a company where talented people can do their best work and make a real impact.
               </p>

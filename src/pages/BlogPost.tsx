@@ -97,7 +97,7 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={`${post.meta_title || post.title} | Zymios Blog`}
+        title={`${post.meta_title || post.title} | insilicology Blog`}
         description={post.meta_description || post.excerpt || ''}
         url={`/blog/${slug}`}
         type="article"

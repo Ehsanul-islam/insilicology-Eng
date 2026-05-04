@@ -32,8 +32,8 @@ Deno.serve(async (req) => {
 
         // Get environment variables
         const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
-        const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "noreply@zymios.com";
-        const SITE_URL = Deno.env.get("SITE_URL") || "https://zymios.com";
+        const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "noreply@insilicology.com";
+        const SITE_URL = Deno.env.get("SITE_URL") || "https://insilicology.com";
         const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
         const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
@@ -142,7 +142,7 @@ Deno.serve(async (req) => {
             },
             body: JSON.stringify({
                 sender: {
-                    name: "Zymios",
+                    name: "insilicology",
                     email: SENDER_EMAIL,
                 },
                 to: [
@@ -251,7 +251,7 @@ function buildSubmittedEmail(userName: string, courseTitle: string, senderEmail:
 
               <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #333333;">
                 Best regards,<br>
-                <strong>The Zymios Team</strong>
+                <strong>The insilicology team</strong>
               </p>
             </td>
           </tr>
@@ -259,7 +259,7 @@ function buildSubmittedEmail(userName: string, courseTitle: string, senderEmail:
           <tr>
             <td style="padding: 30px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; text-align: center;">
               <p style="margin: 0; font-size: 12px; color: #666666;">
-                © ${new Date().getFullYear()} Zymios. All rights reserved.
+                © ${new Date().getFullYear()} insilicology. All rights reserved.
               </p>
             </td>
           </tr>
@@ -340,7 +340,7 @@ function buildApprovedEmail(userName: string, courseTitle: string, dashboardUrl:
 
               <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #333333;">
                 Happy learning!<br>
-                <strong>The Zymios Team</strong>
+                <strong>The insilicology team</strong>
               </p>
             </td>
           </tr>
@@ -348,7 +348,7 @@ function buildApprovedEmail(userName: string, courseTitle: string, dashboardUrl:
           <tr>
             <td style="padding: 30px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; text-align: center;">
               <p style="margin: 0; font-size: 12px; color: #666666;">
-                © ${new Date().getFullYear()} Zymios. All rights reserved.
+                © ${new Date().getFullYear()} insilicology. All rights reserved.
               </p>
             </td>
           </tr>
@@ -434,7 +434,7 @@ function buildRejectedEmail(userName: string, courseTitle: string, rejectionReas
 
               <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #333333;">
                 Best regards,<br>
-                <strong>The Zymios Team</strong>
+                <strong>The insilicology team</strong>
               </p>
             </td>
           </tr>
@@ -442,7 +442,7 @@ function buildRejectedEmail(userName: string, courseTitle: string, rejectionReas
           <tr>
             <td style="padding: 30px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; text-align: center;">
               <p style="margin: 0; font-size: 12px; color: #666666;">
-                © ${new Date().getFullYear()} Zymios. All rights reserved.
+                © ${new Date().getFullYear()} insilicology. All rights reserved.
               </p>
             </td>
           </tr>

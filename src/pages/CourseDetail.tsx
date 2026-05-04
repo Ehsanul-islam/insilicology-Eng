@@ -77,13 +77,14 @@ interface ModuleItem {
   subtitle?: string;
   description?: string;
   icon?: string;
+  early_bird_only?: boolean;
 }
 
 const CourseDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { course, lessons, loading, error, isEnrolled, refetch } = useCourseDetail(slug);
+  const { course, lessons, loading, error, isEnrolled, hasEarlyBirdEnrollment, refetch } = useCourseDetail(slug);
   const [enrollmentOpen, setEnrollmentOpen] = useState(false);
   const [couponDiscount, setCouponDiscount] = useState(0);
 
@@ -204,7 +205,7 @@ const CourseDetail = () => {
     <div className="min-h-screen bg-background">
       {/* SEO Head */}
       <SEOHead
-        title={`${course.title} - Zymios`}
+        title={`${course.title} - insilicology`}
         description={course.description || ''}
         url={`/courses/${slug}`}
         type="article"
@@ -341,6 +342,8 @@ const CourseDetail = () => {
                     lessons={lessons}
                     modules={modules}
                     isEnrolled={isEnrolled}
+                    hasEarlyBirdEnrollment={hasEarlyBirdEnrollment}
+                    isEarlyBirdOfferActive={isEarlyBirdActive}
                     courseTitle={course.title}
                   />
                 </motion.div>

@@ -92,7 +92,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <SEOHead
-        title="Dashboard - Zymios"
+        title="Dashboard - insilicology"
         description="Track your learning progress and manage your courses"
         url="/dashboard"
       />
@@ -105,7 +105,7 @@ const Dashboard = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-primary to-cyan-500 rounded-lg flex items-center justify-center">
                 <GraduationCap className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold gradient-text">Zymios</span>
+              <span className="text-lg font-bold gradient-text">insilicology</span>
             </Link>
 
             <nav className="flex items-center gap-4">

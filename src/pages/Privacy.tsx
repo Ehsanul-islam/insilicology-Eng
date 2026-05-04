@@ -79,7 +79,7 @@ const Privacy = () => {
           <li><strong>Data portability:</strong> Request a copy of your data in a machine-readable format</li>
           <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
         </ul>
-        <p>To exercise these rights, please contact us at privacy@zymios.com</p>
+        <p>To exercise these rights, please contact us at privacy@insilicology.com</p>
       `,
     },
     {
@@ -111,7 +111,7 @@ const Privacy = () => {
       content: `
         <p>If you have any questions about this Privacy Policy, please contact us:</p>
         <ul>
-          <li>Email: privacy@zymios.com</li>
+          <li>Email: privacy@insilicology.com</li>
           <li>Phone: +1 (555) 123-4567</li>
           <li>Address: 123 Learning Street, Education City, EC 12345</li>
         </ul>
@@ -122,8 +122,8 @@ const Privacy = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Privacy Policy - Your Data Security | Zymios"
-        description="Learn how Zymios collects, uses, and protects your personal information. Read our comprehensive privacy policy and data protection practices."
+        title="Privacy Policy - Your Data Security | insilicology"
+        description="Learn how insilicology collects, uses, and protects your personal information. Read our comprehensive privacy policy and data protection practices."
         url="/privacy"
         type="website"
         tags={['privacy policy', 'data protection', 'privacy', 'security']}
@@ -163,7 +163,7 @@ const Privacy = () => {
               <Card>
                 <CardContent className="p-8">
                   <p className="text-lg text-foreground/80 leading-relaxed">
-                    At Zymios, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our learning platform. Please read this privacy policy carefully. By using our services, you agree to the collection and use of information in accordance with this policy.
+                    At insilicology, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our learning platform. Please read this privacy policy carefully. By using our services, you agree to the collection and use of information in accordance with this policy.
                   </p>
                 </CardContent>
               </Card>

@@ -5,46 +5,46 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
         xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
-    <loc>https://zymios.lovable.app/</loc>
+    <loc>https://insilicology.com/</loc>
     <lastmod>2025-12-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://zymios.lovable.app/courses</loc>
+    <loc>https://insilicology.com/courses</loc>
     <lastmod>2025-12-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zymios.lovable.app/portfolio</loc>
+    <loc>https://insilicology.com/portfolio</loc>
     <lastmod>2025-12-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zymios.lovable.app/blog</loc>
+    <loc>https://insilicology.com/blog</loc>
     <lastmod>2025-12-23</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zymios.lovable.app/contact</loc>
+    <loc>https://insilicology.com/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://zymios.lovable.app/career</loc>
+    <loc>https://insilicology.com/career</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://zymios.lovable.app/privacy</loc>
+    <loc>https://insilicology.com/privacy</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://zymios.lovable.app/terms</loc>
+    <loc>https://insilicology.com/terms</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

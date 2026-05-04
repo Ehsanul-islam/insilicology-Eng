@@ -17,6 +17,8 @@ export interface EnrollmentData {
   paymentProofUrl?: string;
   transactionId?: string;
   customFormData: Record<string, string>;
+  /** Set when the student submits payment while Early Bird slots/pricing still apply. */
+  earlyBirdEnrollment?: boolean;
 }
 
 export const useEnrollment = (courseId: string) => {
@@ -104,6 +106,7 @@ export const useEnrollment = (courseId: string) => {
             transaction_id: data.transactionId,
             custom_form_data: data.customFormData,
             rejection_reason: null,
+            early_bird_enrollment: data.earlyBirdEnrollment ?? false,
           })
           .eq('id', existing.id);
 
@@ -166,6 +169,7 @@ export const useEnrollment = (courseId: string) => {
           payment_proof_url: data.paymentProofUrl,
           transaction_id: data.transactionId,
           custom_form_data: data.customFormData,
+          early_bird_enrollment: data.earlyBirdEnrollment ?? false,
         })
         .select()
         .single();

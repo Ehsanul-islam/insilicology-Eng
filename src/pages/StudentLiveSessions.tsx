@@ -194,7 +194,7 @@ const StudentLiveSessions = () => {
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
             <SEOHead
-                title="My Sessions - Zymios"
+                title="My Sessions - insilicology"
                 description="Your schedule of upcoming live classes and past recordings."
                 url="/my-sessions"
             />
@@ -207,7 +207,7 @@ const StudentLiveSessions = () => {
                             <div className="w-8 h-8 bg-gradient-to-br from-primary to-cyan-500 rounded-lg flex items-center justify-center">
                                 <GraduationCap className="w-5 h-5 text-white" />
                             </div>
-                            <span className="text-lg font-bold bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">Zymios</span>
+                            <span className="text-lg font-bold bg-gradient-to-r from-primary to-cyan-500 bg-clip-text text-transparent">insilicology</span>
                         </Link>
 
                         <nav className="flex items-center gap-4">

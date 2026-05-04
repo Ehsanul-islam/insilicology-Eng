@@ -121,7 +121,7 @@ const InstructorCourseEditor = () => {
                     },
                     faq: Array.isArray(data.faq) ? data.faq as any[] : [{ question: '', answer: '' }],
                     whats_included: Array.isArray(data.whats_included) ? data.whats_included as string[] : [''],
-                    modules: Array.isArray(data.modules) ? data.modules as any[] : [{ title: '', subtitle: '', description: '', icon: 'Database' }],
+                    modules: Array.isArray(data.modules) ? data.modules as any[] : [{ title: '', subtitle: '', description: '', icon: 'Database', early_bird_only: false }],
                     payment_methods: Array.isArray(data.payment_methods) ? data.payment_methods as string[] : [],
                     payment_instructions: data.payment_instructions || '',
                     enrollment_form_fields: Array.isArray(data.enrollment_form_fields) ? data.enrollment_form_fields as any[] : [],

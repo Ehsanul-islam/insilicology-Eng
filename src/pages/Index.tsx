@@ -10,7 +10,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <SEOHead
-        title="Zymios - Professional Skills Development Platform"
+        title="insilicology - Professional Skills Development Platform"
         description="Master in-demand skills with expert-led courses, hands-on projects, and industry-recognized certificates."
         url="/"
         type="website"

@@ -75,7 +75,9 @@ const Navbar = () => {
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-cyan-500 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
               <GraduationCap className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold gradient-text hidden sm:inline">Zymios</span>
+            <span className="text-base lg:text-lg font-bold gradient-text hidden sm:inline tracking-tight">
+              insilicology
+            </span>
           </Link>
 
           {/* Search Bar - Desktop */}

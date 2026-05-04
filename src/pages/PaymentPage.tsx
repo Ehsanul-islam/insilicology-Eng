@@ -146,11 +146,18 @@ const PaymentPage = () => {
       if (url) paymentProofUrl = url;
     }
 
+    const ebp = course?.early_bird_price != null ? Number(course.early_bird_price) : null;
+    const ebl = course?.early_bird_limit != null ? Number(course.early_bird_limit) : null;
+    const cnt = course?.participant_count ?? 0;
+    const earlyBirdEnrollment =
+      ebp !== null && ebl !== null && cnt < ebl;
+
     const success = await submitEnrollment({
       paymentMethod,
       paymentProofUrl,
       transactionId: transactionId.trim() || undefined,
       customFormData: formData,
+      earlyBirdEnrollment,
     });
 
     setUploading(false);

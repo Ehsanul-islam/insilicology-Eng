@@ -13,7 +13,7 @@ const NotFound = () => {
     <div className="flex min-h-screen items-center justify-center bg-muted">
       <SEOHead
         title="404 - Page Not Found"
-        description="The page you are looking for could not be found. Return to Zymios to explore our courses and continue your learning journey."
+        description="The page you are looking for could not be found. Return to insilicology to explore our courses and continue your learning journey."
         url={location.pathname}
       />
       <div className="text-center">

@@ -17,7 +17,7 @@ interface SitemapRoute {
   lastmod?: string;
 }
 
-const SITE_URL = 'https://zymios.lovable.app';
+const SITE_URL = 'https://insilicology.com';
 
 // Define your application routes
 const routes: SitemapRoute[] = [

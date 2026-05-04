@@ -164,6 +164,7 @@ export const EnrollmentDialog = ({ course, open, onOpenChange, onSuccess, isEarl
       paymentProofUrl,
       transactionId: transactionId.trim() || undefined,
       customFormData: finalFormData,
+      earlyBirdEnrollment: !!isEarlyBird,
     });
 
     setUploading(false);

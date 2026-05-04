@@ -577,6 +577,7 @@ export type Database = {
           course_id: string | null
           created_at: string | null
           custom_form_data: Json | null
+          early_bird_enrollment: boolean
           enrollment_date: string | null
           id: string
           payment_method: string | null
@@ -595,6 +596,7 @@ export type Database = {
           course_id?: string | null
           created_at?: string | null
           custom_form_data?: Json | null
+          early_bird_enrollment?: boolean
           enrollment_date?: string | null
           id?: string
           payment_method?: string | null
@@ -613,6 +615,7 @@ export type Database = {
           course_id?: string | null
           created_at?: string | null
           custom_form_data?: Json | null
+          early_bird_enrollment?: boolean
           enrollment_date?: string | null
           id?: string
           payment_method?: string | null

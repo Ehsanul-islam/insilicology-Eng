@@ -230,7 +230,7 @@ const LearnPage = () => {
     return (
         <div className="min-h-screen bg-background">
             <SEOHead
-                title={`Learn ${course.title} - Zymios`}
+                title={`Learn ${course.title} - insilicology`}
                 description={course.description || ''}
                 url={`/learn/${slug}`}
             />

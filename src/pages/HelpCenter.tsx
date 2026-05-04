@@ -19,7 +19,7 @@ const HelpCenter = () => {
     const [searchQuery, setSearchQuery] = useState('');
 
     const categories = [
-        { icon: Book, title: 'Getting Started', description: 'New to Zymios? Start here.' },
+        { icon: Book, title: 'Getting Started', description: 'New to insilicology? Start here.' },
         { icon: CreditCard, title: 'Billing & Plans', description: 'Manage your subscription and payments.' },
         { icon: Monitor, title: 'Course Access', description: 'Troubleshoot video and content issues.' },
         { icon: Lock, title: 'Account Security', description: 'Password reset and 2FA help.' },
@@ -51,8 +51,8 @@ const HelpCenter = () => {
     return (
         <div className="min-h-screen font-siliguri text-[16px]">
             <SEOHead
-                title="Help Center - Support & FAQs | Zymios"
-                description="Find answers to common questions about Zymios courses, billing, and account management. We're here to help."
+                title="Help Center - Support & FAQs | insilicology"
+                description="Find answers to common questions about insilicology courses, billing, and account management. We're here to help."
                 url="/help"
                 type="website"
             />

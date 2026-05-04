@@ -38,8 +38,8 @@ const About = () => {
     return (
         <div className="min-h-screen font-siliguri text-[16px]">
             <SEOHead
-                title="About Us - Empowering Futures Through Education | Zymios"
-                description="Learn about our mission to transform lives through education. Meet the team behind Zymios and discover our story."
+                title="About Us - Empowering Futures Through Education | insilicology"
+                description="Learn about our mission to transform lives through education. Meet the team behind insilicology and discover our story."
                 url="/about"
                 type="website"
             />
@@ -104,7 +104,7 @@ const About = () => {
                                 <h2 className="text-3xl font-bold mb-6">Our Story</h2>
                                 <div className="space-y-4 text-muted-foreground text-lg">
                                     <p>
-                                        Founded in 2020, Zymios began with a simple idea: that quality education should be accessible to everyone. What started as a small collection of coding tutorials has grown into a comprehensive learning platform serving thousands of students worldwide.
+                                        Founded in 2020, insilicology began with a simple idea: that quality education should be accessible to everyone. What started as a small collection of coding tutorials has grown into a comprehensive learning platform serving thousands of students worldwide.
                                     </p>
                                     <p>
                                         We've brought together industry experts, passionate educators, and cutting-edge technology to create a learning experience that truly works. Our focus has always been on practical, job-ready skills that help our students advance their careers.

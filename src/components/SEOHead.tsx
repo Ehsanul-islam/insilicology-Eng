@@ -45,7 +45,7 @@ const SEOHead = ({
   image = '/placeholder.svg',
   url,
   type = 'website',
-  siteName = 'Zymios',
+  siteName = 'insilicology',
   author,
   publishedTime,
   modifiedTime,
@@ -55,7 +55,7 @@ const SEOHead = ({
   article,
   faq,
 }: SEOProps) => {
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://zymios.lovable.app';
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://insilicology.com';
   const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
   const fullImageUrl = image.startsWith('http') ? image : `${siteUrl}${image}`;
 
@@ -162,8 +162,8 @@ const SEOHead = ({
     "logo": `${siteUrl}/placeholder.svg`,
     "description": "Professional skills development platform with expert-led courses",
     "sameAs": [
-      "https://twitter.com/zymios",
-      "https://linkedin.com/company/zymios"
+      "https://twitter.com/insilicology",
+      "https://linkedin.com/company/insilicology"
     ]
   };
 

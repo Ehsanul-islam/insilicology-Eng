@@ -19,7 +19,7 @@ export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABL
   },
   global: {
     headers: {
-      'x-client-info': 'zymios-web',
+      'x-client-info': 'insilicology-web',
     },
   },
 });

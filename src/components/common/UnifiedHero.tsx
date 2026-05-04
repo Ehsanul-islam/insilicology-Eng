@@ -139,7 +139,7 @@ const UnifiedHero = memo(({
                                         </span>
                                     </div>
                                     <div className="mt-2 text-4xl md:text-5xl font-bold leading-tight text-gray-900">
-                                        Zymios
+                                        insilicology
                                     </div>
                                 </h1>
                             </div>
@@ -349,7 +349,7 @@ const UnifiedHero = memo(({
                         >
                             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                             <span className="text-sm font-medium text-emerald-700">
-                                Welcome to Zymios
+                                Welcome to insilicology
                             </span>
                         </motion.div>
 

@@ -17,7 +17,7 @@ export function Certificate({
     issueDate,
     certificateNumber,
     instructor = "Dr. James Rodriguez",
-    organization = "Zymios"
+    organization = "insilicology"
 }: CertificateProps) {
     // Format dates to readable format
     const formatDate = (dateString: string) => {

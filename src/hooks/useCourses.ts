@@ -175,7 +175,7 @@ export const useCourseDetail = (slug: string | undefined) => {
       if (user) {
         enrollmentPromise = supabase
           .from('enrollments')
-          .select('*')
+          .select('id, status, early_bird_enrollment')
           .eq('course_id', courseData.id)
           .eq('user_id', user.id)
           .eq('status', 'active')
@@ -224,7 +224,8 @@ export const useCourseDetail = (slug: string | undefined) => {
         course: courseWithCount,
         lessons: lessonsResult.data || [],
         resources,
-        isEnrolled: !!enrollment
+        isEnrolled: !!enrollment,
+        hasEarlyBirdEnrollment: enrollment?.early_bird_enrollment === true,
       };
     },
     enabled: !!slug,
@@ -238,6 +239,7 @@ export const useCourseDetail = (slug: string | undefined) => {
     loading,
     error: error ? 'Failed to load course details' : null,
     isEnrolled: data?.isEnrolled || false,
+    hasEarlyBirdEnrollment: data?.hasEarlyBirdEnrollment ?? false,
     refetch
   };
 };

@@ -10,7 +10,7 @@ import { createClient } from '@supabase/supabase-js';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-const SITE_URL = 'https://zymios.lovable.app';
+const SITE_URL = 'https://insilicology.com';
 
 // Load environment variables
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || '';

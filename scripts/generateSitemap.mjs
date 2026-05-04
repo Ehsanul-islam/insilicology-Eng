@@ -9,7 +9,7 @@ import { createClient } from '@supabase/supabase-js';
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-const SITE_URL = 'https://zymios.lovable.app';
+const SITE_URL = 'https://insilicology.com';
 
 // Supabase client (using environment variables)
 const supabase = createClient(

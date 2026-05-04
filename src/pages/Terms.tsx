@@ -11,7 +11,7 @@ const Terms = () => {
     {
       title: '1. Acceptance of Terms',
       content: `
-        <p>By accessing and using Zymios ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these Terms of Service, please do not use our Service.</p>
+        <p>By accessing and using insilicology ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to these Terms of Service, please do not use our Service.</p>
         <p>We reserve the right to update and change these Terms of Service without notice. Any new features that augment or enhance the current Service shall be subject to the Terms of Service.</p>
       `,
     },
@@ -75,8 +75,8 @@ const Terms = () => {
     {
       title: '6. Intellectual Property Rights',
       content: `
-        <p>The Service and its original content (excluding user content), features, and functionality are and will remain the exclusive property of Zymios and its licensors.</p>
-        <p>Our trademarks and trade dress may not be used in connection with any product or service without our prior written consent. You may not use our intellectual property in any way that is likely to cause confusion or disparages Zymios.</p>
+        <p>The Service and its original content (excluding user content), features, and functionality are and will remain the exclusive property of insilicology and its licensors.</p>
+        <p>Our trademarks and trade dress may not be used in connection with any product or service without our prior written consent. You may not use our intellectual property in any way that is likely to cause confusion or disparages insilicology.</p>
       `,
     },
     {
@@ -86,7 +86,7 @@ const Terms = () => {
         <ul>
           <li>Verify your completion of the course</li>
           <li>Are issued electronically and can be verified online</li>
-          <li>Remain the property of Zymios</li>
+          <li>Remain the property of insilicology</li>
           <li>May be revoked if terms are violated</li>
           <li>Do not represent academic credit unless explicitly stated</li>
         </ul>
@@ -95,7 +95,7 @@ const Terms = () => {
     {
       title: '8. Limitation of Liability',
       content: `
-        <p>To the maximum extent permitted by law, Zymios shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or other intangible losses resulting from:</p>
+        <p>To the maximum extent permitted by law, insilicology shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or other intangible losses resulting from:</p>
         <ul>
           <li>Your use or inability to use the Service</li>
           <li>Unauthorized access to your account</li>
@@ -126,7 +126,7 @@ const Terms = () => {
     {
       title: '11. Governing Law',
       content: `
-        <p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Zymios operates, without regard to its conflict of law provisions.</p>
+        <p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which insilicology operates, without regard to its conflict of law provisions.</p>
         <p>Any disputes arising from these Terms or the Service shall be resolved through binding arbitration in accordance with applicable arbitration rules.</p>
       `,
     },
@@ -142,7 +142,7 @@ const Terms = () => {
       content: `
         <p>If you have any questions about these Terms, please contact us:</p>
         <ul>
-          <li>Email: legal@zymios.com</li>
+          <li>Email: legal@insilicology.com</li>
           <li>Phone: +1 (555) 123-4567</li>
           <li>Address: 123 Learning Street, Education City, EC 12345</li>
         </ul>
@@ -153,8 +153,8 @@ const Terms = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Terms of Service - User Agreement | Zymios"
-        description="Read Zymios's terms of service to understand your rights and responsibilities when using our learning platform."
+        title="Terms of Service - User Agreement | insilicology"
+        description="Read insilicology's terms of service to understand your rights and responsibilities when using our learning platform."
         url="/terms"
         type="website"
         tags={['terms of service', 'user agreement', 'terms and conditions', 'legal']}
@@ -194,7 +194,7 @@ const Terms = () => {
               <Card>
                 <CardContent className="p-8">
                   <p className="text-lg text-foreground/80 leading-relaxed">
-                    Welcome to Zymios. These Terms of Service ("Terms") govern your use of our website, mobile applications, and services (collectively, the "Service"). Please read these Terms carefully before using our Service. By accessing or using the Service, you agree to be bound by these Terms and our Privacy Policy.
+                    Welcome to insilicology. These Terms of Service ("Terms") govern your use of our website, mobile applications, and services (collectively, the "Service"). Please read these Terms carefully before using our Service. By accessing or using the Service, you agree to be bound by these Terms and our Privacy Policy.
                   </p>
                 </CardContent>
               </Card>

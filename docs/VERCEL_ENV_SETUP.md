@@ -54,7 +54,7 @@ VITE_META_PIXEL_ID=<your-meta-pixel-id>
 
    **Fourth Variable (Optional):**
    - **Key:** `VITE_SITE_URL`
-   - **Value:** Your Vercel deployment URL (e.g., `https://zymios.vercel.app`)
+   - **Value:** Your Vercel deployment URL (e.g., `https://insilicology.vercel.app`)
    - **Environment:** Select all
    - Click **Save**
 

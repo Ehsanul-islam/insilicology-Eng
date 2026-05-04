@@ -49,6 +49,8 @@ export interface ModuleItem {
   subtitle: string;
   description: string;
   icon: string;
+  /** When true, module is marketed as Early Bird exclusive; lesson list may be hidden for non–Early Bird enrollments. */
+  early_bird_only?: boolean;
 }
 
 // Main CourseFormData interface

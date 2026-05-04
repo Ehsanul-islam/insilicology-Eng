@@ -188,8 +188,11 @@ const AdminCourseEditor = () => {
             ? data.whats_included as string[]
             : [''],
           modules: Array.isArray(data.modules) && data.modules.length > 0
-            ? data.modules as unknown as ModuleItem[]
-            : [{ title: '', subtitle: '', description: '', icon: 'Database' }],
+            ? (data.modules as unknown as ModuleItem[]).map((m) => ({
+                ...m,
+                early_bird_only: !!m.early_bird_only,
+              }))
+            : [{ title: '', subtitle: '', description: '', icon: 'Database', early_bird_only: false }],
           payment_methods: Array.isArray(data.payment_methods) ? data.payment_methods as string[] : [],
           payment_instructions: data.payment_instructions || '',
           enrollment_form_fields: Array.isArray(data.enrollment_form_fields)
@@ -1475,6 +1478,24 @@ const AdminCourseEditor = () => {
                             rows={2}
                           />
                         </div>
+
+                        <div className="mt-4 flex items-center justify-between gap-4 rounded-lg border border-amber-200/80 bg-amber-50/80 dark:bg-amber-950/20 dark:border-amber-900/50 px-3 py-3">
+                          <div className="space-y-0.5 pr-2">
+                            <Label htmlFor={`module-eb-${index}`} className="text-foreground cursor-pointer">
+                              Early Bird only
+                            </Label>
+                            <p className="text-xs text-muted-foreground">
+                              Mark this module as exclusive to students who enroll during the Early Bird window. Others still see the module with a badge; enrolled non–Early Bird students do not see lesson lists here.
+                            </p>
+                          </div>
+                          <Switch
+                            id={`module-eb-${index}`}
+                            checked={!!module.early_bird_only}
+                            onCheckedChange={(checked) =>
+                              updateArrayField('modules', index, { ...module, early_bird_only: checked })
+                            }
+                          />
+                        </div>
                       </div>
                     );
                   })}
@@ -1483,7 +1504,15 @@ const AdminCourseEditor = () => {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => addArrayItem('modules', { title: '', subtitle: '', description: '', icon: 'Database' })}
+                    onClick={() =>
+                      addArrayItem('modules', {
+                        title: '',
+                        subtitle: '',
+                        description: '',
+                        icon: 'Database',
+                        early_bird_only: false,
+                      })
+                    }
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Add Module

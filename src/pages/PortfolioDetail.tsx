@@ -65,7 +65,7 @@ const PortfolioDetail = () => {
     return (
       <div className="min-h-screen">
         <SEOHead
-          title="Portfolio Not Found | Zymios"
+          title="Portfolio Not Found | insilicology"
           description="The portfolio project you're looking for doesn't exist."
           robots="noindex,nofollow"
         />
@@ -90,7 +90,7 @@ const PortfolioDetail = () => {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title={`${project.title} - Portfolio Case Study | Zymios`}
+        title={`${project.title} - Portfolio Case Study | insilicology`}
         description={project.summary}
         url={`/portfolio/${slug}`}
         type="article"

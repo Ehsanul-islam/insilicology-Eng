@@ -47,7 +47,7 @@ const RefundPolicy = () => {
           <li>Log in to your account and go to your Purchase History.</li>
           <li>Find the course you wish to refund.</li>
           <li>Click on "Request Refund" (if the option is available/eligible).</li>
-          <li>Alternatively, you can email our support team at support@zymios.com with your order details and reason for the refund.</li>
+          <li>Alternatively, you can email our support team at support@insilicology.com with your order details and reason for the refund.</li>
         </ol>
       `,
         },
@@ -73,7 +73,7 @@ const RefundPolicy = () => {
     return (
         <div className="min-h-screen font-siliguri text-[16px]">
             <SEOHead
-                title="Refund Policy - 30-Day Money-Back Guarantee | Zymios"
+                title="Refund Policy - 30-Day Money-Back Guarantee | insilicology"
                 description="Learn about our 30-day money-back guarantee and refund process. We want you to be satisfied with your learning journey."
                 url="/refunds"
                 type="website"
@@ -114,7 +114,7 @@ const RefundPolicy = () => {
                             <Card>
                                 <CardContent className="p-8">
                                     <p className="text-lg text-foreground/80 leading-relaxed">
-                                        At Zymios, we are committed to providing high-quality educational content. However, we understand that sometimes a course might not be the right fit. This Request Policy outlines the terms and conditions for refunds on our platform.
+                                        At insilicology, we are committed to providing high-quality educational content. However, we understand that sometimes a course might not be the right fit. This Request Policy outlines the terms and conditions for refunds on our platform.
                                     </p>
                                 </CardContent>
                             </Card>

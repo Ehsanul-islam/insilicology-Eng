@@ -31,8 +31,8 @@ Deno.serve(async (req) => {
 
         // Get environment variables
         const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
-        const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "noreply@zymios.com";
-        const SITE_URL = Deno.env.get("SITE_URL") || "https://zymios.com";
+        const SENDER_EMAIL = Deno.env.get("SENDER_EMAIL") || "noreply@insilicology.com";
+        const SITE_URL = Deno.env.get("SITE_URL") || "https://insilicology.com";
 
         if (!BREVO_API_KEY) {
             console.error("BREVO_API_KEY is not set");
@@ -55,7 +55,7 @@ Deno.serve(async (req) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to Zymios!</title>
+  <title>Welcome to insilicology!</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -66,7 +66,7 @@ Deno.serve(async (req) => {
           <!-- Header -->
           <tr>
             <td style="padding: 40px 40px 20px 40px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px 8px 0 0;">
-              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">Welcome to Zymios! 🚀</h1>
+              <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">Welcome to insilicology! 🚀</h1>
             </td>
           </tr>
 
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
               </p>
               
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #333333;">
-                Thank you for joining <strong>Zymios</strong>! We're excited to have you as part of our learning community.
+                Thank you for joining <strong>insilicology</strong>! We're excited to have you as part of our learning community.
               </p>
 
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #333333;">
@@ -123,7 +123,7 @@ Deno.serve(async (req) => {
 
               <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #333333;">
                 Happy learning!<br>
-                <strong>The Zymios Team</strong>
+                <strong>The insilicology team</strong>
               </p>
             </td>
           </tr>
@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
           <tr>
             <td style="padding: 30px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; text-align: center;">
               <p style="margin: 0; font-size: 12px; color: #666666;">
-                © ${new Date().getFullYear()} Zymios. All rights reserved.
+                © ${new Date().getFullYear()} insilicology. All rights reserved.
               </p>
               <p style="margin: 10px 0 0 0; font-size: 12px; color: #666666;">
                 <a href="${SITE_URL}" style="color: #667eea; text-decoration: none;">Visit our website</a>
@@ -157,7 +157,7 @@ Deno.serve(async (req) => {
             },
             body: JSON.stringify({
                 sender: {
-                    name: "Zymios",
+                    name: "insilicology",
                     email: SENDER_EMAIL,
                 },
                 to: [
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
                         name: recipientName,
                     },
                 ],
-                subject: "Welcome to Zymios! 🚀",
+                subject: "Welcome to insilicology! 🚀",
                 htmlContent: htmlContent,
             }),
         });
