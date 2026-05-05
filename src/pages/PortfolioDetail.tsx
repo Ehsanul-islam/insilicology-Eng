@@ -1,7 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ChevronRight, Building2, MapPin, Calendar, Users, TrendingUp, CheckCircle2, ArrowRight } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  Calendar,
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  ExternalLink,
+  Github,
+  ImageIcon,
+  Layers,
+  MapPin,
+  ShieldCheck,
+  Sparkles,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SEOHead from '@/components/SEOHead';
@@ -189,6 +205,14 @@ const PortfolioDetail = () => {
     );
   }
 
+  const galleryImages = Array.isArray(project.gallery_images) ? project.gallery_images : [];
+  const projectFacts = [
+    project.client_name && { icon: Building2, label: 'Client', value: project.client_name },
+    project.country && { icon: MapPin, label: 'Location', value: project.country },
+    project.duration_text && { icon: Clock, label: 'Timeline', value: project.duration_text },
+    project.team_size && { icon: Users, label: 'Team', value: project.team_size },
+  ].filter(Boolean);
+
   return (
     <div className="min-h-screen">
       <SEOHead
@@ -201,16 +225,21 @@ const PortfolioDetail = () => {
       />
       <Navbar />
 
-      <main className="pt-16">
+      <main className="pt-16 bg-slate-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-primary-dark via-primary to-cyan-500 text-white py-16">
-          <div className="container-custom">
+        <section className="relative overflow-hidden bg-slate-950 text-white py-10 md:py-12">
+          <div className="absolute inset-0 opacity-[0.04] pointer-events-none"
+            style={{ backgroundImage: `url('https://grainy-gradients.vercel.app/noise.svg')` }} />
+          <div className="absolute -top-40 -left-32 w-96 h-96 bg-primary/30 rounded-full blur-3xl" />
+          <div className="absolute top-20 -right-24 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl" />
+
+          <div className="container-custom relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className="flex items-center gap-2 mb-4 text-white/80">
+              <div className="flex items-center gap-2 mb-3 text-xs text-white/70">
                 <Link to="/portfolio" className="hover:text-white transition-colors">
                   Portfolio
                 </Link>
@@ -218,67 +247,90 @@ const PortfolioDetail = () => {
                 <span>{project.category || 'Project'}</span>
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">{project.title}</h1>
-              <p className="text-xl text-white/90 mb-8 max-w-3xl">{project.summary}</p>
+              <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 items-center">
+                <div>
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 backdrop-blur text-xs font-semibold text-cyan-100 mb-3">
+                    <Sparkles className="w-4 h-4" />
+                    Premium Case Study
+                  </div>
+                  <h1 className="text-3xl md:text-5xl font-black mb-3 tracking-tight leading-tight">
+                    {project.title}
+                  </h1>
+                  <p className="text-sm md:text-base text-slate-300 mb-5 max-w-3xl leading-relaxed">
+                    {project.summary}
+                  </p>
 
-              <div className="flex flex-wrap gap-6">
-                {project.client_name && (
-                  <div className="flex items-center gap-2">
-                    <Building2 className="w-5 h-5" />
-                    <span>{project.client_name}</span>
+                  <div className="grid sm:grid-cols-2 gap-2 mb-5">
+                    {projectFacts.map((fact: any) => (
+                      <div key={fact.label} className="flex items-center gap-2 rounded-xl bg-white/[0.06] border border-white/10 p-3 backdrop-blur">
+                        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+                          <fact.icon className="w-4 h-4 text-cyan-200" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] uppercase tracking-wide text-slate-400 font-semibold">{fact.label}</p>
+                          <p className="text-sm font-semibold text-white">{fact.value}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                )}
-                {project.country && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-5 h-5" />
-                    <span>{project.country}</span>
+
+                  <div className="flex flex-wrap gap-3">
+                    <Button asChild size="sm" className="bg-white text-slate-950 hover:bg-cyan-50">
+                      <Link to="/contact">
+                        Request Similar Project
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Link>
+                    </Button>
+                    {project.demo_url && (
+                      <Button asChild size="sm" variant="outline" className="border-white/20 bg-white/5 text-white hover:bg-white/10">
+                        <a href={project.demo_url} target="_blank" rel="noreferrer">
+                          Live Demo
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        </a>
+                      </Button>
+                    )}
+                    {project.github_url && (
+                      <Button asChild size="sm" variant="outline" className="border-white/20 bg-white/5 text-white hover:bg-white/10">
+                        <a href={project.github_url} target="_blank" rel="noreferrer">
+                          Source
+                          <Github className="w-4 h-4 ml-2" />
+                        </a>
+                      </Button>
+                    )}
                   </div>
-                )}
-                {project.duration_text && (
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    <span>{project.duration_text}</span>
+                </div>
+
+                <div className="relative">
+                  <div className="absolute -inset-4 bg-gradient-to-br from-cyan-400/20 to-primary/20 rounded-[2rem] blur-2xl" />
+                  <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-white/5 shadow-2xl">
+                    {project.hero_image_url ? (
+                      <img
+                        src={project.hero_image_url}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <ImageIcon className="w-16 h-16 text-white/40" />
+                      </div>
+                    )}
+                    <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent">
+                      <div className="flex items-center gap-2 text-sm font-semibold">
+                        <ShieldCheck className="w-4 h-4 text-emerald-300" />
+                        Security-aware delivery with approval-ready documentation
+                      </div>
+                    </div>
                   </div>
-                )}
-                {project.team_size && (
-                  <div className="flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    <span>{project.team_size}</span>
-                  </div>
-                )}
+                </div>
               </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Hero Image */}
-        <section className="bg-muted py-12">
-          <div className="container-custom">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="aspect-video bg-gradient-to-br from-primary/20 to-accent/20 rounded-2xl overflow-hidden"
-            >
-              {project.hero_image_url ? (
-                <img
-                  src={project.hero_image_url}
-                  alt={project.title}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="text-8xl opacity-50">📊</div>
-                </div>
-              )}
-            </motion.div>
-          </div>
-        </section>
-
-        <div className="container-custom py-16">
-          <div className="grid lg:grid-cols-3 gap-12">
+        <div className="container-custom py-10">
+          <div className="grid lg:grid-cols-3 gap-8">
             {/* Main Content */}
-            <div className="lg:col-span-2 space-y-12">
+            <div className="lg:col-span-2 space-y-8">
               {/* Overview */}
               {project.description && (
                 <motion.section
@@ -286,11 +338,18 @@ const PortfolioDetail = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  <h2 className="text-3xl font-bold mb-4">Project Overview</h2>
-                  <div className="prose prose-lg dark:prose-invert max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {project.description}
-                    </ReactMarkdown>
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                        <Layers className="w-5 h-5 text-primary" />
+                      </div>
+                      <h2 className="text-2xl font-bold">Project Overview</h2>
+                    </div>
+                    <div className="prose max-w-none prose-p:text-slate-600 prose-headings:text-slate-950">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {project.description}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                 </motion.section>
               )}
@@ -302,13 +361,13 @@ const PortfolioDetail = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <h2 className="text-3xl font-bold mb-6">Challenges</h2>
-                  <div className="space-y-6">
+                  <h2 className="text-2xl font-bold mb-4">Challenges</h2>
+                  <div className="space-y-4">
                     {project.challenges.map((challenge: any, index: number) => (
-                      <Card key={index}>
-                        <CardContent className="p-6">
-                          <h3 className="text-xl font-bold mb-2">{challenge.title}</h3>
-                          <p className="text-foreground/80">{challenge.description}</p>
+                      <Card key={index} className="border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="p-5">
+                          <h3 className="text-lg font-bold mb-1.5">{challenge.title}</h3>
+                          <p className="text-sm text-slate-600">{challenge.description}</p>
                         </CardContent>
                       </Card>
                     ))}
@@ -323,16 +382,16 @@ const PortfolioDetail = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <h2 className="text-3xl font-bold mb-6">Solutions</h2>
-                  <div className="space-y-6">
+                  <h2 className="text-2xl font-bold mb-4">Solutions</h2>
+                  <div className="space-y-4">
                     {project.solutions.map((solution: any, index: number) => (
-                      <Card key={index} className="border-l-4 border-l-primary">
-                        <CardContent className="p-6">
-                          <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+                      <Card key={index} className="border-l-4 border-l-primary bg-white shadow-sm hover:shadow-md transition-shadow">
+                        <CardContent className="p-5">
+                          <h3 className="text-lg font-bold mb-1.5 flex items-center gap-2">
                             <CheckCircle2 className="w-5 h-5 text-primary" />
                             {solution.title}
                           </h3>
-                          <p className="text-foreground/80 ml-7">{solution.description}</p>
+                          <p className="text-sm text-slate-600 ml-7">{solution.description}</p>
                         </CardContent>
                       </Card>
                     ))}
@@ -347,18 +406,36 @@ const PortfolioDetail = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
                 >
-                  <h2 className="text-3xl font-bold mb-6">Results & Impact</h2>
-                  <div className="grid sm:grid-cols-2 gap-6">
+                  <h2 className="text-2xl font-bold mb-4">Results & Impact</h2>
+                  <div className="grid sm:grid-cols-2 gap-4">
                     {project.results.map((result: any, index: number) => (
-                      <Card key={index} className="bg-gradient-to-br from-primary/5 to-accent/5">
-                        <CardContent className="p-6 text-center">
+                      <Card key={index} className="group border-slate-200 bg-white shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                        <CardContent className="p-5 text-center">
                           <div className="flex items-center justify-center mb-2">
-                            <TrendingUp className="w-6 h-6 text-primary" />
+                            <TrendingUp className="w-5 h-5 text-primary" />
                           </div>
-                          <div className="text-4xl font-bold text-primary mb-2">{result.metric}</div>
-                          <p className="text-foreground/80">{result.description}</p>
+                          <div className="text-3xl font-black text-primary mb-1.5 group-hover:scale-105 transition-transform">{result.metric}</div>
+                          <p className="text-sm text-slate-600">{result.description}</p>
                         </CardContent>
                       </Card>
+                    ))}
+                  </div>
+                </motion.section>
+              )}
+
+              {/* Gallery */}
+              {galleryImages.length > 0 && (
+                <motion.section
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.55 }}
+                >
+                  <h2 className="text-2xl font-bold mb-4">Project Gallery</h2>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    {galleryImages.map((imageUrl: string, index: number) => (
+                      <div key={`${imageUrl}-${index}`} className="aspect-video rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm">
+                        <img src={imageUrl} alt={`${project.title} gallery ${index + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                      </div>
                     ))}
                   </div>
                 </motion.section>
@@ -375,12 +452,12 @@ const PortfolioDetail = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 }}
                   >
-                    <Card>
-                      <CardContent className="p-6">
-                        <h3 className="text-xl font-bold mb-4">Technologies Used</h3>
+                    <Card className="border-slate-200 bg-white shadow-sm">
+                      <CardContent className="p-5">
+                        <h3 className="text-lg font-bold mb-3">Technologies Used</h3>
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.map((tech: string) => (
-                            <Badge key={tech} variant="secondary">
+                            <Badge key={tech} variant="secondary" className="rounded-full">
                               {tech}
                             </Badge>
                           ))}
@@ -397,10 +474,10 @@ const PortfolioDetail = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <Card>
-                      <CardContent className="p-6">
-                        <h3 className="text-xl font-bold mb-4">Services Provided</h3>
-                        <ul className="space-y-3">
+                    <Card className="border-slate-200 bg-white shadow-sm">
+                      <CardContent className="p-5">
+                        <h3 className="text-lg font-bold mb-3">Services Provided</h3>
+                        <ul className="space-y-2.5 text-sm">
                           {project.services.map((service: string, index: number) => (
                             <li key={index} className="flex items-center gap-2">
                               <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
@@ -413,16 +490,47 @@ const PortfolioDetail = () => {
                   </motion.div>
                 )}
 
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.35 }}
+                >
+                  <Card className="border-emerald-200 bg-gradient-to-br from-emerald-50 to-white shadow-sm">
+                    <CardContent className="p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-100 flex items-center justify-center">
+                          <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <h3 className="text-lg font-bold">Trust & Approval</h3>
+                      </div>
+                      <div className="space-y-2.5 text-sm text-slate-700">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          Approval-ready project documentation
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          Security-conscious implementation approach
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          Clear success metrics and handover notes
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
                 {/* CTA */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <Card className="bg-gradient-to-br from-primary to-primary-dark text-white">
-                    <CardContent className="p-6 text-center">
-                      <h3 className="text-xl font-bold mb-2">Have a Similar Project?</h3>
-                      <p className="text-white/90 mb-4">
+                  <Card className="bg-gradient-to-br from-slate-950 via-primary-dark to-primary text-white shadow-xl">
+                    <CardContent className="p-5 text-center">
+                      <h3 className="text-lg font-bold mb-2">Have a Similar Project?</h3>
+                      <p className="text-sm text-white/90 mb-4">
                         Let's discuss how we can help you achieve your goals.
                       </p>
                       <Button className="w-full bg-accent hover:bg-accent/90 text-accent-foreground" asChild>

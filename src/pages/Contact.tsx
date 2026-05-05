@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, MessageSquare, Clock } from 'lucide-react';
+import { Mail, MessageSquare, MapPin, Send, Clock } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -11,7 +11,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import {
   Form,
@@ -64,19 +63,19 @@ const Contact = () => {
     {
       icon: Mail,
       label: 'Email',
-      value: 'hello@insilicology.com',
-      link: 'mailto:hello@insilicology.com',
+      value: 'info@insilicology.com',
+      link: 'mailto:info@insilicology.com',
     },
     {
-      icon: Phone,
-      label: 'Phone',
-      value: '+1 (555) 123-4567',
-      link: 'tel:+15551234567',
+      icon: MessageSquare,
+      label: 'WhatsApp / Telegram',
+      value: '+8801617082936',
+      link: 'https://wa.me/8801617082936',
     },
     {
       icon: MapPin,
-      label: 'Address',
-      value: '123 Learning Street, Education City, EC 12345',
+      label: 'Location',
+      value: 'Brussels, Belgium',
       link: null,
     },
     {
@@ -329,10 +328,32 @@ const Contact = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin className="w-16 h-16 mx-auto mb-4 text-primary" />
-                  <p className="text-xl font-semibold text-muted-foreground">Map View</p>
+              <div className="overflow-hidden rounded-2xl border bg-background shadow-sm">
+                <div className="aspect-video">
+                  <iframe
+                    title="Insilicology location near Brussels, Belgium"
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=4.3780%2C50.7780%2C4.4590%2C50.8270&layer=mapnik&marker=50.8025%2C4.4185"
+                    className="h-full w-full border-0"
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-4 px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    <div>
+                      <p className="font-semibold">Brussels, Belgium</p>
+                      <p className="text-sm text-muted-foreground">Quiet outer Brussels area</p>
+                    </div>
+                  </div>
+                  <a
+                    href="https://www.openstreetmap.org/?mlat=50.8025&mlon=4.4185#map=13/50.8025/4.4185"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm font-medium text-primary hover:underline"
+                  >
+                    View larger map
+                  </a>
                 </div>
               </div>
             </motion.div>
