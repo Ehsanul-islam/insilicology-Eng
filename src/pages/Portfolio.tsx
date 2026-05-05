@@ -10,6 +10,48 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Building2, MapPin } from 'lucide-react';
 import { usePortfolio } from '@/hooks/usePortfolio';
 
+const demoProjects = [
+  {
+    id: 'demo-1',
+    slug: 'biotech-analytics-portal',
+    title: 'Biotech Analytics Portal',
+    summary: 'Built a secure analytics platform for genomics teams with automated dashboards and stakeholder-ready reporting.',
+    hero_image_url: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1200&q=80',
+    featured: true,
+    client_name: 'NovaGen Labs',
+    country: 'USA',
+    technologies: ['React', 'TypeScript', 'PostgreSQL', 'Supabase'],
+    duration_text: '14 weeks',
+    category: 'health-tech',
+  },
+  {
+    id: 'demo-2',
+    slug: 'clinical-ops-workflow-automation',
+    title: 'Clinical Ops Workflow Automation',
+    summary: 'Automated clinical operations workflow with role-based approvals, reducing manual handoffs and review delays.',
+    hero_image_url: 'https://images.unsplash.com/photo-1579165466741-7f35e4755660?auto=format&fit=crop&w=1200&q=80',
+    featured: true,
+    client_name: 'MedAxis Program',
+    country: 'Germany',
+    technologies: ['Next.js', 'Node.js', 'Redis', 'Tailwind CSS'],
+    duration_text: '10 weeks',
+    category: 'automation',
+  },
+  {
+    id: 'demo-3',
+    slug: 'learning-platform-revamp',
+    title: 'Learning Platform Revamp',
+    summary: 'Redesigned an enterprise learning product with premium UX, better engagement loops, and measurable retention growth.',
+    hero_image_url: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&q=80',
+    featured: false,
+    client_name: 'SkillForge Academy',
+    country: 'Bangladesh',
+    technologies: ['React', 'Framer Motion', 'Supabase Auth', 'Vite'],
+    duration_text: '12 weeks',
+    category: 'edtech',
+  },
+];
+
 const Portfolio = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [projects, setProjects] = useState<any[]>([]);
@@ -29,10 +71,27 @@ const Portfolio = () => {
         fetchPublishedPortfolios(),
         fetchCategories(),
       ]);
-      setProjects(portfolioData);
-      setCategories(categoryData);
+      const hasLiveProjects = portfolioData && portfolioData.length > 0;
+
+      if (hasLiveProjects) {
+        setProjects(portfolioData);
+        setCategories(categoryData);
+      } else {
+        setProjects(demoProjects);
+        setCategories([
+          { slug: 'health-tech', name: 'Health Tech' },
+          { slug: 'automation', name: 'Automation' },
+          { slug: 'edtech', name: 'EdTech' },
+        ]);
+      }
     } catch (error) {
       console.error('Error loading portfolio data:', error);
+      setProjects(demoProjects);
+      setCategories([
+        { slug: 'health-tech', name: 'Health Tech' },
+        { slug: 'automation', name: 'Automation' },
+        { slug: 'edtech', name: 'EdTech' },
+      ]);
     } finally {
       setLoading(false);
     }
