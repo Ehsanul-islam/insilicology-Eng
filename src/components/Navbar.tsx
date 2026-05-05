@@ -55,8 +55,8 @@ const Navbar = () => {
 
   const mainNavLinks = [
     { name: 'Home', href: '/' },
+    { name: 'Services', href: '/research' },
     { name: 'Courses', href: '/courses' },
-    { name: 'Research', href: '/research' },
   ];
 
   const othersDropdownLinks = [
@@ -100,7 +100,7 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 to={link.href}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                className="px-3 py-2 text-sm font-medium text-gray-700 rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5"
               >
                 {link.name}
               </Link>
@@ -109,7 +109,7 @@ const Navbar = () => {
             {/* Others Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200">
+                <button className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 rounded-lg transition-all duration-200 hover:bg-primary/10 hover:text-primary hover:-translate-y-0.5">
                   Others
                   <ChevronDown className="w-4 h-4" />
                 </button>
