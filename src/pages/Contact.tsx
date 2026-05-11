@@ -68,9 +68,15 @@ const Contact = () => {
     },
     {
       icon: MessageSquare,
-      label: 'WhatsApp / Telegram',
+      label: 'WhatsApp',
       value: '+8801617082936',
       link: 'https://wa.me/8801617082936',
+    },
+    {
+      icon: MessageSquare,
+      label: 'Telegram',
+      value: '+8801617082936',
+      link: 'https://t.me/+8801617082936',
     },
     {
       icon: MapPin,
