@@ -81,10 +81,13 @@ const ResearchInsights = () => {
 
     // Data: Research Field Distribution
     const fieldData = [
-        { region: 'Drug Discovery', value: 45, color: '#3b82f6' },
-        { region: 'Protein Analysis', value: 30, color: '#8b5cf6' },
-        { region: 'Material Science', value: 15, color: '#10b981' },
-        { region: 'Others', value: 10, color: '#f59e0b' },
+        { region: 'Drug Discovery', value: 25, color: '#3b82f6' },
+        { region: 'Protein Analysis', value: 20, color: '#8b5cf6' },
+        { region: 'MD Simulation', value: 18, color: '#06b6d4' },
+        { region: 'Vaccine Design', value: 15, color: '#ec4899' },
+        { region: 'Network pharmacology', value: 10, color: '#6366f1' },
+        { region: 'Material Science', value: 8, color: '#10b981' },
+        { region: 'Others', value: 4, color: '#f59e0b' },
     ];
 
     // Impact KPIs
@@ -498,7 +501,7 @@ const ResearchInsights = () => {
                         variants={cardVariants}
                         whileHover={{ y: -6, scale: 1.01 }}
                     >
-                        <Card className="h-[224px] border-t-[3px] border-t-indigo-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[238px] border-t-[3px] border-t-indigo-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-indigo-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -511,16 +514,16 @@ const ResearchInsights = () => {
                                         Research Fields
                                     </CardTitle>
                                     <div className="text-base font-black bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
-                                        4+ Areas
+                                        7+ Areas
                                     </div>
                                 </div>
                             </CardHeader>
-                            <CardContent className="relative z-10 h-32">
+                            <CardContent className="relative z-10 h-40 pb-1">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <BarChart data={fieldData} layout="vertical">
                                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" opacity={0.3} />
                                         <XAxis type="number" hide />
-                                        <YAxis type="category" dataKey="region" tick={{ fontSize: 9, fill: '#6b7280' }} width={72} />
+                                        <YAxis type="category" dataKey="region" tick={{ fontSize: 9, fill: '#6b7280' }} width={98} />
                                         <Tooltip content={<CustomTooltip />} />
                                         <Bar dataKey="value" radius={[0, 6, 6, 0]} animationDuration={1500} animationBegin={600}>
                                             {fieldData.map((entry, index) => (
@@ -543,7 +546,7 @@ const ResearchInsights = () => {
                         variants={cardVariants}
                         whileHover={{ y: -6, scale: 1.01 }}
                     >
-                        <Card className="h-[224px] border-t-[3px] border-t-amber-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 relative overflow-hidden group">
+                        <Card className="h-[238px] border-t-[3px] border-t-amber-500 bg-white/80 backdrop-blur-xl hover:bg-white/90 hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-500 relative overflow-hidden group">
                             <motion.div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                             <div className="absolute inset-0 bg-gradient-to-br from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
