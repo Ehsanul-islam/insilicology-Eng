@@ -130,17 +130,45 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground font-sans antialiased;
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img, video, svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent text overflow in tight containers */
+  h1, h2, h3, h4, h5, h6 {
     @apply font-bold tracking-tight;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+
+  /* Ensure inputs are at least 16px on iOS to prevent zoom */
+  @media (max-width: 767px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  /* Better tap targets on mobile */
+  @media (max-width: 767px) {
+    button,
+    [role="button"],
+    .touch-target {
+      min-height: 44px;
+    }
   }
 }
 
