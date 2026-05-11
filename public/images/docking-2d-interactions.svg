@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 520" role="img" aria-labelledby="title desc">
+  <title id="title">Docking 2D interaction diagram example</title>
+  <desc id="desc">A stylized 2D ligand interaction diagram.</desc>
+  <rect width="900" height="520" fill="#111827"/>
+  <rect x="72" y="54" width="760" height="382" rx="24" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+  <text x="96" y="98" fill="#f8fafc" font-family="Arial, sans-serif" font-size="30" font-weight="700">2D Interaction Map</text>
+  <text x="96" y="130" fill="#94a3b8" font-family="Arial, sans-serif" font-size="18">Hydrogen bonds, hydrophobic contacts, and key residues</text>
+  <polygon points="416,210 492,210 532,274 492,338 416,338 376,274" fill="#1d4ed8" stroke="#93c5fd" stroke-width="5"/>
+  <circle cx="282" cy="198" r="44" fill="#0f766e" stroke="#5eead4" stroke-width="4"/>
+  <circle cx="620" cy="198" r="44" fill="#7c2d12" stroke="#fdba74" stroke-width="4"/>
+  <circle cx="286" cy="354" r="44" fill="#4c1d95" stroke="#c4b5fd" stroke-width="4"/>
+  <circle cx="640" cy="352" r="44" fill="#365314" stroke="#bef264" stroke-width="4"/>
+  <line x1="322" y1="218" x2="376" y2="250" stroke="#5eead4" stroke-width="4" stroke-dasharray="8 8"/>
+  <line x1="584" y1="218" x2="532" y2="250" stroke="#fdba74" stroke-width="4" stroke-dasharray="8 8"/>
+  <line x1="326" y1="338" x2="376" y2="300" stroke="#c4b5fd" stroke-width="4" stroke-dasharray="8 8"/>
+  <line x1="600" y1="334" x2="532" y2="302" stroke="#bef264" stroke-width="4" stroke-dasharray="8 8"/>
+  <text x="260" y="204" fill="#ecfeff" font-family="Arial, sans-serif" font-size="18" font-weight="700">ASP</text>
+  <text x="596" y="204" fill="#fff7ed" font-family="Arial, sans-serif" font-size="18" font-weight="700">PHE</text>
+  <text x="264" y="360" fill="#faf5ff" font-family="Arial, sans-serif" font-size="18" font-weight="700">LYS</text>
+  <text x="616" y="358" fill="#f7fee7" font-family="Arial, sans-serif" font-size="18" font-weight="700">VAL</text>
+  <text x="422" y="282" fill="#eff6ff" font-family="Arial, sans-serif" font-size="18" font-weight="700">Ligand</text>
+</svg>

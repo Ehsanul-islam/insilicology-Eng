@@ -41,6 +41,7 @@ const MyCertificates = lazy(() => import("./pages/MyCertificates"));
 const StudentLiveSessions = lazy(() => import("./pages/StudentLiveSessions"));
 const LearnPage = lazy(() => import("./pages/LearnPage"));
 const Research = lazy(() => import("./pages/Research"));
+const ResearchServiceDetail = lazy(() => import("./pages/ResearchServiceDetail"));
 const Community = lazy(() => import("./pages/Community"));
 const PaymentPage = lazy(() => import("./pages/PaymentPage"));
 
@@ -70,6 +71,8 @@ const AdminBlogCategories = lazy(() => import("./pages/admin/AdminBlogCategories
 const AdminPrograms = lazy(() => import("./pages/admin/AdminPrograms"));
 const AdminProgramEditor = lazy(() => import("./pages/admin/AdminProgramEditor"));
 const AdminLiveSessions = lazy(() => import("./pages/admin/AdminLiveSessions"));
+const AdminResearchServices = lazy(() => import("./pages/admin/AdminResearchServices"));
+const AdminResearchServiceEditor = lazy(() => import("./pages/admin/AdminResearchServiceEditor"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -121,7 +124,7 @@ const App = () => (
                   <Route path="/courses" element={<Courses />} />
                   <Route path="/courses/:slug" element={<CourseDetail />} />
                   <Route path="/research" element={<Research />} />
-                  <Route path="/research" element={<Research />} />
+                  <Route path="/research/:serviceSlug" element={<ResearchServiceDetail />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/portfolio" element={<Portfolio />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
@@ -375,6 +378,30 @@ const App = () => (
                     element={
                       <ProtectedRoute>
                         <AdminProgramEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/research-services"
+                    element={
+                      <ProtectedRoute>
+                        <AdminResearchServices />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/research-services/new"
+                    element={
+                      <ProtectedRoute>
+                        <AdminResearchServiceEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/admin/research-services/:id/edit"
+                    element={
+                      <ProtectedRoute>
+                        <AdminResearchServiceEditor />
                       </ProtectedRoute>
                     }
                   />

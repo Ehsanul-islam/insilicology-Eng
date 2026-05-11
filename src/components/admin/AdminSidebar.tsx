@@ -13,6 +13,7 @@ import {
   GraduationCap,
   Calendar,
   Video,
+  FlaskConical,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -42,6 +43,7 @@ const contentNavItems = [
   { title: 'Blog Posts', url: '/admin/blog', icon: FileText },
   { title: 'Portfolio', url: '/admin/portfolio', icon: Briefcase },
   { title: 'Upcoming Programs', url: '/admin/programs', icon: Calendar },
+  { title: 'Research Services', url: '/admin/research-services', icon: FlaskConical },
 ];
 
 const otherNavItems = [
