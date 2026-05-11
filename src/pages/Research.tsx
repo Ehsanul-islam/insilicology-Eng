@@ -21,7 +21,7 @@ const Research = () => {
 
     useEffect(() => {
         let active = true;
-        (async () => {
+        void (async () => {
             const remote = await fetchPublishedServices();
             if (active && remote.length > 0) {
                 setResearchServices(remote);

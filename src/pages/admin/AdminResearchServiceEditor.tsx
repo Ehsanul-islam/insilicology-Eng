@@ -25,6 +25,32 @@ import {
 } from '@/hooks/useResearchServices';
 import { researchIconNames, getResearchIcon } from '@/data/researchIcons';
 
+function normalizeSampleAnalysesForForm(
+  raw: unknown,
+): ResearchServiceInput['sample_analyses'] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((entry) => {
+    const item = entry as Record<string, unknown>;
+    const fromImages = Array.isArray(item.images)
+      ? item.images.filter((u): u is string => typeof u === 'string' && u.trim().length > 0)
+      : [];
+    const legacy =
+      typeof item.image === 'string' && item.image.trim().length > 0 ? item.image.trim() : '';
+    const images = fromImages.length > 0 ? fromImages : legacy ? [legacy] : [];
+    return {
+      title: String(item.title ?? ''),
+      description: String(item.description ?? ''),
+      images,
+      caption:
+        typeof item.caption === 'string'
+          ? item.caption
+          : item.caption != null
+            ? String(item.caption)
+            : '',
+    };
+  });
+}
+
 const STYLE_PRESETS: Array<{
   label: string;
   color: string;
@@ -159,7 +185,7 @@ const AdminResearchServiceEditor = () => {
             seo_description: row.seo_description || '',
             overview_bullets: Array.isArray(row.overview_bullets) ? row.overview_bullets : [],
             service_types: Array.isArray(row.service_types) ? row.service_types : [],
-            sample_analyses: Array.isArray(row.sample_analyses) ? row.sample_analyses : [],
+            sample_analyses: normalizeSampleAnalysesForForm(row.sample_analyses),
             client_requirements: Array.isArray(row.client_requirements)
               ? row.client_requirements
               : [],
@@ -236,6 +262,17 @@ const AdminResearchServiceEditor = () => {
         price: form.price.trim() || 'Custom quote',
         seo_title: form.seo_title.trim() || form.title.trim(),
         seo_description: form.seo_description.trim() || form.description.trim(),
+        sample_analyses: form.sample_analyses.map((a) => {
+          const images = (Array.isArray(a.images) ? a.images : [])
+            .map((u) => String(u).trim())
+            .filter(Boolean);
+          return {
+            title: a.title.trim(),
+            description: a.description.trim(),
+            ...(images.length > 0 ? { images } : {}),
+            ...(a.caption?.trim() ? { caption: a.caption.trim() } : {}),
+          };
+        }),
       };
 
       if (isEditing && id) {
@@ -472,10 +509,10 @@ const AdminResearchServiceEditor = () => {
                         required: true,
                       },
                       {
-                        name: 'image',
-                        label: 'Image URL (optional)',
-                        type: 'text',
-                        placeholder: '/images/md-rmsd.svg',
+                        name: 'images',
+                        label: 'Image URLs (add as many as you need)',
+                        type: 'tags',
+                        placeholder: 'Paste image URL and press Enter or Add',
                       },
                       {
                         name: 'caption',

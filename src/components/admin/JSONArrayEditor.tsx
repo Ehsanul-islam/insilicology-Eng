@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
+import { TagInput } from '@/components/admin/TagInput';
 import {
   Collapsible,
   CollapsibleContent,
@@ -14,7 +15,7 @@ import {
 interface Field {
   name: string;
   label: string;
-  type: 'text' | 'textarea' | 'number';
+  type: 'text' | 'textarea' | 'number' | 'tags';
   placeholder?: string;
   required?: boolean;
 }
@@ -45,7 +46,9 @@ export const JSONArrayEditor = ({
 
     const newItem: any = {};
     fields.forEach((field) => {
-      newItem[field.name] = field.type === 'number' ? 0 : '';
+      if (field.type === 'number') newItem[field.name] = 0;
+      else if (field.type === 'tags') newItem[field.name] = [];
+      else newItem[field.name] = '';
     });
 
     const newValue = [...value, newItem];
@@ -184,6 +187,12 @@ export const JSONArrayEditor = ({
                             onChange={(e) => updateItem(index, field.name, e.target.value)}
                             placeholder={field.placeholder}
                             required={field.required}
+                          />
+                        ) : field.type === 'tags' ? (
+                          <TagInput
+                            tags={Array.isArray(item[field.name]) ? item[field.name] : []}
+                            onChange={(tags) => updateItem(index, field.name, tags)}
+                            placeholder={field.placeholder ?? 'Paste image URL and press Enter'}
                           />
                         ) : (
                           <Input

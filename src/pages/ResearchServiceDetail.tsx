@@ -6,6 +6,8 @@ import {
   ArrowRight,
   BadgeDollarSign,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   HelpCircle,
   ImageIcon,
@@ -21,9 +23,101 @@ import { Card, CardContent } from '@/components/ui/card';
 import {
   getResearchServiceBySlug,
   getResearchWhatsappLink,
+  getSampleAnalysisImageUrls,
   type ResearchService,
 } from '@/data/researchServices';
 import { useResearchServices } from '@/hooks/useResearchServices';
+
+function SampleAnalysisImageCarousel({
+  urls,
+  galleryKey,
+}: {
+  urls: string[];
+  galleryKey: string;
+}) {
+  const [index, setIndex] = useState(0);
+  const [failed, setFailed] = useState<Set<number>>(() => new Set());
+
+  useEffect(() => {
+    setIndex(0);
+    setFailed(new Set());
+  }, [galleryKey]);
+
+  const n = urls.length;
+
+  const goPrev = () => {
+    if (n <= 1) return;
+    setIndex((i) => (i - 1 + n) % n);
+  };
+
+  const goNext = () => {
+    if (n <= 1) return;
+    setIndex((i) => (i + 1) % n);
+  };
+
+  if (n === 0) {
+    return (
+      <div className="flex h-48 items-center justify-center border-b bg-muted/30">
+        <ImageIcon className="h-8 w-8 text-muted-foreground" />
+      </div>
+    );
+  }
+
+  const safeIndex = ((index % n) + n) % n;
+  const currentUrl = urls[safeIndex];
+  const showNav = n > 1;
+  const currentFailed = failed.has(safeIndex);
+
+  return (
+    <div className="relative overflow-hidden border-b bg-slate-950">
+      {!currentFailed ? (
+        <img
+          key={`${galleryKey}-${safeIndex}`}
+          src={currentUrl}
+          alt=""
+          className="h-48 w-full object-cover"
+          loading={safeIndex === 0 ? 'eager' : 'lazy'}
+          referrerPolicy="no-referrer"
+          onError={() => setFailed((prev) => new Set(prev).add(safeIndex))}
+        />
+      ) : (
+        <div className="flex h-48 items-center justify-center bg-muted/20">
+          <ImageIcon className="h-8 w-8 text-muted-foreground" />
+        </div>
+      )}
+
+      {showNav && (
+        <>
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className="absolute left-2 top-1/2 z-10 h-9 w-9 -translate-y-1/2 rounded-full border border-white/20 bg-black/55 text-white shadow-md backdrop-blur-sm hover:bg-black/75 hover:text-white"
+            aria-label="Previous figure"
+            onClick={goPrev}
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden />
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            size="icon"
+            className="absolute right-2 top-1/2 z-10 h-9 w-9 -translate-y-1/2 rounded-full border border-white/20 bg-black/55 text-white shadow-md backdrop-blur-sm hover:bg-black/75 hover:text-white"
+            aria-label="Next figure"
+            onClick={goNext}
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden />
+          </Button>
+          <div className="pointer-events-none absolute bottom-2 left-0 right-0 flex justify-center">
+            <span className="rounded-full bg-black/55 px-2.5 py-0.5 text-[11px] font-medium tabular-nums text-white/95 backdrop-blur-sm">
+              {safeIndex + 1} / {n}
+            </span>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 const ResearchServiceDetail = () => {
   const { serviceSlug } = useParams();
@@ -34,7 +128,7 @@ const ResearchServiceDetail = () => {
 
   useEffect(() => {
     let active = true;
-    (async () => {
+    void (async () => {
       if (!serviceSlug) {
         setLoaded(true);
         return;
@@ -235,22 +329,12 @@ const ResearchServiceDetail = () => {
                 </p>
                 <h2 className="text-3xl font-bold tracking-tight">Sample Outputs And Figures</h2>
                 <div className="mt-5 grid gap-4 md:grid-cols-2">
-                  {service.sampleAnalyses.map((analysis) => (
-                    <Card key={analysis.title} className="overflow-hidden border-slate-200">
-                      {analysis.image ? (
-                        <div className="border-b bg-slate-950">
-                          <img
-                            src={analysis.image}
-                            alt={`${analysis.title} example`}
-                            className="h-48 w-full object-cover"
-                            loading="lazy"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex h-32 items-center justify-center border-b bg-muted/30">
-                          <ImageIcon className="h-8 w-8 text-muted-foreground" />
-                        </div>
-                      )}
+                  {service.sampleAnalyses.map((analysis, index) => {
+                    const imgKey = `${service.slug}-${index}-${analysis.title}`;
+                    const urls = getSampleAnalysisImageUrls(analysis);
+                    return (
+                      <Card key={imgKey} className="overflow-hidden border-slate-200">
+                        <SampleAnalysisImageCarousel urls={urls} galleryKey={imgKey} />
                       <CardContent className="p-5">
                         <h3 className="font-bold">{analysis.title}</h3>
                         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -263,7 +347,8 @@ const ResearchServiceDetail = () => {
                         )}
                       </CardContent>
                     </Card>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
 

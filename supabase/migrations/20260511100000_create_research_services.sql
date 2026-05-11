@@ -130,3 +130,8 @@ DO $$
 BEGIN
   RAISE NOTICE 'Migration completed: research_services table created with RLS policies.';
 END $$;
+
+-- API access (required or PostgREST returns "permission denied" and the admin list stays empty)
+GRANT SELECT ON TABLE public.research_services TO anon;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE public.research_services TO authenticated;
+GRANT ALL ON TABLE public.research_services TO service_role;

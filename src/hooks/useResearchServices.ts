@@ -26,7 +26,7 @@ export type ResearchServiceInput = {
   seo_description: string;
   overview_bullets: string[];
   service_types: { title: string; description: string }[];
-  sample_analyses: { title: string; description: string; image?: string; caption?: string }[];
+  sample_analyses: { title: string; description: string; image?: string; images?: string[]; caption?: string }[];
   client_requirements: string[];
   deliverables: string[];
   tools: string[];

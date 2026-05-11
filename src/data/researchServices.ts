@@ -19,8 +19,21 @@ export type ResearchServiceSectionItem = {
 export type ResearchServiceAnalysis = {
   title: string;
   description: string;
+  /** Single image (legacy); use `images` when possible */
   image?: string;
+  /** Multiple figures for this analysis (shown in carousel) */
+  images?: string[];
   caption?: string;
+};
+
+/** Normalized URLs for display: prefers `images`, falls back to legacy `image` */
+export const getSampleAnalysisImageUrls = (analysis: ResearchServiceAnalysis): string[] => {
+  const fromImages = Array.isArray(analysis.images)
+    ? analysis.images.filter((u) => typeof u === 'string' && u.trim().length > 0)
+    : [];
+  if (fromImages.length > 0) return [...fromImages];
+  if (analysis.image?.trim()) return [analysis.image.trim()];
+  return [];
 };
 
 export type ResearchServiceFaq = {
