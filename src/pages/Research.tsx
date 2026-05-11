@@ -307,7 +307,7 @@ const Research = () => {
                                             </Button>
                                             <Button size="sm" variant="outline" asChild>
                                                 <Link to={`/research/${service.slug}`}>
-                                                    Read Full Service Page
+                                                    More Info
                                                     <ArrowRight className="ml-2 h-4 w-4" />
                                                 </Link>
                                             </Button>
