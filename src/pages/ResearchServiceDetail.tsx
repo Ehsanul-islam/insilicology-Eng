@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -14,6 +14,8 @@ import {
   MessageCircle,
   PackageCheck,
   Wrench,
+  X,
+  ZoomIn,
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -28,12 +30,139 @@ import {
 } from '@/data/researchServices';
 import { useResearchServices } from '@/hooks/useResearchServices';
 
+/* ------------------------------------------------------------------ */
+/*  Image Lightbox                                                     */
+/* ------------------------------------------------------------------ */
+
+function ImageLightbox({
+  urls,
+  initialIndex,
+  title,
+  onClose,
+}: {
+  urls: string[];
+  initialIndex: number;
+  title?: string;
+  onClose: () => void;
+}) {
+  const [index, setIndex] = useState(initialIndex);
+  const n = urls.length;
+  const safeIndex = ((index % n) + n) % n;
+
+  const goPrev = useCallback(() => {
+    if (n <= 1) return;
+    setIndex((i) => (i - 1 + n) % n);
+  }, [n]);
+
+  const goNext = useCallback(() => {
+    if (n <= 1) return;
+    setIndex((i) => (i + 1) % n);
+  }, [n]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') goPrev();
+      if (e.key === 'ArrowRight') goNext();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose, goPrev, goNext]);
+
+  // Lock body scroll
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      {/* Close button */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-md border border-white/10 hover:bg-white/20 hover:text-white transition-all"
+        aria-label="Close lightbox"
+      >
+        <X className="h-5 w-5" />
+      </button>
+
+      {/* Title */}
+      {title && (
+        <div className="absolute top-4 left-4 z-10">
+          <span className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white/90 backdrop-blur-md border border-white/10">
+            {title}
+          </span>
+        </div>
+      )}
+
+      {/* Navigation */}
+      {n > 1 && (
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); goPrev(); }}
+            className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-md border border-white/10 hover:bg-white/20 hover:text-white transition-all"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); goNext(); }}
+            className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white/80 backdrop-blur-md border border-white/10 hover:bg-white/20 hover:text-white transition-all"
+            aria-label="Next image"
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </>
+      )}
+
+      {/* Image */}
+      <motion.img
+        key={safeIndex}
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.95 }}
+        transition={{ duration: 0.2 }}
+        src={urls[safeIndex]}
+        alt={title || 'Sample analysis figure'}
+        className="max-h-[85vh] max-w-[92vw] rounded-xl object-contain shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+        referrerPolicy="no-referrer"
+      />
+
+      {/* Counter */}
+      {n > 1 && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+          <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium tabular-nums text-white/90 backdrop-blur-md border border-white/10">
+            {safeIndex + 1} / {n}
+          </span>
+        </div>
+      )}
+    </motion.div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sample Analysis Image Carousel (inline cards)                      */
+/* ------------------------------------------------------------------ */
+
 function SampleAnalysisImageCarousel({
   urls,
   galleryKey,
+  onImageClick,
 }: {
   urls: string[];
   galleryKey: string;
+  onImageClick?: (index: number) => void;
 }) {
   const [index, setIndex] = useState(0);
   const [failed, setFailed] = useState<Set<number>>(() => new Set());
@@ -45,12 +174,14 @@ function SampleAnalysisImageCarousel({
 
   const n = urls.length;
 
-  const goPrev = () => {
+  const goPrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (n <= 1) return;
     setIndex((i) => (i - 1 + n) % n);
   };
 
-  const goNext = () => {
+  const goNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (n <= 1) return;
     setIndex((i) => (i + 1) % n);
   };
@@ -69,13 +200,16 @@ function SampleAnalysisImageCarousel({
   const currentFailed = failed.has(safeIndex);
 
   return (
-    <div className="relative overflow-hidden border-b bg-slate-950">
+    <div
+      className="relative overflow-hidden border-b bg-slate-950 cursor-pointer group/img"
+      onClick={() => !currentFailed && onImageClick?.(safeIndex)}
+    >
       {!currentFailed ? (
         <img
           key={`${galleryKey}-${safeIndex}`}
           src={currentUrl}
           alt=""
-          className="h-48 w-full object-cover"
+          className="h-48 w-full object-cover transition-transform duration-300 group-hover/img:scale-[1.03]"
           loading={safeIndex === 0 ? 'eager' : 'lazy'}
           referrerPolicy="no-referrer"
           onError={() => setFailed((prev) => new Set(prev).add(safeIndex))}
@@ -83,6 +217,16 @@ function SampleAnalysisImageCarousel({
       ) : (
         <div className="flex h-48 items-center justify-center bg-muted/20">
           <ImageIcon className="h-8 w-8 text-muted-foreground" />
+        </div>
+      )}
+
+      {/* Zoom hint overlay */}
+      {!currentFailed && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover/img:bg-black/30 transition-all duration-300 pointer-events-none">
+          <div className="flex items-center gap-1.5 rounded-full bg-white/0 px-3 py-1.5 text-white/0 group-hover/img:bg-white/15 group-hover/img:text-white/90 backdrop-blur-none group-hover/img:backdrop-blur-sm transition-all duration-300 text-xs font-medium">
+            <ZoomIn className="h-3.5 w-3.5" />
+            Click to enlarge
+          </div>
         </div>
       )}
 
@@ -125,6 +269,15 @@ const ResearchServiceDetail = () => {
   const fallback = getResearchServiceBySlug(serviceSlug);
   const [service, setService] = useState<ResearchService | null>(fallback ?? null);
   const [loaded, setLoaded] = useState(false);
+
+  // Lightbox state
+  const [lightbox, setLightbox] = useState<{
+    urls: string[];
+    index: number;
+    title?: string;
+  } | null>(null);
+
+  const closeLightbox = useCallback(() => setLightbox(null), []);
 
   useEffect(() => {
     let active = true;
@@ -334,7 +487,14 @@ const ResearchServiceDetail = () => {
                     const urls = getSampleAnalysisImageUrls(analysis);
                     return (
                       <Card key={imgKey} className="overflow-hidden border-slate-200">
-                        <SampleAnalysisImageCarousel urls={urls} galleryKey={imgKey} />
+                        <SampleAnalysisImageCarousel
+                          urls={urls}
+                          galleryKey={imgKey}
+                          onImageClick={(imgIndex) =>
+                            urls.length > 0 &&
+                            setLightbox({ urls, index: imgIndex, title: analysis.title })
+                          }
+                        />
                       <CardContent className="p-5">
                         <h3 className="font-bold">{analysis.title}</h3>
                         <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
@@ -478,6 +638,18 @@ const ResearchServiceDetail = () => {
       </main>
 
       <Footer />
+
+      {/* Lightbox overlay */}
+      <AnimatePresence>
+        {lightbox && (
+          <ImageLightbox
+            urls={lightbox.urls}
+            initialIndex={lightbox.index}
+            title={lightbox.title}
+            onClose={closeLightbox}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
