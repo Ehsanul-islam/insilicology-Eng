@@ -189,7 +189,11 @@ const AdminResearchServiceEditor = () => {
             client_requirements: Array.isArray(row.client_requirements)
               ? row.client_requirements
               : [],
-            deliverables: Array.isArray(row.deliverables) ? row.deliverables : [],
+            deliverables: Array.isArray(row.deliverables)
+              ? row.deliverables.map((d: any) =>
+                  typeof d === 'string' ? { title: d, description: '' } : d,
+                )
+              : [],
             tools: Array.isArray(row.tools) ? row.tools : [],
             faqs: Array.isArray(row.faqs) ? row.faqs : [],
             status: row.status || 'draft',
@@ -476,7 +480,7 @@ const AdminResearchServiceEditor = () => {
                         label: 'Description',
                         type: 'textarea',
                         placeholder: 'What this workflow covers...',
-                        required: true,
+                        required: false,
                       },
                     ]}
                   />
@@ -543,10 +547,27 @@ const AdminResearchServiceEditor = () => {
                   <CardTitle>Deliverables</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <TagInput
-                    tags={form.deliverables}
-                    onChange={(t) => update('deliverables', t)}
-                    placeholder="e.g. Trajectory analysis plots"
+                  <JSONArrayEditor
+                    value={form.deliverables}
+                    onChange={(v) => update('deliverables', v)}
+                    label="Deliverables"
+                    itemLabel="Deliverable"
+                    fields={[
+                      {
+                        name: 'title',
+                        label: 'Title',
+                        type: 'text',
+                        placeholder: 'Trajectory Files',
+                        required: true,
+                      },
+                      {
+                        name: 'description',
+                        label: 'Description',
+                        type: 'textarea',
+                        placeholder: 'Full .xtc / .dcd files with topology...',
+                        required: false,
+                      },
+                    ]}
                   />
                 </CardContent>
               </Card>

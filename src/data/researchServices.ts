@@ -67,7 +67,7 @@ export type ResearchService = {
   serviceTypes: ResearchServiceSectionItem[];
   sampleAnalyses: ResearchServiceAnalysis[];
   clientRequirements: string[];
-  deliverables: string[];
+  deliverables: ResearchServiceSectionItem[];
   tools: string[];
   faqs: ResearchServiceFaq[];
 };
@@ -97,7 +97,7 @@ export type ResearchServiceRow = {
   service_types: ResearchServiceSectionItem[];
   sample_analyses: ResearchServiceAnalysis[];
   client_requirements: string[];
-  deliverables: string[];
+  deliverables: ResearchServiceSectionItem[];
   tools: string[];
   faqs: ResearchServiceFaq[];
   status: 'draft' | 'published' | 'archived';
@@ -132,7 +132,7 @@ export const mapRowToResearchService = (row: ResearchServiceRow): ResearchServic
   serviceTypes: Array.isArray(row.service_types) ? row.service_types : [],
   sampleAnalyses: Array.isArray(row.sample_analyses) ? row.sample_analyses : [],
   clientRequirements: Array.isArray(row.client_requirements) ? row.client_requirements : [],
-  deliverables: Array.isArray(row.deliverables) ? row.deliverables : [],
+  deliverables: Array.isArray(row.deliverables) ? row.deliverables.map(d => typeof d === 'string' ? { title: d, description: '' } : d) : [],
   tools: Array.isArray(row.tools) ? row.tools : [],
   faqs: Array.isArray(row.faqs) ? row.faqs : [],
 });
@@ -211,11 +211,11 @@ export const researchServices: ResearchService[] = [
       'Preferred software, grid box constraints, or publication method requirements.',
     ],
     deliverables: [
-      'Prepared ligand and receptor files',
-      'Docking score table with ranked poses',
-      '2D and 3D interaction visuals',
-      'Binding site and residue interaction summary',
-      'Concise interpretation report',
+      { title: 'Prepared ligand and receptor files', description: '' },
+      { title: 'Docking score table with ranked poses', description: '' },
+      { title: '2D and 3D interaction visuals', description: '' },
+      { title: 'Binding site and residue interaction summary', description: '' },
+      { title: 'Concise interpretation report', description: '' },
     ],
     tools: ['AutoDock Vina', 'PyMOL', 'Discovery Studio', 'Open Babel', 'BIOVIA tools'],
     faqs: [
@@ -314,12 +314,12 @@ export const researchServices: ResearchService[] = [
       'Specific analyses needed for thesis, manuscript, or grant reporting.',
     ],
     deliverables: [
-      'System setup and minimization notes',
-      'Equilibration and production run summary',
-      'Trajectory analysis plots',
-      'Stability and interaction interpretation',
-      'Publication-ready figures',
-      'Final methods and results report',
+      { title: 'Trajectory Files', description: 'Full .xtc / .dcd files with topology, ready for your own further analysis.' },
+      { title: 'High-Res Figures', description: 'Publication-quality plots at 300 DPI — PNG, SVG, and editable .eps formats.' },
+      { title: 'Methods Section', description: 'Ready-to-submit methods text detailing software versions, parameters, and protocols.' },
+      { title: 'Interpreted Report', description: 'Scientifically written narrative contextualising results within your research question.' },
+      { title: 'Raw Data Files', description: 'All numerical output in .csv and .xvg format for independent verification.' },
+      { title: 'Revision Support', description: 'One round of peer-review revision support included with every project.' },
     ],
     tools: ['GROMACS', 'CHARMM-GUI', 'VMD', 'Grace/Xmgrace', 'Python/R plotting'],
     faqs: [
@@ -373,11 +373,11 @@ export const researchServices: ResearchService[] = [
       'Target outputs needed for manuscript, thesis, or comparison table.',
     ],
     deliverables: [
-      'Optimized molecular geometries',
-      'HOMO-LUMO and energy gap analysis',
-      'Molecular electrostatic potential visuals',
-      'Descriptor table and interpretation',
-      'Method and basis set summary',
+      { title: 'Optimized molecular geometries', description: '' },
+      { title: 'HOMO-LUMO and energy gap analysis', description: '' },
+      { title: 'Molecular electrostatic potential visuals', description: '' },
+      { title: 'Descriptor table and interpretation', description: '' },
+      { title: 'Method and basis set summary', description: '' },
     ],
     tools: ['Gaussian', 'GaussView', 'ORCA', 'Multiwfn'],
     faqs: [
@@ -425,10 +425,10 @@ export const researchServices: ResearchService[] = [
       'Research question and required figures or tables.',
     ],
     deliverables: [
-      'Sequence or dataset quality overview',
-      'Alignment, annotation, or pathway outputs',
-      'Figures and result tables',
-      'Actionable interpretation report',
+      { title: 'Sequence or dataset quality overview', description: '' },
+      { title: 'Alignment, annotation, or pathway outputs', description: '' },
+      { title: 'Figures and result tables', description: '' },
+      { title: 'Actionable interpretation report', description: '' },
     ],
     tools: ['BLAST', 'Clustal Omega', 'MEGA', 'R/Bioconductor'],
     faqs: [
@@ -476,10 +476,10 @@ export const researchServices: ResearchService[] = [
       'Preferred databases or reference papers, if any.',
     ],
     deliverables: [
-      'Compound-target network maps',
-      'PPI and hub gene analysis',
-      'GO/KEGG enrichment outputs',
-      'Mechanism-focused interpretation report',
+      { title: 'Compound-target network maps', description: '' },
+      { title: 'PPI and hub gene analysis', description: '' },
+      { title: 'GO/KEGG enrichment outputs', description: '' },
+      { title: 'Mechanism-focused interpretation report', description: '' },
     ],
     tools: ['Cytoscape', 'STRING', 'SwissTargetPrediction', 'DAVID/Enrichr'],
     faqs: [
@@ -527,10 +527,10 @@ export const researchServices: ResearchService[] = [
       'Reference papers or preferred prediction tools if required.',
     ],
     deliverables: [
-      'Antigen and epitope screening report',
-      'Vaccine construct design',
-      'Allergenicity and antigenicity assessment',
-      'Structure and docking summary',
+      { title: 'Antigen and epitope screening report', description: '' },
+      { title: 'Vaccine construct design', description: '' },
+      { title: 'Allergenicity and antigenicity assessment', description: '' },
+      { title: 'Structure and docking summary', description: '' },
     ],
     tools: ['IEDB', 'VaxiJen', 'AllerTOP', 'ClusPro'],
     faqs: [
@@ -578,10 +578,10 @@ export const researchServices: ResearchService[] = [
       'Filters such as Lipinski, toxicity limits, or preferred ADMET criteria.',
     ],
     deliverables: [
-      'Virtual screening workflow summary',
-      'Ranked hit list and interaction visuals',
-      'ADMET/drug-likeness report',
-      'Lead prioritization recommendations',
+      { title: 'Virtual screening workflow summary', description: '' },
+      { title: 'Ranked hit list and interaction visuals', description: '' },
+      { title: 'ADMET/drug-likeness report', description: '' },
+      { title: 'Lead prioritization recommendations', description: '' },
     ],
     tools: ['AutoDock Vina', 'SwissADME', 'pkCSM', 'PyMOL'],
     faqs: [
@@ -629,10 +629,10 @@ export const researchServices: ResearchService[] = [
       'Research question and preferred database if any.',
     ],
     deliverables: [
-      'Quality control and preprocessing summary',
-      'Taxonomic profile and abundance tables',
-      'Alpha/beta diversity plots',
-      'Functional or pathway interpretation',
+      { title: 'Quality control and preprocessing summary', description: '' },
+      { title: 'Taxonomic profile and abundance tables', description: '' },
+      { title: 'Alpha/beta diversity plots', description: '' },
+      { title: 'Functional or pathway interpretation', description: '' },
     ],
     tools: ['QIIME 2', 'Kraken2', 'MetaPhlAn', 'R/Phyloseq'],
     faqs: [

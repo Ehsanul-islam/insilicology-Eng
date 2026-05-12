@@ -428,30 +428,6 @@ const ResearchServiceDetail = () => {
           <div className="container-custom grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             {/* Left column */}
             <div className="space-y-6">
-              {/* Scope */}
-              <section>
-                <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
-                  Scope
-                </p>
-                <h2 className="text-2xl font-bold tracking-tight md:text-[1.6rem]">
-                  What This Service Includes
-                </h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  {service.summary}
-                </p>
-                <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                  {service.overviewBullets.map((item) => (
-                    <div
-                      key={item}
-                      className="flex items-start gap-2 rounded-lg border bg-muted/20 px-3 py-2 text-xs leading-relaxed text-muted-foreground"
-                    >
-                      <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
               {/* Service Types */}
               <section>
                 <p className="mb-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-primary">
@@ -460,16 +436,21 @@ const ResearchServiceDetail = () => {
                 <h2 className="text-2xl font-bold tracking-tight md:text-[1.6rem]">
                   Available Service Types
                 </h2>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {service.serviceTypes.map((type) => (
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {service.serviceTypes.map((type, index) => (
                     <div
                       key={type.title}
-                      className="rounded-xl border border-slate-200 bg-background p-4 transition-shadow hover:shadow-sm"
+                      className="group rounded-xl border border-slate-200 bg-background p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
                     >
+                      <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-sm font-bold text-slate-500 transition-colors duration-300 group-hover:bg-primary/10 group-hover:text-primary">
+                        {index + 1}
+                      </div>
                       <h3 className="text-sm font-bold">{type.title}</h3>
-                      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-                        {type.description}
-                      </p>
+                      {type.description && (
+                        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                          {type.description}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -546,9 +527,32 @@ const ResearchServiceDetail = () => {
               <CompactInfoCard
                 title="What We Need From You"
                 items={service.clientRequirements}
+                highlight
               />
 
-              <CompactInfoCard title="Deliverables" items={service.deliverables} />
+              <div className="rounded-2xl border border-violet-200 bg-[#fcfaff] p-6 shadow-sm">
+                <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.2em] text-violet-600">
+                  WHAT YOU RECEIVE
+                </p>
+                <h3 className="text-[17px] font-bold tracking-tight text-slate-900">Publication-ready deliverables</h3>
+                <div className="mt-6 space-y-5">
+                  {service.deliverables.map((item) => (
+                    <div key={item.title} className="group flex gap-3.5">
+                      <div className="flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full bg-violet-100 transition-colors group-hover:bg-violet-200">
+                        <CheckCircle2 className="h-[18px] w-[18px] text-violet-600" />
+                      </div>
+                      <div className="min-w-0">
+                        <h4 className="text-[14px] font-bold text-slate-900">{item.title}</h4>
+                        {item.description && (
+                          <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
+                            {item.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               {/* Tools - chips style */}
               <div className="rounded-2xl border border-slate-200 bg-background p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
@@ -635,6 +639,8 @@ const ResearchServiceDetail = () => {
             </aside>
           </div>
         </section>
+
+
       </main>
 
       <Footer />
@@ -654,15 +660,15 @@ const ResearchServiceDetail = () => {
   );
 };
 
-const CompactInfoCard = ({ title, items }: { title: string; items: string[] }) => {
+const CompactInfoCard = ({ title, items, highlight }: { title: string; items: string[]; highlight?: boolean }) => {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-background p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04)]">
-      <h3 className="text-base font-bold tracking-tight">{title}</h3>
-      <ul className="mt-3 space-y-2.5">
+    <div className={`rounded-2xl border p-6 shadow-sm ${highlight ? 'border-violet-200 bg-[#fcfaff]' : 'border-slate-200 bg-background'}`}>
+      <h3 className="text-[17px] font-bold tracking-tight text-slate-900">{title}</h3>
+      <ul className="mt-4 space-y-3.5">
         {items.map((item) => (
-          <li key={item} className="flex items-start gap-2.5">
-            <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-            <span className="text-[13px] leading-snug text-foreground/80">{item}</span>
+          <li key={item} className="flex items-start gap-3.5">
+            <CheckCircle2 className="mt-[2px] h-[18px] w-[18px] shrink-0 text-violet-600" />
+            <span className="text-[14px] leading-relaxed text-slate-600">{item}</span>
           </li>
         ))}
       </ul>

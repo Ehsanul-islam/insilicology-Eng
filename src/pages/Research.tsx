@@ -253,9 +253,9 @@ const Research = () => {
                                             <h4 className="mb-2 text-sm font-semibold">Deliverables</h4>
                                             <div className="grid gap-1.5 sm:grid-cols-2">
                                                 {service.deliverables.slice(0, 4).map((item) => (
-                                                    <div key={item} className="flex items-start gap-2 text-xs text-muted-foreground">
+                                                    <div key={item.title} className="flex items-start gap-2 text-xs text-muted-foreground">
                                                         <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
-                                                        <span>{item}</span>
+                                                        <span>{item.title}</span>
                                                     </div>
                                                 ))}
                                             </div>

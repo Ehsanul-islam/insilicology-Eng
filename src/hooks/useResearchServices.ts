@@ -28,7 +28,7 @@ export type ResearchServiceInput = {
   service_types: { title: string; description: string }[];
   sample_analyses: { title: string; description: string; image?: string; images?: string[]; caption?: string }[];
   client_requirements: string[];
-  deliverables: string[];
+  deliverables: { title: string; description: string }[];
   tools: string[];
   faqs: { question: string; answer: string }[];
   status: ResearchServiceStatus;
