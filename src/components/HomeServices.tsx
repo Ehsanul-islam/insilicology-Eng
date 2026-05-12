@@ -1,9 +1,31 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { researchServices } from '@/data/researchServices';
+import {
+    researchServices as fallbackServices,
+    type ResearchService,
+} from '@/data/researchServices';
+import { useResearchServices } from '@/hooks/useResearchServices';
 
 const HomeServices = () => {
+    const { fetchPublishedServices } = useResearchServices();
+    const [services, setServices] = useState<ResearchService[]>(fallbackServices);
+
+    useEffect(() => {
+        let active = true;
+        void (async () => {
+            const remote = await fetchPublishedServices();
+            if (active && remote.length > 0) {
+                setServices(remote);
+            }
+        })();
+        return () => {
+            active = false;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <section className="py-16 bg-white relative overflow-hidden">
             {/* Subtle background accent */}
@@ -31,8 +53,11 @@ const HomeServices = () => {
 
                 {/* Services Grid — 4 cards per row */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                    {researchServices.map((service, index) => {
+                    {services.map((service, index) => {
                         const Icon = service.icon;
+                        // On mobile/tablet (< xl), hide cards after the first 4
+                        const mobileHiddenClass = index >= 4 ? 'hidden xl:block' : '';
+
                         return (
                             <motion.div
                                 key={service.id}
@@ -40,6 +65,7 @@ const HomeServices = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.35, delay: index * 0.06 }}
                                 viewport={{ once: true }}
+                                className={mobileHiddenClass}
                             >
                                 <Link
                                     to={`/research/${service.slug}`}
