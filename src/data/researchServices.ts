@@ -14,6 +14,16 @@ import { getResearchIcon } from './researchIcons';
 export type ResearchServiceSectionItem = {
   title: string;
   description: string;
+  /** Short abbreviation for compact display (e.g. "PLD", "PPD") */
+  abbreviation?: string;
+  /** Key deliverables specific to this service type */
+  keyDeliverables?: string[];
+};
+
+export type ResearchServiceProcessStep = {
+  step: number;
+  title: string;
+  description: string;
 };
 
 export type ResearchServiceAnalysis = {
@@ -65,6 +75,7 @@ export type ResearchService = {
   seoDescription: string;
   overviewBullets: string[];
   serviceTypes: ResearchServiceSectionItem[];
+  processSteps: ResearchServiceProcessStep[];
   sampleAnalyses: ResearchServiceAnalysis[];
   clientRequirements: string[];
   deliverables: ResearchServiceSectionItem[];
@@ -95,6 +106,7 @@ export type ResearchServiceRow = {
   seo_description: string;
   overview_bullets: string[];
   service_types: ResearchServiceSectionItem[];
+  process_steps: ResearchServiceProcessStep[];
   sample_analyses: ResearchServiceAnalysis[];
   client_requirements: string[];
   deliverables: ResearchServiceSectionItem[];
@@ -130,6 +142,7 @@ export const mapRowToResearchService = (row: ResearchServiceRow): ResearchServic
   seoDescription: row.seo_description || row.description || '',
   overviewBullets: Array.isArray(row.overview_bullets) ? row.overview_bullets : [],
   serviceTypes: Array.isArray(row.service_types) ? row.service_types : [],
+  processSteps: Array.isArray(row.process_steps) ? row.process_steps : [],
   sampleAnalyses: Array.isArray(row.sample_analyses) ? row.sample_analyses : [],
   clientRequirements: Array.isArray(row.client_requirements) ? row.client_requirements : [],
   deliverables: Array.isArray(row.deliverables) ? row.deliverables.map(d => typeof d === 'string' ? { title: d, description: '' } : d) : [],
@@ -170,21 +183,35 @@ export const researchServices: ResearchService[] = [
     ],
     serviceTypes: [
       {
-        title: 'Protein-ligand docking',
+        title: 'Protein-Ligand Docking',
+        abbreviation: 'PLD',
         description: 'Dock small molecules or natural compounds into an active site or predicted binding pocket.',
+        keyDeliverables: ['Binding pose files', 'Interaction diagrams', 'Score ranking table'],
       },
       {
-        title: 'Blind docking',
+        title: 'Blind Docking',
+        abbreviation: 'BD',
         description: 'Screen the full receptor surface when the binding pocket is unknown or exploratory.',
+        keyDeliverables: ['Surface scan results', 'Top pocket predictions', 'Ranked pose report'],
       },
       {
-        title: 'Protein-protein docking',
+        title: 'Protein-Protein Docking',
+        abbreviation: 'PPD',
         description: 'Model likely binding orientations between two protein partners for complex formation studies.',
+        keyDeliverables: ['Complex models', 'Interface residue map', 'Orientation ranking'],
       },
       {
-        title: 'Virtual screening support',
+        title: 'Virtual Screening',
+        abbreviation: 'VS',
         description: 'Prepare ligand libraries, run docking batches, and prioritize hits for downstream validation.',
+        keyDeliverables: ['Screened hit list', 'Score distribution', 'Top-N interaction visuals'],
       },
+    ],
+    processSteps: [
+      { step: 1, title: 'Send Your Files', description: 'Share your protein structure and ligand files — we review everything and confirm scope.' },
+      { step: 2, title: 'We Prepare & Dock', description: 'We clean structures, set up the docking grid, and run all calculations.' },
+      { step: 3, title: 'Results & Figures', description: 'You receive ranked scores, binding poses, and publication-ready interaction visuals.' },
+      { step: 4, title: 'Review & Revise', description: 'We walk you through the results and make adjustments if needed.' },
     ],
     sampleAnalyses: [
       {
@@ -254,25 +281,41 @@ export const researchServices: ResearchService[] = [
     ],
     serviceTypes: [
       {
-        title: 'Protein-ligand complex MD',
+        title: 'Protein-Ligand Complex MD',
+        abbreviation: 'PL-MD',
         description: 'Assess ligand stability, binding-pocket contacts, and protein response across the trajectory.',
+        keyDeliverables: ['RMSD/RMSF plots', 'H-bond occupancy', 'Ligand stability report'],
       },
       {
-        title: 'Apo protein MD',
+        title: 'Apo Protein MD',
+        abbreviation: 'APO-MD',
         description: 'Study baseline protein flexibility, domain motion, compactness, and structural stability.',
+        keyDeliverables: ['RMSD time series', 'Per-residue RMSF', 'Rg and SASA plots'],
       },
       {
-        title: 'Protein-protein complex MD',
+        title: 'Protein-Protein Complex MD',
+        abbreviation: 'PP-MD',
         description: 'Evaluate interface stability, residue contacts, and complex behavior over simulation time.',
+        keyDeliverables: ['Interface contact map', 'Complex RMSD', 'Interaction persistence'],
       },
       {
-        title: 'Post-MD free energy support',
+        title: 'Free Energy Analysis',
+        abbreviation: 'FEA',
         description: 'Run MM/PBSA or MM/GBSA style analysis when the system and research question are suitable.',
+        keyDeliverables: ['Binding free energy', 'Per-residue decomposition', 'Comparison table'],
       },
       {
-        title: 'Ligand parameterization support',
+        title: 'Ligand Parameterization',
+        abbreviation: 'LP',
         description: 'Prepare ligand topology and parameter files for common MD workflows after structure validation.',
+        keyDeliverables: ['Topology files', 'Parameter validation', 'Ready-to-run inputs'],
       },
+    ],
+    processSteps: [
+      { step: 1, title: 'Share Your System', description: 'Send your protein/ligand structures and tell us about your research goal.' },
+      { step: 2, title: 'Setup & Simulation', description: 'We build the system, run energy minimization, equilibration, and production MD.' },
+      { step: 3, title: 'Analysis & Figures', description: 'We generate RMSD, RMSF, SASA, H-bond, and other plots with interpretation.' },
+      { step: 4, title: 'Delivery & Support', description: 'You receive all files, figures, methods text, and one round of revision support.' },
     ],
     sampleAnalyses: [
       {
@@ -357,10 +400,16 @@ export const researchServices: ResearchService[] = [
       'Clear method and basis-set documentation.',
     ],
     serviceTypes: [
-      { title: 'Geometry optimization', description: 'Optimize molecular structures and prepare clean geometry outputs.' },
-      { title: 'Orbital analysis', description: 'Visualize HOMO, LUMO, and energy-gap features for reactivity interpretation.' },
-      { title: 'MEP and charge analysis', description: 'Map electrostatic potential and identify electron-rich or electron-poor regions.' },
-      { title: 'Thermodynamic descriptor support', description: 'Summarize descriptor values needed for computational chemistry reporting.' },
+      { title: 'Geometry Optimization', abbreviation: 'GO', description: 'Optimize molecular structures and prepare clean geometry outputs.', keyDeliverables: ['Optimized .xyz/.mol', 'Energy convergence', 'Frequency check'] },
+      { title: 'Orbital Analysis', abbreviation: 'OA', description: 'Visualize HOMO, LUMO, and energy-gap features for reactivity interpretation.', keyDeliverables: ['HOMO/LUMO visuals', 'Energy gap table', 'Orbital surfaces'] },
+      { title: 'MEP & Charge Analysis', abbreviation: 'MEP', description: 'Map electrostatic potential and identify electron-rich or electron-poor regions.', keyDeliverables: ['MEP surface map', 'Charge distribution', 'Interpretation notes'] },
+      { title: 'Descriptor Reporting', abbreviation: 'DR', description: 'Summarize descriptor values needed for computational chemistry reporting.', keyDeliverables: ['Descriptor table', 'Thermodynamic values', 'Method summary'] },
+    ],
+    processSteps: [
+      { step: 1, title: 'Send Your Molecule', description: 'Share the structure, SMILES, or drawing — we confirm the method and basis set.' },
+      { step: 2, title: 'We Run Calculations', description: 'Geometry optimization, frequency checks, and property calculations are performed.' },
+      { step: 3, title: 'Visuals & Data', description: 'You receive orbital images, MEP maps, descriptor tables, and interpretation.' },
+      { step: 4, title: 'Review & Adjust', description: 'We review outputs together and adjust methods or add analyses if needed.' },
     ],
     sampleAnalyses: [
       { title: 'HOMO-LUMO energy gap', description: 'Summarizes frontier orbital energies and likely reactivity trends.' },
@@ -409,10 +458,16 @@ export const researchServices: ResearchService[] = [
       'Pathway and enrichment summaries with clean figures.',
     ],
     serviceTypes: [
-      { title: 'Sequence analysis', description: 'Alignment, identity review, conserved region checks, and annotation support.' },
-      { title: 'Protein analysis', description: 'Domain, motif, physicochemical, and structure-linked interpretation.' },
-      { title: 'Pathway analysis', description: 'Functional enrichment and pathway-level interpretation for biological datasets.' },
-      { title: 'Phylogenetic analysis', description: 'Tree preparation and interpretation for sequence comparison studies.' },
+      { title: 'Sequence Analysis', abbreviation: 'SA', description: 'Alignment, identity review, conserved region checks, and annotation support.', keyDeliverables: ['Alignment output', 'Conservation map', 'Annotation table'] },
+      { title: 'Protein Analysis', abbreviation: 'PA', description: 'Domain, motif, physicochemical, and structure-linked interpretation.', keyDeliverables: ['Domain map', 'Property profile', 'Feature summary'] },
+      { title: 'Pathway Analysis', abbreviation: 'PWA', description: 'Functional enrichment and pathway-level interpretation for biological datasets.', keyDeliverables: ['Enrichment plots', 'Pathway table', 'Functional summary'] },
+      { title: 'Phylogenetic Analysis', abbreviation: 'PHA', description: 'Tree preparation and interpretation for sequence comparison studies.', keyDeliverables: ['Phylogenetic tree', 'Bootstrap values', 'Clade annotation'] },
+    ],
+    processSteps: [
+      { step: 1, title: 'Share Your Data', description: 'Send sequences, gene lists, or accession IDs with your research question.' },
+      { step: 2, title: 'We Analyze', description: 'Alignment, annotation, enrichment, or phylogenetic workflows are run and validated.' },
+      { step: 3, title: 'Figures & Tables', description: 'You receive publication-quality figures, tables, and result summaries.' },
+      { step: 4, title: 'Interpret & Deliver', description: 'We provide biological interpretation and adjust outputs to your needs.' },
     ],
     sampleAnalyses: [
       { title: 'Alignment and conservation', description: 'Identifies conserved residues, similarity patterns, and sequence-level differences.' },
@@ -460,10 +515,16 @@ export const researchServices: ResearchService[] = [
       'Mechanism-focused interpretation for manuscripts.',
     ],
     serviceTypes: [
-      { title: 'Compound-target network', description: 'Predict and map likely targets for selected compounds or natural products.' },
-      { title: 'Disease target intersection', description: 'Identify shared targets between compounds and disease biology.' },
-      { title: 'PPI and hub analysis', description: 'Build protein interaction networks and prioritize central genes or proteins.' },
-      { title: 'GO/KEGG enrichment', description: 'Summarize biological processes and pathways connected to the selected targets.' },
+      { title: 'Compound-Target Network', abbreviation: 'CTN', description: 'Predict and map likely targets for selected compounds or natural products.', keyDeliverables: ['Network diagram', 'Target list', 'Compound mapping'] },
+      { title: 'Disease Target Intersection', abbreviation: 'DTI', description: 'Identify shared targets between compounds and disease biology.', keyDeliverables: ['Venn diagram', 'Shared target list', 'Disease gene overlap'] },
+      { title: 'PPI & Hub Analysis', abbreviation: 'PPI', description: 'Build protein interaction networks and prioritize central genes or proteins.', keyDeliverables: ['PPI network', 'Hub gene ranking', 'Centrality scores'] },
+      { title: 'GO/KEGG Enrichment', abbreviation: 'GKE', description: 'Summarize biological processes and pathways connected to the selected targets.', keyDeliverables: ['GO bar/dot plots', 'KEGG pathway maps', 'Enrichment table'] },
+    ],
+    processSteps: [
+      { step: 1, title: 'Define Your Scope', description: 'Share your compounds, disease area, and research question — we plan the workflow.' },
+      { step: 2, title: 'Network Construction', description: 'We mine databases, build networks, and identify key targets and hubs.' },
+      { step: 3, title: 'Enrichment & Visuals', description: 'GO/KEGG enrichment, network diagrams, and hub rankings are generated.' },
+      { step: 4, title: 'Report & Revise', description: 'You receive a mechanism-focused report with figures, ready for your manuscript.' },
     ],
     sampleAnalyses: [
       { title: 'Network map', description: 'Visualizes compound-target-pathway relationships for mechanism exploration.' },
@@ -511,10 +572,16 @@ export const researchServices: ResearchService[] = [
       'Construct design and structure-linked evaluation support.',
     ],
     serviceTypes: [
-      { title: 'Antigen screening', description: 'Evaluate candidate proteins for vaccine design suitability.' },
-      { title: 'Epitope prediction', description: 'Predict B-cell, T-cell, and helper T-cell epitopes using accepted tools.' },
-      { title: 'Vaccine construct design', description: 'Assemble selected epitopes with linkers and adjuvant strategy when appropriate.' },
-      { title: 'Structure and docking support', description: 'Model construct structure and assess interaction with immune receptors where relevant.' },
+      { title: 'Antigen Screening', abbreviation: 'AS', description: 'Evaluate candidate proteins for vaccine design suitability.', keyDeliverables: ['Antigenicity scores', 'Candidate ranking', 'Surface accessibility'] },
+      { title: 'Epitope Prediction', abbreviation: 'EP', description: 'Predict B-cell, T-cell, and helper T-cell epitopes using accepted tools.', keyDeliverables: ['Epitope list', 'MHC binding data', 'Population coverage'] },
+      { title: 'Construct Design', abbreviation: 'CD', description: 'Assemble selected epitopes with linkers and adjuvant strategy when appropriate.', keyDeliverables: ['Construct sequence', 'Linker map', '3D model'] },
+      { title: 'Structure & Docking', abbreviation: 'SD', description: 'Model construct structure and assess interaction with immune receptors where relevant.', keyDeliverables: ['Docked complex', 'Interaction map', 'Stability check'] },
+    ],
+    processSteps: [
+      { step: 1, title: 'Share Pathogen Info', description: 'Send protein sequences, accession IDs, and your target host/population details.' },
+      { step: 2, title: 'Screening & Prediction', description: 'We screen antigens, predict epitopes, and evaluate safety and coverage.' },
+      { step: 3, title: 'Design & Model', description: 'The vaccine construct is assembled, modeled in 3D, and docked if needed.' },
+      { step: 4, title: 'Report & Support', description: 'You receive the full design report with figures and revision support.' },
     ],
     sampleAnalyses: [
       { title: 'Epitope ranking', description: 'Prioritizes epitopes by antigenicity, allergenicity, toxicity, and coverage.' },
@@ -562,10 +629,16 @@ export const researchServices: ResearchService[] = [
       'Integrated decision report for lead selection.',
     ],
     serviceTypes: [
-      { title: 'Virtual screening', description: 'Screen compound libraries and rank hits for a target of interest.' },
-      { title: 'ADMET and drug-likeness', description: 'Evaluate absorption, distribution, metabolism, toxicity, and rule-based filters.' },
-      { title: 'Hit prioritization', description: 'Combine score, interaction, ADMET, and feasibility signals into a ranked shortlist.' },
-      { title: 'Lead optimization support', description: 'Suggest research directions based on structure, interaction, and property patterns.' },
+      { title: 'Virtual Screening', abbreviation: 'VS', description: 'Screen compound libraries and rank hits for a target of interest.', keyDeliverables: ['Hit list', 'Score distribution', 'Filtered compound set'] },
+      { title: 'ADMET & Drug-Likeness', abbreviation: 'ADMET', description: 'Evaluate absorption, distribution, metabolism, toxicity, and rule-based filters.', keyDeliverables: ['ADMET table', 'Lipinski summary', 'Toxicity flags'] },
+      { title: 'Hit Prioritization', abbreviation: 'HP', description: 'Combine score, interaction, ADMET, and feasibility signals into a ranked shortlist.', keyDeliverables: ['Ranked shortlist', 'Multi-criteria matrix', 'Top-N profiles'] },
+      { title: 'Lead Optimization', abbreviation: 'LO', description: 'Suggest research directions based on structure, interaction, and property patterns.', keyDeliverables: ['SAR insights', 'Modification suggestions', 'Property comparison'] },
+    ],
+    processSteps: [
+      { step: 1, title: 'Define Your Target', description: 'Share target info, compound library, and any screening criteria you need.' },
+      { step: 2, title: 'Screen & Filter', description: 'We run virtual screening, apply ADMET filters, and rank the results.' },
+      { step: 3, title: 'Prioritize Hits', description: 'Top compounds are profiled across multiple criteria for decision support.' },
+      { step: 4, title: 'Decision Report', description: 'You receive a lead prioritization report with visuals and recommendations.' },
     ],
     sampleAnalyses: [
       { title: 'Ranked hit list', description: 'Combines docking score, interaction quality, and property filters.' },
@@ -613,10 +686,16 @@ export const researchServices: ResearchService[] = [
       'Functional or pathway interpretation where suitable.',
     ],
     serviceTypes: [
-      { title: 'Amplicon analysis', description: '16S/18S/ITS style workflows for taxonomy and diversity outputs.' },
-      { title: 'Shotgun metagenomics', description: 'Taxonomic and functional profiling for broader microbiome studies.' },
-      { title: 'Diversity analysis', description: 'Alpha and beta diversity plots with statistical interpretation support.' },
-      { title: 'Differential abundance', description: 'Compare groups and identify taxa or features that differ between conditions.' },
+      { title: 'Amplicon Analysis', abbreviation: '16S', description: '16S/18S/ITS style workflows for taxonomy and diversity outputs.', keyDeliverables: ['OTU/ASV table', 'Taxonomy barplots', 'Rarefaction curves'] },
+      { title: 'Shotgun Metagenomics', abbreviation: 'SMG', description: 'Taxonomic and functional profiling for broader microbiome studies.', keyDeliverables: ['Species profile', 'Functional annotation', 'Abundance heatmap'] },
+      { title: 'Diversity Analysis', abbreviation: 'DA', description: 'Alpha and beta diversity plots with statistical interpretation support.', keyDeliverables: ['Shannon/Simpson indices', 'PCoA/NMDS plots', 'Statistical tests'] },
+      { title: 'Differential Abundance', abbreviation: 'DiffAb', description: 'Compare groups and identify taxa or features that differ between conditions.', keyDeliverables: ['DESeq2/ANCOM results', 'Volcano plots', 'Significant taxa list'] },
+    ],
+    processSteps: [
+      { step: 1, title: 'Send Your Sequences', description: 'Share FASTQ files, metadata, and sample grouping — we check quality first.' },
+      { step: 2, title: 'Processing & QC', description: 'We clean reads, assign taxonomy, and build abundance tables.' },
+      { step: 3, title: 'Diversity & Comparison', description: 'Alpha/beta diversity, differential abundance, and functional analysis are run.' },
+      { step: 4, title: 'Report & Figures', description: 'You receive all plots, tables, and an interpretation-focused report.' },
     ],
     sampleAnalyses: [
       { title: 'Taxonomic profile', description: 'Summarizes microbial composition across samples and groups.' },

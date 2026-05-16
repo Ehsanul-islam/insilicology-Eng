@@ -42,7 +42,7 @@ interface SEOProps {
 const SEOHead = ({
   title,
   description,
-  image = '/placeholder.svg',
+  image = '/og-image.png',
   url,
   type = 'website',
   siteName = 'insilicology',
@@ -120,7 +120,9 @@ const SEOHead = ({
       "name": siteName,
       "logo": {
         "@type": "ImageObject",
-        "url": `${siteUrl}/favicon.svg`
+        "url": `${siteUrl}/logo.png`,
+        "width": 512,
+        "height": 512
       }
     },
     "datePublished": article.publishedTime,
@@ -159,7 +161,12 @@ const SEOHead = ({
     "@type": "Organization",
     "name": siteName,
     "url": siteUrl,
-    "logo": `${siteUrl}/favicon.svg`,
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/logo.png`,
+      "width": 512,
+      "height": 512
+    },
     "description": "Professional skills development platform with expert-led courses",
     "sameAs": [
       "https://twitter.com/insilicology",
