@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { GraduationCap, Mail, Lock, User, ArrowLeft, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, ArrowLeft, Eye, EyeOff, AlertCircle } from 'lucide-react';
 import SEOHead from '@/components/SEOHead';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -128,11 +128,13 @@ const Auth = () => {
           {/* Logo & Header */}
           <div className="text-center mb-8 animate-fade-in">
             <Link to="/" className="inline-flex items-center justify-center mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-primary to-cyan-500 rounded-xl flex items-center justify-center">
-                <GraduationCap className="w-8 h-8 text-white" />
-              </div>
+              <img
+                src="/logo-icon.svg"
+                className="w-16 h-16 object-contain transform hover:scale-110 transition-transform duration-300"
+                alt="insilicology Logo"
+              />
             </Link>
-            <h1 className="text-3xl font-bold gradient-text mb-2">Welcome to insilicology</h1>
+            <h1 className="text-3xl font-bold font-sans bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent mb-2">Welcome to insilicology</h1>
             <p className="text-muted-foreground">
               {activeTab === 'signin' ? 'Sign in to continue your learning' : 'Start your learning journey today'}
             </p>

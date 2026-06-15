@@ -72,10 +72,12 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 gap-4">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group flex-shrink-0">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-cyan-500 rounded-lg flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-              <GraduationCap className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-base lg:text-lg font-bold gradient-text hidden sm:inline tracking-tight">
+            <img
+              src="/logo-icon.svg"
+              className="w-14 h-14 object-contain transform group-hover:scale-110 transition-transform duration-300"
+              alt="insilicology Logo"
+            />
+            <span className="text-base lg:text-lg font-bold font-sans bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent hidden sm:inline tracking-tight translate-y-[4px]">
               insilicology
             </span>
           </Link>

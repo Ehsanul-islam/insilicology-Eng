@@ -10,7 +10,6 @@ import {
   MessageSquare,
   Settings,
   ChevronLeft,
-  GraduationCap,
   Calendar,
   Video,
   FlaskConical,
@@ -87,9 +86,7 @@ export const AdminSidebar = () => {
     <Sidebar collapsible="icon" className="border-r border-border">
       <SidebarHeader className="p-4 border-b border-border">
         <Link to="/admin" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-primary to-cyan-500 rounded-lg flex items-center justify-center shrink-0">
-            <GraduationCap className="w-5 h-5 text-primary-foreground" />
-          </div>
+          <img src="/logo-icon.svg" className="w-10 h-10 object-contain shrink-0 animate-fade-in" alt="insilicology Logo" />
           {!collapsed && (
             <div>
               <span className="font-bold text-foreground">Admin Panel</span>

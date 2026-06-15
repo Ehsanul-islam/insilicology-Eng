@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { GraduationCap, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram } from 'lucide-react';
 
 const Footer = () => {
   const footerLinks = {
@@ -37,10 +37,12 @@ const Footer = () => {
           {/* Brand - Span 2 cols */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="flex items-center space-x-2 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-shadow">
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-700 to-cyan-600 bg-clip-text text-transparent">
+              <img
+                src="/logo-icon.svg"
+                className="w-14 h-14 object-contain transform group-hover:scale-110 transition-transform duration-300"
+                alt="insilicology Logo"
+              />
+              <span className="text-xl font-bold font-sans bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent translate-y-[4px]">
                 insilicology
               </span>
             </Link>
