@@ -167,10 +167,15 @@ function SampleAnalysisImageCarousel({
   const [index, setIndex] = useState(0);
   const [failed, setFailed] = useState<Set<number>>(() => new Set());
 
+  // Reset index and failed state when the gallery identity OR actual URLs change.
+  // This handles the case where static fallback images fail to load, then
+  // the DB data arrives with valid URLs — without this, the stale `failed`
+  // set would keep showing the placeholder.
+  const urlsKey = urls.join(',');
   useEffect(() => {
     setIndex(0);
     setFailed(new Set());
-  }, [galleryKey]);
+  }, [galleryKey, urlsKey]);
 
   const n = urls.length;
 
@@ -211,8 +216,10 @@ function SampleAnalysisImageCarousel({
           alt=""
           className="h-48 w-full object-cover transition-transform duration-300 group-hover/img:scale-[1.03]"
           loading={safeIndex === 0 ? 'eager' : 'lazy'}
-          referrerPolicy="no-referrer"
-          onError={() => setFailed((prev) => new Set(prev).add(safeIndex))}
+          onError={(e) => {
+            console.error("Image failed to load:", currentUrl, e);
+            setFailed((prev) => new Set(prev).add(safeIndex));
+          }}
         />
       ) : (
         <div className="flex h-48 items-center justify-center bg-muted/20">
